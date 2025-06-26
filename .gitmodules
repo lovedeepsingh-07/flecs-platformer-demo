@@ -1,0 +1,18 @@
+[submodule "external/box2d"]
+	path = external/box2d
+	url = https://github.com/erincatto/box2d
+[submodule "external/raylib"]
+	path = external/raylib
+	url = https://github.com/raysan5/raylib
+[submodule "external/raygui"]
+	path = external/raygui
+	url = https://github.com/raysan5/raygui
+[submodule "external/clay/clay"]
+	path = external/clay/clay
+	url = https://github.com/nicbarker/clay
+[submodule "external/flecs"]
+	path = external/flecs
+	url = https://github.com/SanderMertens/flecs
+[submodule "external/ldtk_loader"]
+	path = external/ldtk_loader
+	url = https://github.com/Madour/LDtkLoader
