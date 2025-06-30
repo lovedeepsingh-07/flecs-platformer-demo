@@ -6,8 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libgcc -static-libstdc++")
 
 set(THIRD_PARTY_DIR external)
+set(INTERNAL_DIR internal)
 add_subdirectory(${THIRD_PARTY_DIR}/raylib)
-add_subdirectory(${THIRD_PARTY_DIR}/box2d)
+add_subdirectory(${INTERNAL_DIR}/physics)
 add_subdirectory(${THIRD_PARTY_DIR}/ldtk_loader)
 add_subdirectory(${THIRD_PARTY_DIR}/flecs)
 
@@ -21,9 +22,10 @@ target_include_directories(game PRIVATE
     ${THIRD_PARTY_DIR}/raygui/src
 )
 
-target_link_libraries(game PRIVATE raylib)
-target_link_libraries(game PRIVATE box2d)
-target_link_libraries(game PRIVATE LDtkLoader::LDtkLoader)
-target_link_libraries(game PRIVATE flecs::flecs_static)
-
+target_link_libraries(game PRIVATE
+	raylib
+	physics
+	LDtkLoader::LDtkLoader
+	flecs::flecs_static
+)
 target_compile_definitions(game PRIVATE PLATFORM_DESKTOP)
