@@ -10,4 +10,5 @@ add_library(physics ${SRC_FILES})
 
 target_include_directories(physics PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/../../external/raylib/src
 )
