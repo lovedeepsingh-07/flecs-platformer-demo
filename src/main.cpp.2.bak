@@ -1,0 +1,81 @@
+#define CLAY_IMPLEMENTATION
+#include "clay/clay.h"
+#include "clay/renderers/raylib/clay_renderer_raylib.c"
+#include "nuck/math.hpp"
+#include "nuck/nuck.hpp"
+#include "raylib.h"
+
+auto main() -> int {
+    Clay_Raylib_Initialize(0, 0, "game", FLAG_WINDOW_UNDECORATED);
+    int screen_width = GetMonitorWidth(0);
+    int screen_height = GetMonitorHeight(0);
+    SetWindowSize(screen_width, screen_height);
+    SetTargetFPS(75);
+
+    // nuck::World world;
+    // world.world_gravity = math::Vector2{ 0, 980 };
+    // nuck::ObjectID player_id =
+    //     world.create_object(math::Vector2{ 600, 50 }, math::Vector2{ 32, 32 }, 50, nuck::ObjectType::DYNAMIC);
+    // auto player_color = RAYWHITE;
+    // nuck::ObjectID box_1_id =
+    //     world.create_object(math::Vector2{ 300, 50 }, math::Vector2{ 32, 32 }, 50, nuck::ObjectType::STATIC);
+    // nuck::ObjectID box_2_id =
+    //     world.create_object(math::Vector2{ 300, 200 }, math::Vector2{ 32, 32 }, 50, nuck::ObjectType::STATIC);
+    //
+    // nuck::Object* player = world.get_object(player_id);
+    // nuck::Object* box_1 = world.get_object(box_1_id);
+    // nuck::Object* box_2 = world.get_object(box_2_id);
+
+    while (!WindowShouldClose()) {
+        float delta_time = GetFrameTime();
+        // world.step(delta_time);
+        //
+        // if (IsKeyDown(KEY_A)) {
+        //     player->velocity.x = -300;
+        //     player->is_sleeping = false;
+        // } else if (IsKeyDown(KEY_D)) {
+        //     player->velocity.x = 300;
+        //     player->is_sleeping = false;
+        // } else {
+        //     player->velocity.x = 0;
+        // }
+        // if (IsKeyDown(KEY_W)) {
+        //     player->velocity.y = -300;
+        //     player->is_sleeping = false;
+        // } else if (IsKeyDown(KEY_S)) {
+        //     player->velocity.y = 300;
+        //     player->is_sleeping = false;
+        // } else {
+        //     player->velocity.y = 0;
+        // }
+        // if (IsKeyPressed(KEY_SPACE)) {
+        //     player->velocity.y = -500;
+        // }
+
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        // if (world.is_colliding(player_id)) {
+        //     player_color = GREEN;
+        // } else {
+        //     player_color = RAYWHITE;
+        // }
+        //
+        // DrawRectangle(
+        //     (int)box_1->position.x, (int)box_1->position.y,
+        //     (int)box_1->size.x, (int)box_1->size.y, LIGHTGRAY
+        // );
+        // DrawRectangle(
+        //     (int)box_2->position.x, (int)box_2->position.y,
+        //     (int)box_2->size.x, (int)box_2->size.y, LIGHTGRAY
+        // );
+        // DrawRectangle(
+        //     (int)player->position.x, (int)player->position.y,
+        //     (int)player->size.x, (int)player->size.y, player_color
+        // );
+
+        EndDrawing();
+    }
+    Clay_Raylib_Close();
+}

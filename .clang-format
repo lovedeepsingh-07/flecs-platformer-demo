@@ -48,7 +48,7 @@ Language: Cpp
 #   LS_Auto (in configuration: Auto) Automatic detection based on the input.
 Standard: Cpp11
 # Pointer and reference alignment style. Possible values: Left, Right, Middle.
-PointerAlignment: Right
+PointerAlignment: Left
 # AccessModifierOffset (int)
 # The extra indent or outdent of access modifiers, e.g. public:.
 AccessModifierOffset: -2
@@ -114,7 +114,7 @@ AllowShortLoopsOnASingleLine: false
 AlwaysBreakBeforeMultilineStrings: false
 # AlwaysBreakTemplateDeclarations (bool)
 # If true, always break after the template<...> of a template declaration.
-AlwaysBreakTemplateDeclarations: false
+AlwaysBreakTemplateDeclarations: true
 # BinPackArguments (bool)
 # If false, a function call’s arguments will either be all on the same line or will have one line each.
 #BinPackArguments: false
