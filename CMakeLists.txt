@@ -6,25 +6,42 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libgcc -st
 cmake_minimum_required(VERSION 3.15)
 project(${PROJECT_NAME})
 
-set(THIRD_PARTY_DIR external)
-add_subdirectory(${THIRD_PARTY_DIR}/raylib)
-add_subdirectory(${THIRD_PARTY_DIR}/ldtk_loader)
-add_subdirectory(${THIRD_PARTY_DIR}/flecs)
+set(EXTERNAL_DIR external)
+add_subdirectory(${EXTERNAL_DIR}/raylib)
+add_subdirectory(${EXTERNAL_DIR}/ldtk_loader)
+add_subdirectory(${EXTERNAL_DIR}/flecs)
+add_subdirectory(${EXTERNAL_DIR}/box2d)
+
+set(IMGUI_SOURCES
+    ${EXTERNAL_DIR}/imgui/imgui.cpp
+    ${EXTERNAL_DIR}/imgui/imgui_draw.cpp
+    ${EXTERNAL_DIR}/imgui/imgui_demo.cpp
+    ${EXTERNAL_DIR}/imgui/imgui_tables.cpp
+    ${EXTERNAL_DIR}/imgui/imgui_widgets.cpp
+)
+set(RLIMGUI_SOURCES
+	${EXTERNAL_DIR}/rlimgui/rlImGui.cpp
+)
+include_directories(
+	${EXTERNAL_DIR}/imgui
+	${EXTERNAL_DIR}/rlimgui
+)
 
 file(GLOB_RECURSE SRC_FILES src/*.cc)
 
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${IMGUI_SOURCES} ${RLIMGUI_SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     include
-    ${THIRD_PARTY_DIR}/clay
-    ${THIRD_PARTY_DIR}/raygui/src
+    ${EXTERNAL_DIR}/clay
+    ${EXTERNAL_DIR}/raygui/src
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	raylib
 	LDtkLoader::LDtkLoader
 	flecs::flecs_static
+	box2d
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE PLATFORM_DESKTOP)

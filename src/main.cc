@@ -13,7 +13,6 @@ int main() {
     while (!WindowShouldClose()) {
         float delta_time = GetFrameTime();
 
-
         BeginDrawing();
         ClearBackground(BLACK);
 
