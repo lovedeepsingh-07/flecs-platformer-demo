@@ -7,7 +7,7 @@
 void CameraSystem::update(flecs::world& registry, Camera2D& camera) {
     flecs::system camera_sys =
         registry
-            .system<components::PositionComponent, components::CameraComponent>("camera")
+            .system<components::PositionComponent, components::CameraComponent>()
             .each([&camera](const components::PositionComponent& pos, const components::CameraComponent& cam) {
                 camera.offset = (Vector2){ (float)GetScreenWidth() / 2.0F,
                                            (float)GetScreenHeight() / 2.0F };

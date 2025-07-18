@@ -7,7 +7,7 @@
 void ControllerSystem::update(flecs::world& registry) {
     flecs::system controller_sys =
         registry
-            .system<components::PhysicsComponent, components::ControllerComponent>("controller")
+            .system<components::PhysicsComponent, components::ControllerComponent>()
             .each([](const components::PhysicsComponent& phy,
                      const components::ControllerComponent& controller) {
                 b2Vec2 vel = b2Body_GetLinearVelocity(phy.body_id);

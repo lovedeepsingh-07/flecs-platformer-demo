@@ -6,7 +6,7 @@ void Render2DSystem::update(flecs::world& registry) {
     // render rectangles
     flecs::system rect_sys =
         registry
-            .system<components::PositionComponent, components::SizeComponent, components::RectangleComponent>("render_2d_rect")
+            .system<components::PositionComponent, components::SizeComponent, components::RectangleComponent>()
             .each([](const components::PositionComponent& pos,
                      const components::SizeComponent& size,
                      const components::RectangleComponent& rect) {

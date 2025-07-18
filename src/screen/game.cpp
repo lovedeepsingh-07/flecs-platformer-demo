@@ -1,4 +1,7 @@
+#include "LDtkLoader/DataTypes.hpp"
 #include "box2d/box2d.h"
+#include "box2d/types.h"
+#include "components.hpp"
 #include "constants.hpp"
 #include "imgui.h"
 #include "rlImGui.h"
@@ -21,67 +24,91 @@ void Screen::GameScreen::on_enter(flecs::world& registry) {
     m_world_debug_draw.DrawSolidPolygonFcn = PhysicsSystem::draw_solid_polygon;
 
     // player
-    // const auto player{ registry.create() };
-    // b2Vec2 player_pos =
-    //     (b2Vec2){ Constants::BASE_WINDOW_WIDTH / 2.0F, Constants::BASE_WINDOW_HEIGHT };
-    // b2Vec2 player_size = (b2Vec2){ Constants::PLAYER_WIDTH, Constants::PLAYER_HEIGHT };
-    //
-    // m_camera_2d = Camera2D{ 0 };
-    // m_camera_2d.target = Vector2{ .x = player_pos.x, .y = player_pos.y };
-    // m_camera_2d.offset =
-    //     (Vector2){ (float)GetScreenWidth() / 2.0F, (float)GetScreenHeight() / 2.0F };
-    // m_camera_2d.rotation = 0.0F;
-    // m_camera_2d.zoom = 1.0F;
-    //
-    // Utils::create_physical_body(registry, m_world_id, player, player_pos, player_size, b2_dynamicBody);
-    // registry.emplace<Components::ControllerComponent>(player);
-    // registry.emplace<Components::CameraComponent>(player);
-    // registry.emplace<Components::RectangleComponent>(
-    //     player, player_size.x, player_size.y, RAYWHITE
-    // );
+    float screen_width{ (float)GetScreenWidth() };
+    float screen_height{ (float)GetScreenWidth() };
+    b2Vec2 player_pos{ (b2Vec2){ screen_width / 2.0F, screen_height } };
+    b2Vec2 player_size{ (b2Vec2){ constants::PLAYER_WIDTH, constants::PLAYER_HEIGHT } };
+    m_camera_2d = Camera2D{ 0 };
+    m_camera_2d.target = Vector2{ .x = player_pos.x, .y = player_pos.y };
+    m_camera_2d.offset =
+        (Vector2){ (float)GetScreenWidth() / 2.0F, (float)GetScreenHeight() / 2.0F };
+    m_camera_2d.rotation = 0.0F;
+    m_camera_2d.zoom = 1.0F;
+    b2BodyDef body_def{ b2DefaultBodyDef() };
+    body_def.type = b2_dynamicBody;
+    body_def.position = player_pos;
+    body_def.fixedRotation = true;
+    b2BodyId body_id = b2CreateBody(m_world_id, &body_def);
+    b2Polygon body_polygon = b2MakeBox(player_size.x / 2, player_size.y / 2);
+    b2ShapeDef body_shape_def = b2DefaultShapeDef();
+    body_shape_def.density = 1.0F;
+    body_shape_def.material.friction = 0.0F;
+    b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
+    flecs::entity player{
+        registry.entity()
+            .set(components::PositionComponent{ player_pos.x - (player_size.x / 2),
+                                                player_pos.y - (player_size.y / 2) })
+            .set(components::SizeComponent{ player_size.x, player_size.y })
+            .set(components::PhysicsComponent{ body_id })
+            .add<components::ControllerComponent>()
+            .add<components::CameraComponent>()
+            .set(components::RectangleComponent{ RAYWHITE })
+    };
 
     // world
-    // m_ldtk_project.loadFromFile("./assets/world.ldtk");
-    //
-    // for (const auto& tile :
-    //      m_ldtk_project.getWorld().getLevel("Level_0").getLayer("IntegerLayer").allTiles()) {
-    //     ldtk::IntPoint tile_pos = tile.getPosition();
-    //     ldtk::IntRect tile_rect = tile.getTextureRect();
-    //     ldtk::IntPoint grid_pos = tile.getGridPosition();
-    //     ldtk::IntGridValue curr_int_val =
-    //         tile.layer->getIntGridVal(grid_pos.x, grid_pos.y);
-    //
-    //     const auto tile_entity{ registry.create() };
-    //
-    //     if (curr_int_val.value == 1) {
-    //         Utils::create_physical_body(
-    //             registry, m_world_id, tile_entity,
-    //             (b2Vec2){ (float)tile_pos.x, (float)tile_pos.y },
-    //             (b2Vec2){ (float)tile_rect.width, (float)tile_rect.height }, b2_staticBody
-    //         );
-    //         registry.emplace<Components::RectangleComponent>(
-    //             tile_entity, tile_rect.width, tile_rect.height, GRAY
-    //         );
-    //     }
-    // if (curr_int_val.value == 2) {
-    //     registry.emplace<Components::TransformComponent>(
-    //         tile_entity, (float)tile_pos.x - ((float)tile_rect.width /
-    //         2), (float)tile_pos.y - ((float)tile_rect.height / 2)
-    //     );
-    // }
+    m_ldtk_project.loadFromFile("./assets/world.ldtk");
 
-    // registry.emplace<Components::TilesetTextureComponent>(
-    //     tile_entity, m_tileset, (float)tile_rect.x, (float)tile_rect.y,
-    //     (float)tile_rect.width, (float)tile_rect.height
-    // );
+    for (const auto& tile :
+         m_ldtk_project.getWorld().getLevel("Level_0").getLayer("IntegerLayer").allTiles()) {
+        ldtk::IntPoint tile_pos = tile.getPosition();
+        ldtk::IntRect tile_rect = tile.getTextureRect();
+        ldtk::IntPoint grid_pos = tile.getGridPosition();
+        ldtk::IntGridValue curr_int_val =
+            tile.layer->getIntGridVal(grid_pos.x, grid_pos.y);
 
-    // DEBUG: Different integer values for Integer layers
-    // registry.emplace<Components::RectangleLinesComponent>(
-    //     tile_entity, tile_rect.width, tile_rect.height,
-    //     (Color){ curr_int_val.color.r, curr_int_val.color.g,
-    //              curr_int_val.color.g, curr_int_val.color.a }
-    // );
-    // }
+        flecs::entity tile_entity{
+            registry.entity()
+                .set(components::PositionComponent{
+                    (float)tile_pos.x - ((float)tile_rect.width / 2),
+                    (float)tile_pos.y - ((float)tile_rect.height / 2) })
+                .set(components::SizeComponent{ (float)tile_rect.width,
+                                                (float)tile_rect.height })
+        };
+
+        if (curr_int_val.value == 1) {
+            float screen_width{ (float)GetScreenWidth() };
+            float screen_height{ (float)GetScreenWidth() };
+            b2BodyDef body_def{ b2DefaultBodyDef() };
+            body_def.type = b2_staticBody;
+            body_def.position = (b2Vec2){ (float)tile_pos.x, (float)tile_pos.y };
+            body_def.fixedRotation = true;
+            b2BodyId body_id = b2CreateBody(m_world_id, &body_def);
+            b2Polygon body_polygon =
+                b2MakeBox((float)tile_rect.width / 2, (float)tile_rect.height / 2);
+            b2ShapeDef body_shape_def = b2DefaultShapeDef();
+            body_shape_def.density = 1.0F;
+            body_shape_def.material.friction = 0.0F;
+            b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
+            tile_entity.set(components::RectangleComponent{ GRAY }).set(components::PhysicsComponent{ body_id });
+        }
+        if (curr_int_val.value == 2) {
+            tile_entity.set(components::PositionComponent{
+                (float)tile_pos.x - ((float)tile_rect.width / 2),
+                (float)tile_pos.y - ((float)tile_rect.height / 2) });
+        }
+
+        // registry.emplace<Components::TilesetTextureComponent>(
+        //     tile_entity, m_tileset, (float)tile_rect.x, (float)tile_rect.y,
+        //     (float)tile_rect.width, (float)tile_rect.height
+        // );
+
+        // DEBUG: Different integer values for Integer layers
+        // registry.emplace<Components::RectangleLinesComponent>(
+        //     tile_entity, tile_rect.width, tile_rect.height,
+        //     (Color){ curr_int_val.color.r, curr_int_val.color.g,
+        //              curr_int_val.color.g, curr_int_val.color.a }
+        // );
+    }
 }
 
 void Screen::GameScreen::on_update(flecs::world& registry) {

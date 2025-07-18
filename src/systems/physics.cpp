@@ -5,7 +5,7 @@
 void PhysicsSystem::update(flecs::world& registry) {
     flecs::system physics_sys =
         registry
-            .system<components::PositionComponent, components::SizeComponent, components::PhysicsComponent>("physics")
+            .system<components::PositionComponent, components::SizeComponent, components::PhysicsComponent>()
             .each([](components::PositionComponent& pos, const components::SizeComponent& size,
                      const components::PhysicsComponent& phy) {
                 b2Vec2 body_pos = b2Body_GetPosition(phy.body_id);
