@@ -29,8 +29,8 @@ class MainMenuScreen : public Screen {
 };
 class GameScreen : public Screen {
   private:
-    b2WorldDef m_world_def;
     b2WorldId m_world_id;
+    b2DebugDraw m_world_debug_draw;
     Camera2D m_camera_2d;
     ldtk::Project m_ldtk_project;
     bool m_debug_mode{ false };

@@ -15,7 +15,7 @@ void ScreenManager::ScreenManager::init() {
     int screen_width = GetMonitorWidth(0);
     int screen_height = GetMonitorHeight(0);
     SetWindowSize(screen_width, screen_height);
-    SetTargetFPS(Constants::FPS);
+    SetTargetFPS(constants::FPS);
 
     // setup clay
     uint64_t clay_required_memory = Clay_MinMemorySize();

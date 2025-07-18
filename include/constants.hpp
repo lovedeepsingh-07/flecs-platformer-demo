@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Constants {
+namespace constants {
 
 const int FPS = 75;
 const int BASE_WINDOW_WIDTH = 1200;
@@ -18,4 +18,4 @@ const float MIN_CAMERA_SPEED = 30;
 const float MIN_CAMERA_EFFECT_LENGTH = 30;
 const float CAMERA_FRACTION_SPEED = 0.5F;
 
-} // namespace Constants
+} // namespace constants
