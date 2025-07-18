@@ -27,7 +27,7 @@ include_directories(
 	${EXTERNAL_DIR}/rlimgui
 )
 
-file(GLOB_RECURSE SRC_FILES src/*.cc)
+file(GLOB_RECURSE SRC_FILES src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${IMGUI_SOURCES} ${RLIMGUI_SOURCES})
 
