@@ -56,10 +56,10 @@ void ScreenManager::ScreenManager::render() {
     // clay UI
     Clay_BeginLayout();
     if (m_current_screen_label == Screen::ScreenLabel::MainMenu) {
-        Interface::main_menu(this);
+        Interface::main_menu_GUI(this);
     }
     if (m_current_screen_label == Screen::ScreenLabel::Game) {
-        Interface::game(this);
+        Interface::game_GUI(this);
     }
     Clay_RenderCommandArray render_commands = Clay_EndLayout();
 

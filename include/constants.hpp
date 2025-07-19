@@ -1,5 +1,7 @@
 #pragma once
 
+#include "raylib.h"
+
 namespace constants {
 
 const int FPS = 75;
@@ -17,5 +19,7 @@ const int SUB_STEP_COUNT = 4;
 const float MIN_CAMERA_SPEED = 30;
 const float MIN_CAMERA_EFFECT_LENGTH = 30;
 const float CAMERA_FRACTION_SPEED = 0.5F;
+
+const KeyboardKey DEBUG_KEY = KEY_F3;
 
 } // namespace constants

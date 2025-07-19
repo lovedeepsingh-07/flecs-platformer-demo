@@ -1,6 +1,6 @@
-#include "systems/physics.hpp"
 #include "box2d/box2d.h"
 #include "components.hpp"
+#include "systems.hpp"
 
 void PhysicsSystem::update(flecs::world& registry) {
     flecs::system physics_sys =

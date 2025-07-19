@@ -1,5 +1,5 @@
 #include "screen.hpp"
-#include "systems/render_2d.hpp"
+#include "systems.hpp"
 
 void Screen::MainMenuScreen::on_enter(flecs::world& registry) {}
 void Screen::MainMenuScreen::on_exit(flecs::world& registry) {

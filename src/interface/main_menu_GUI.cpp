@@ -5,7 +5,7 @@
 #include "screen_manager.hpp"
 #include "utils.hpp"
 
-void Interface::main_menu(ScreenManager::ScreenManager* screen_manager) {
+void Interface::main_menu_GUI(ScreenManager::ScreenManager* screen_manager) {
     CLAY({ .id = CLAY_ID("main_menu_MainContainer"),
            .layout = { .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                        .padding = CLAY_PADDING_ALL(16),
