@@ -28,3 +28,6 @@ void PhysicsSystem::draw_solid_polygon(
         DrawLineV(p0, p1, GREEN);
     }
 }
+void PhysicsSystem::draw_segment(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void* context) {
+    DrawLineV((Vector2){ p1.x, p1.y }, (Vector2){ p2.x, p2.y }, GREEN);
+};

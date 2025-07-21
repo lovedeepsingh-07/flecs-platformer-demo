@@ -18,11 +18,12 @@ void Screen::GameScreen::on_enter(flecs::world& registry) {
     m_world_debug_draw.drawContacts = true;
     m_world_debug_draw.drawBounds = true;
     m_world_debug_draw.DrawSolidPolygonFcn = PhysicsSystem::draw_solid_polygon;
+    m_world_debug_draw.DrawSegmentFcn = PhysicsSystem::draw_segment;
 
     // player
     float screen_width{ (float)GetScreenWidth() };
     float screen_height{ (float)GetScreenWidth() };
-    b2Vec2 player_pos{ (b2Vec2){ screen_width / 2.0F, screen_height / 3.0F } };
+    b2Vec2 player_pos{ (b2Vec2){ screen_width / 2.0F, 0 } };
     m_camera_2d = Camera2D{ 0 };
     m_camera_2d.target = Vector2{ .x = player_pos.x, .y = player_pos.y };
     m_camera_2d.offset = (Vector2){ screen_width / 2.0F, screen_height / 2.0F };
@@ -31,7 +32,7 @@ void Screen::GameScreen::on_enter(flecs::world& registry) {
     Player::setup(player_pos, m_world_id, registry);
 
     // world
-    TileWorld::setup(registry, m_world_id, m_ldtk_project);
+    TileWorld::setup(registry, m_world_id);
 }
 
 void Screen::GameScreen::on_update(flecs::world& registry) {

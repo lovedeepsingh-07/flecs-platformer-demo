@@ -1,60 +1,86 @@
 #include "box2d/box2d.h"
 #include "components.hpp"
+#include "constants.hpp"
 #include "modules.hpp"
+#include "pugixml.hpp"
+#include "rapidcsv.h"
 #include "raylib.h"
+#include <sstream>
+#include <string>
 
-void TileWorld::setup(flecs::world& registry, b2WorldId world_id, ldtk::Project& ldtk_project) {
-    ldtk_project.loadFromFile("./assets/world.ldtk");
+void TileWorld::setup(flecs::world& registry, b2WorldId world_id) {
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file("assets/map.xml");
+    if (!result) {
+        throw std::runtime_error("Failed to load XML file");
+    }
 
-    for (const auto& tile :
-         ldtk_project.getWorld().getLevel("Level_0").getLayer("IntegerLayer").allTiles()) {
-        ldtk::IntPoint tile_pos = tile.getPosition();
-        ldtk::IntRect tile_rect = tile.getTextureRect();
-        ldtk::IntPoint grid_pos = tile.getGridPosition();
-        ldtk::IntGridValue curr_int_val =
-            tile.layer->getIntGridVal(grid_pos.x, grid_pos.y);
+    pugi::xml_node tile_layer =
+        doc.child("map").find_child_by_attribute("layer", "name", "Tile Layer 1");
+    if (tile_layer == nullptr) {
+        throw std::runtime_error("Failed to get tile layer");
+    }
+    std::stringstream tile_layer_stream(tile_layer.child("data").child_value());
+    rapidcsv::Document csv_data(tile_layer_stream, rapidcsv::LabelParams(-1, -1));
+    int map_width = std::stoi(tile_layer.attribute("width").value());
+    int map_height = std::stoi(tile_layer.attribute("height").value());
 
-        flecs::entity tile_entity{
-            registry.entity()
-                .set(components::PositionComponent{
-                    (float)tile_pos.x - ((float)tile_rect.width / 2),
-                    (float)tile_pos.y - ((float)tile_rect.height / 2) })
-                .set(components::SizeComponent{ (float)tile_rect.width,
-                                                (float)tile_rect.height })
+    for (int grid_y = 0; grid_y < map_height; grid_y++) {
+        for (int grid_x = 0; grid_x < map_width; grid_x++) {
+            int grid_val = csv_data.GetCell<int>(grid_x, grid_y);
+            if (grid_val != 0) {
+                float tile_width = constants::WORLD_SCALE;
+                float tile_height = constants::WORLD_SCALE;
+                float tile_x = (float)grid_x * tile_width;
+                float tile_y = (float)grid_y * tile_height;
+                flecs::entity tile_entity{
+                    registry.entity()
+                        .set(components::PositionComponent{
+                            tile_x - (tile_width / 2), tile_y - (tile_height / 2) })
+                        .set(components::SizeComponent{ tile_width, tile_height })
+                        .set(components::RectangleComponent{ GRAY })
+                };
+            }
+        }
+    }
+    pugi::xml_node object_layer =
+        doc.child("map").find_child_by_attribute("objectgroup", "name", "Object Layer 1");
+    if (object_layer == nullptr) {
+        throw std::runtime_error("Failed to get object layer");
+    }
+    for (pugi::xml_node curr_object : object_layer.children()) {
+        float object_x = std::stof(curr_object.attribute("x").value());
+        float object_y = std::stof(curr_object.attribute("y").value());
+
+        std::vector<b2Vec2> vertices;
+        std::stringstream object_points_stream(
+            curr_object.child("polygon").attribute("points").value()
+        );
+        std::string pair;
+
+        while (std::getline(object_points_stream, pair, ' ')) {
+            float point_x = 0;
+            float point_y = 0;
+            char comma = 0;
+            std::stringstream pairStream(pair);
+            pairStream >> point_x >> comma >> point_y;
+            point_x -= constants::WORLD_SCALE / 2;
+            point_y -= constants::WORLD_SCALE / 2;
+            vertices.emplace_back(b2Vec2{ point_x, point_y });
+        }
+
+        b2BodyDef body_def{ b2DefaultBodyDef() };
+        body_def.type = b2_staticBody;
+        body_def.fixedRotation = true;
+        body_def.position = (b2Vec2){ object_x, object_y };
+        b2BodyId body_id = b2CreateBody(world_id, &body_def);
+        b2ChainDef body_chain_def = b2DefaultChainDef();
+        body_chain_def.points = vertices.data();
+        body_chain_def.count = (int)vertices.size();
+        body_chain_def.isLoop = true;
+        b2CreateChain(body_id, &body_chain_def);
+        flecs::entity object_collider_entity{
+            registry.entity().set(components::PhysicsComponent{ body_id })
         };
-
-        if (curr_int_val.value == 1) {
-            float screen_width{ (float)GetScreenWidth() };
-            float screen_height{ (float)GetScreenWidth() };
-            b2BodyDef body_def{ b2DefaultBodyDef() };
-            body_def.type = b2_staticBody;
-            body_def.position = (b2Vec2){ (float)tile_pos.x, (float)tile_pos.y };
-            body_def.fixedRotation = true;
-            b2BodyId body_id = b2CreateBody(world_id, &body_def);
-            b2Polygon body_polygon =
-                b2MakeBox((float)tile_rect.width / 2, (float)tile_rect.height / 2);
-            b2ShapeDef body_shape_def = b2DefaultShapeDef();
-            body_shape_def.density = 1.0F;
-            body_shape_def.material.friction = 0.0F;
-            b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
-            tile_entity.set(components::RectangleComponent{ GRAY }).set(components::PhysicsComponent{ body_id });
-        }
-        if (curr_int_val.value == 2) {
-            tile_entity.set(components::PositionComponent{
-                (float)tile_pos.x - ((float)tile_rect.width / 2),
-                (float)tile_pos.y - ((float)tile_rect.height / 2) });
-        }
-
-        // registry.emplace<Components::TilesetTextureComponent>(
-        //     tile_entity, m_tileset, (float)tile_rect.x, (float)tile_rect.y,
-        //     (float)tile_rect.width, (float)tile_rect.height
-        // );
-
-        // DEBUG: Different integer values for Integer layers
-        // registry.emplace<Components::RectangleLinesComponent>(
-        //     tile_entity, tile_rect.width, tile_rect.height,
-        //     (Color){ curr_int_val.color.r, curr_int_val.color.g,
-        //              curr_int_val.color.g, curr_int_val.color.a }
-        // );
     }
 }

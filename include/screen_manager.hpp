@@ -4,8 +4,12 @@
 #include "flecs.h"
 #include "raylib.h"
 #include "screen.hpp"
+#include <array>
+#include <memory>
+#include <unordered_map>
 
 namespace ScreenManager {
+
 class ScreenManager {
   private:
     std::unordered_map<Screen::ScreenLabel, std::shared_ptr<Screen::Screen>> m_screens;
@@ -25,4 +29,5 @@ class ScreenManager {
     void switch_to(const Screen::ScreenLabel& label);
     static void shutdown();
 };
+
 } // namespace ScreenManager

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "LDtkLoader/Project.hpp"
 #include "box2d/types.h"
 #include "flecs.h"
 #include "raylib.h"
+#include <cstdint>
 
 namespace Screen {
 
@@ -32,7 +32,6 @@ class GameScreen : public Screen {
     b2WorldId m_world_id;
     b2DebugDraw m_world_debug_draw;
     Camera2D m_camera_2d;
-    ldtk::Project m_ldtk_project;
     bool m_debug_mode{ false };
 
   public:

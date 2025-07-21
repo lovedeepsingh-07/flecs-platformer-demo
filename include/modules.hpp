@@ -1,11 +1,10 @@
 #pragma once
 
-#include "LDtkLoader/Project.hpp"
 #include "box2d/box2d.h"
 #include "flecs.h"
 
 namespace TileWorld {
-void setup(flecs::world& registry, b2WorldId world_id, ldtk::Project& ldtk_project);
+void setup(flecs::world& registry, b2WorldId world_id);
 }
 
 namespace Player {

@@ -7,9 +7,6 @@
 [submodule "external/flecs"]
 	path = external/flecs
 	url = https://github.com/SanderMertens/flecs
-[submodule "external/ldtk_loader"]
-	path = external/ldtk_loader
-	url = https://github.com/Madour/LDtkLoader
 [submodule "external/imgui"]
 	path = external/imgui
 	url = https://github.com/ocornut/imgui
@@ -19,3 +16,9 @@
 [submodule "external/box2d"]
 	path = external/box2d
 	url = https://github.com/erincatto/box2d
+[submodule "external/pugixml"]
+	path = external/pugixml
+	url = https://github.com/zeux/pugixml
+[submodule "external/rapidcsv"]
+	path = external/rapidcsv
+	url = https://github.com/d99kris/rapidcsv

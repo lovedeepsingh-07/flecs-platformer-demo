@@ -8,9 +8,10 @@ project(${PROJECT_NAME})
 
 set(EXTERNAL_DIR external)
 add_subdirectory(${EXTERNAL_DIR}/raylib)
-add_subdirectory(${EXTERNAL_DIR}/ldtk_loader)
 add_subdirectory(${EXTERNAL_DIR}/flecs)
 add_subdirectory(${EXTERNAL_DIR}/box2d)
+add_subdirectory(${EXTERNAL_DIR}/pugixml)
+add_subdirectory(${EXTERNAL_DIR}/rapidcsv)
 
 set(IMGUI_SOURCES
     ${EXTERNAL_DIR}/imgui/imgui.cpp
@@ -39,9 +40,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	raylib
-	LDtkLoader::LDtkLoader
 	flecs::flecs_static
 	box2d
+	pugixml
+	rapidcsv
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE PLATFORM_DESKTOP)
