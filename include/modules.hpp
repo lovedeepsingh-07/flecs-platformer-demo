@@ -9,4 +9,4 @@ void setup(flecs::world& registry, b2WorldId world_id);
 
 namespace Player {
 void setup(b2Vec2 pos, b2WorldId world_id, flecs::world& registry);
-}
+} // namespace Player

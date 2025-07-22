@@ -14,18 +14,25 @@ void Player::setup(b2Vec2 pos, b2WorldId world_id, flecs::world& registry) {
     body_shape_def.density = 1.0F;
     body_shape_def.material.friction = 0.0F;
     b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
+
     b2Polygon body_feet_polygon =
         b2MakeOffsetBox(4, 3, (b2Vec2){ 0, constants::PLAYER_HEIGHT / 2 }, b2MakeRot(0));
     b2ShapeDef body_feet_def = b2DefaultShapeDef();
     body_feet_def.isSensor = true;
     body_feet_def.enableSensorEvents = true;
+    auto* sensor_data =
+        new components::PhysicsSensorData{ .id = "ground_sensor" };
+    body_feet_def.userData = sensor_data;
     b2CreatePolygonShape(body_id, &body_feet_def, &body_feet_polygon);
-    flecs::entity player_entity{ registry.entity()
-                                     .set(components::PositionComponent{
-                                         pos.x - (size.x / 2), pos.y - (size.y / 2) })
-                                     .set(components::SizeComponent{ size.x, size.y })
-                                     .set(components::PhysicsComponent{ body_id })
-                                     .add<components::ControllerComponent>()
-                                     .add<components::CameraComponent>()
-                                     .set(components::RectangleComponent{ RAYWHITE }) };
+
+    flecs::entity player_entity{
+        registry.entity()
+            .set(components::PositionComponent{ pos.x - (size.x / 2), pos.y - (size.y / 2) })
+            .set(components::SizeComponent{ size.x, size.y })
+            .set(components::PhysicsComponent{ body_id })
+            .set(components::GroundSensorComponent{ .on_ground = false })
+            .add<components::ControllerComponent>()
+            .add<components::CameraComponent>()
+            .set(components::RectangleComponent{ RAYWHITE })
+    };
 }

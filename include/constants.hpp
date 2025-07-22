@@ -9,12 +9,13 @@ constexpr int BASE_WINDOW_WIDTH = 1200;
 constexpr int BASE_WINDOW_HEIGHT = 600;
 
 constexpr float WORLD_SCALE = 16.0F;
-constexpr float PLAYER_WIDTH = 16.0F;
-constexpr float PLAYER_HEIGHT = 32.0F;
-
 constexpr float FORCE_CONST = 5.0F;
 constexpr float TIME_STEP = 1 / 60.0F;
 constexpr int SUB_STEP_COUNT = 4;
+
+constexpr float PLAYER_WIDTH = 16.0F;
+constexpr float PLAYER_HEIGHT = 32.0F;
+constexpr float PLAYER_JUMP_VEL = -5.0F * WORLD_SCALE * FORCE_CONST;
 
 constexpr float MIN_CAMERA_SPEED = 30;
 constexpr float MIN_CAMERA_EFFECT_LENGTH = 30;

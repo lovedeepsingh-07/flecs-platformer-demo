@@ -37,8 +37,10 @@ void Screen::GameScreen::on_enter(flecs::world& registry) {
 
 void Screen::GameScreen::on_update(flecs::world& registry) {
     b2World_Step(m_world_id, constants::TIME_STEP, constants::SUB_STEP_COUNT);
+
+    // updating ECS systems
     ControllerSystem::update(registry);
-    PhysicsSystem::update(registry);
+    PhysicsSystem::update(registry, m_world_id);
     CameraSystem::update(registry, m_camera_2d);
 
     if (IsKeyPressed(constants::DEBUG_KEY)) {
