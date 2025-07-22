@@ -5,6 +5,8 @@
 #include "pugixml.hpp"
 #include "rapidcsv.h"
 #include "raylib.h"
+#include <cmath>
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -16,35 +18,52 @@ void TileWorld::setup(flecs::world& registry, b2WorldId world_id) {
     }
 
     pugi::xml_node tile_layer =
-        doc.child("map").find_child_by_attribute("layer", "name", "Tile Layer 1");
+        doc.child("map").find_child_by_attribute("layer", "name", "DrawingLayer");
     if (tile_layer == nullptr) {
         throw std::runtime_error("Failed to get tile layer");
     }
     std::stringstream tile_layer_stream(tile_layer.child("data").child_value());
     rapidcsv::Document csv_data(tile_layer_stream, rapidcsv::LabelParams(-1, -1));
+
+    float debug_tileset_first_gid =
+        std::stof(doc.child("map")
+                      .find_child_by_attribute("tileset", "source", "tiles-debug.xml")
+                      .attribute("firstgid")
+                      .value());
+    Texture2D tileset_debug_texture = LoadTexture("assets/tiles-debug.png");
     int map_width = std::stoi(tile_layer.attribute("width").value());
     int map_height = std::stoi(tile_layer.attribute("height").value());
 
     for (int grid_y = 0; grid_y < map_height; grid_y++) {
         for (int grid_x = 0; grid_x < map_width; grid_x++) {
-            int grid_val = csv_data.GetCell<int>(grid_x, grid_y);
-            if (grid_val != 0) {
+            auto gid_value = csv_data.GetCell<float>(grid_x, grid_y);
+            if (gid_value != 0) {
                 float tile_width = constants::WORLD_SCALE;
                 float tile_height = constants::WORLD_SCALE;
                 float tile_x = (float)grid_x * tile_width;
                 float tile_y = (float)grid_y * tile_height;
+
+                float tile_index = gid_value - debug_tileset_first_gid;
+                float tile_rect_x =
+                    (float)((int)tile_index % (int)((float)tileset_debug_texture.width / tile_width))
+                    * tile_width;
+                float tile_rect_y =
+                    std::floor(tile_index / ((float)tileset_debug_texture.width / tile_width))
+                    * tile_height;
+
                 flecs::entity tile_entity{
                     registry.entity()
                         .set(components::PositionComponent{
                             tile_x - (tile_width / 2), tile_y - (tile_height / 2) })
                         .set(components::SizeComponent{ tile_width, tile_height })
-                        .set(components::RectangleComponent{ GRAY })
+                        .set(components::TextureComponent{ tileset_debug_texture, tile_rect_x,
+                                                           tile_rect_y, tile_width, tile_height })
                 };
             }
         }
     }
     pugi::xml_node object_layer =
-        doc.child("map").find_child_by_attribute("objectgroup", "name", "Object Layer 1");
+        doc.child("map").find_child_by_attribute("objectgroup", "name", "GroundLayer");
     if (object_layer == nullptr) {
         throw std::runtime_error("Failed to get object layer");
     }

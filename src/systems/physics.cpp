@@ -1,7 +1,6 @@
 #include "box2d/box2d.h"
 #include "components.hpp"
 #include "systems.hpp"
-#include <iostream>
 
 void PhysicsSystem::update(flecs::world& registry, b2WorldId world_id) {
     flecs::system physics_sys =
@@ -14,32 +13,6 @@ void PhysicsSystem::update(flecs::world& registry, b2WorldId world_id) {
                 b2Vec2 body_pos = b2Body_GetPosition(phy.body_id);
                 pos.x = body_pos.x - (size.width / 2);
                 pos.y = body_pos.y - (size.height / 2);
-
-                // b2SensorEvents sensorEvents = b2World_GetSensorEvents(world_id);
-                // for (int i = 0; i < sensorEvents.beginCount; ++i) {
-                //     b2SensorBeginTouchEvent* beginTouch = sensorEvents.beginEvents + i;
-                //     b2ShapeId shape_id = beginTouch->sensorShapeId;
-                //     if (b2Shape_IsSensor(shape_id)) {
-                //         auto* sensor_data = static_cast<components::PhysicsSensorData*>(
-                //             b2Shape_GetUserData(shape_id)
-                //         );
-                //         if (sensor_data != nullptr && sensor_data->id == "ground_sensor") {
-                //             std::cout << "shit working" << '\n';
-                //         }
-                //     }
-                // }
-                // for (int i = 0; i < sensorEvents.endCount; ++i) {
-                //     b2SensorEndTouchEvent* endTouch = sensorEvents.endEvents + i;
-                //     b2ShapeId shape_id = endTouch->sensorShapeId;
-                //     if (b2Shape_IsValid(shape_id)) {
-                //         auto* sensor_data = static_cast<components::PhysicsSensorData*>(
-                //             b2Shape_GetUserData(shape_id)
-                //         );
-                //         if (sensor_data != nullptr && sensor_data->id == "ground_sensor") {
-                //             std::cout << "shit stopped working" << '\n';
-                //         }
-                //     }
-                // }
             });
     physics_sys.run();
 

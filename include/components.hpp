@@ -18,6 +18,14 @@ struct RectangleComponent {
     Color color;
 };
 
+struct TextureComponent {
+    Texture2D texture;
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
 struct PhysicsComponent {
     b2BodyId body_id;
 };

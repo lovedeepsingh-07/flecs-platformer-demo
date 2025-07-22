@@ -3,6 +3,20 @@
 #include "systems.hpp"
 
 void Render2DSystem::update(flecs::world& registry) {
+    // render texture
+    flecs::system texture_sys =
+        registry
+            .system<components::PositionComponent, components::TextureComponent>()
+            .each([](const components::PositionComponent& pos,
+                     const components::TextureComponent& texture) {
+                DrawTextureRec(
+                    texture.texture,
+                    (Rectangle){ texture.x, texture.y, texture.width, texture.height },
+                    (Vector2){ pos.x, pos.y }, WHITE
+                );
+            });
+    texture_sys.run();
+
     // render rectangles
     flecs::system rect_sys =
         registry
