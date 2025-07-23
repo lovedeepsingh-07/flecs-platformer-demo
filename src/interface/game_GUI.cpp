@@ -1,10 +1,10 @@
 #include "clay/clay.h"
 #include "interface.hpp"
 #include "raylib.h"
-#include "screen.hpp"
+#include "scene.hpp"
 #include "utils.hpp"
 
-void Interface::game_GUI(ScreenManager::ScreenManager* screen_manager) {
+void Interface::game_GUI(GameContext& ctx, SceneManager::SceneManager* scene_manager) {
     CLAY({ .id = CLAY_ID("game_MainContainer"),
            .layout = { .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                        .padding = CLAY_PADDING_ALL(16),
@@ -25,7 +25,7 @@ void Interface::game_GUI(ScreenManager::ScreenManager* screen_manager) {
                 },
             .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                screen_manager->switch_to(Screen::ScreenLabel::MainMenu);
+                scene_manager->switch_to(ctx, SceneLabel::MainMenu);
             }
             CLAY_TEXT(
                 CLAY_STRING("Exit"),

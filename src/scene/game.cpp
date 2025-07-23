@@ -4,10 +4,10 @@
 #include "interface.hpp"
 #include "modules.hpp"
 #include "rlImGui.h"
-#include "screen.hpp"
+#include "scene.hpp"
 #include "systems.hpp"
 
-void Screen::GameScreen::on_enter(flecs::world& registry) {
+void GameScene::on_enter(flecs::world& registry) {
     rlImGuiSetup(true);
     b2SetLengthUnitsPerMeter(constants::WORLD_SCALE);
     b2WorldDef world_def = b2DefaultWorldDef();
@@ -35,7 +35,7 @@ void Screen::GameScreen::on_enter(flecs::world& registry) {
     TileWorld::setup(registry, m_world_id);
 }
 
-void Screen::GameScreen::on_update(flecs::world& registry) {
+void GameScene::on_update(flecs::world& registry) {
     b2World_Step(m_world_id, constants::TIME_STEP, constants::SUB_STEP_COUNT);
 
     // updating ECS systems
@@ -49,7 +49,7 @@ void Screen::GameScreen::on_update(flecs::world& registry) {
 }
 
 
-void Screen::GameScreen::on_render(flecs::world& registry) {
+void GameScene::on_render(flecs::world& registry) {
     BeginMode2D(m_camera_2d);
     Render2DSystem::update(registry);
     if (m_debug_mode) {
@@ -62,7 +62,7 @@ void Screen::GameScreen::on_render(flecs::world& registry) {
     }
 }
 
-void Screen::GameScreen::on_exit(flecs::world& registry) {
+void GameScene::on_exit(flecs::world& registry) {
     b2DestroyWorld(m_world_id);
     registry.reset();
     rlImGuiShutdown();

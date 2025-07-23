@@ -5,29 +5,27 @@
 #include "raylib.h"
 #include <cstdint>
 
-namespace Screen {
-
 // uint8_t is used here to ensure efficient use of space
-enum ScreenLabel : std::uint8_t { MainMenu, Game };
+enum SceneLabel : std::uint8_t { MainMenu, Game };
 
-class Screen {
+class Scene {
   public:
-    virtual ~Screen() = default;
+    virtual ~Scene() = default;
     virtual void on_enter(flecs::world& registry) = 0;
     virtual void on_update(flecs::world& registry) = 0;
     virtual void on_render(flecs::world& registry) = 0;
     virtual void on_exit(flecs::world& registry) = 0;
 };
 
-class MainMenuScreen : public Screen {
+class MainMenuScene : public Scene {
   public:
-    ~MainMenuScreen() override = default;
+    ~MainMenuScene() override = default;
     void on_enter(flecs::world& registry) override;
     void on_update(flecs::world& registry) override;
     void on_render(flecs::world& registry) override;
     void on_exit(flecs::world& registry) override;
 };
-class GameScreen : public Screen {
+class GameScene : public Scene {
   private:
     b2WorldId m_world_id;
     b2DebugDraw m_world_debug_draw;
@@ -35,11 +33,9 @@ class GameScreen : public Screen {
     bool m_debug_mode{ false };
 
   public:
-    ~GameScreen() override = default;
+    ~GameScene() override = default;
     void on_enter(flecs::world& registry) override;
     void on_update(flecs::world& registry) override;
     void on_render(flecs::world& registry) override;
     void on_exit(flecs::world& registry) override;
 };
-
-}; // namespace Screen

@@ -1,11 +1,11 @@
 #include "clay/clay.h"
 #include "interface.hpp"
 #include "raylib.h"
-#include "screen.hpp"
-#include "screen_manager.hpp"
+#include "scene.hpp"
+#include "scene_manager.hpp"
 #include "utils.hpp"
 
-void Interface::main_menu_GUI(ScreenManager::ScreenManager* screen_manager) {
+void Interface::main_menu_GUI(GameContext& ctx, SceneManager::SceneManager* scene_manager) {
     CLAY({ .id = CLAY_ID("main_menu_MainContainer"),
            .layout = { .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                        .padding = CLAY_PADDING_ALL(16),
@@ -26,7 +26,7 @@ void Interface::main_menu_GUI(ScreenManager::ScreenManager* screen_manager) {
                 },
             .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                screen_manager->switch_to(Screen::ScreenLabel::Game);
+                scene_manager->switch_to(ctx, SceneLabel::Game);
             }
             CLAY_TEXT(
                 CLAY_STRING("Play"),
@@ -45,7 +45,7 @@ void Interface::main_menu_GUI(ScreenManager::ScreenManager* screen_manager) {
                 },
             .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                screen_manager->m_should_quit_game = true;
+                ctx.should_quit_game = true;
             }
             CLAY_TEXT(
                 CLAY_STRING("Quit"),

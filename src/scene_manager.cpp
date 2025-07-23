@@ -1,15 +1,15 @@
-#include "screen_manager.hpp"
+#include "scene_manager.hpp"
 #include "clay/clay.h"
 #include "clay/renderers/raylib/clay_renderer_raylib.c"
 #include "constants.hpp"
 #include "interface.hpp"
 #include "raylib.h"
-#include "screen.hpp"
+#include "scene.hpp"
 #include "utils.hpp"
 #include <memory>
 #include <utility>
 
-void ScreenManager::ScreenManager::init() {
+void SceneManager::SceneManager::init() {
     // setup raylib window
     Clay_Raylib_Initialize(0, 0, "game", FLAG_WINDOW_UNDECORATED);
     int screen_width = GetMonitorWidth(0);
@@ -26,28 +26,21 @@ void ScreenManager::ScreenManager::init() {
     Clay_Initialize(
         clay_memory,
         Clay_Dimensions{
-            .width = (float)GetScreenWidth(),
-            .height = (float)GetScreenHeight(),
+            .width = (float)screen_width,
+            .height = (float)screen_height,
         },
         (Clay_ErrorHandler){ Utils::HandleClayErrors }
     );
 
     // setup fonts
     Clay_SetMeasureTextFunction(Raylib_MeasureText, m_fonts.data());
-
-    // add screens
-    add_screen(Screen::ScreenLabel::MainMenu, std::make_shared<Screen::MainMenuScreen>());
-    add_screen(Screen::ScreenLabel::Game, std::make_shared<Screen::GameScreen>());
-
-    // set the default screen to "MainMenu"
-    switch_to(Screen::ScreenLabel::MainMenu);
 }
 
-void ScreenManager::ScreenManager::update() {
-    m_current_screen->on_update(m_registry);
+void SceneManager::SceneManager::update(GameContext& ctx) {
+    m_current_screen->on_update(ctx.registry);
 }
 
-void ScreenManager::ScreenManager::render() {
+void SceneManager::SceneManager::render(GameContext& ctx) {
     Clay_SetLayoutDimensions((Clay_Dimensions
     ){ .width = (float)GetScreenWidth(), .height = (float)GetScreenHeight() });
     Vector2 mouse_pos = GetMousePosition();
@@ -55,35 +48,35 @@ void ScreenManager::ScreenManager::render() {
 
     // clay UI
     Clay_BeginLayout();
-    if (m_current_screen_label == Screen::ScreenLabel::MainMenu) {
-        Interface::main_menu_GUI(this);
+    if (m_current_screen_label == SceneLabel::MainMenu) {
+        Interface::main_menu_GUI(ctx, this);
     }
-    if (m_current_screen_label == Screen::ScreenLabel::Game) {
-        Interface::game_GUI(this);
+    if (m_current_screen_label == SceneLabel::Game) {
+        Interface::game_GUI(ctx, this);
     }
     Clay_RenderCommandArray render_commands = Clay_EndLayout();
 
-    m_current_screen->on_render(m_registry);
+    m_current_screen->on_render(ctx.registry);
     Clay_Raylib_Render(render_commands, m_fonts.data());
 }
 
-void ScreenManager::ScreenManager::add_screen(
-    const Screen::ScreenLabel& label, std::shared_ptr<Screen::Screen> screen
+void SceneManager::SceneManager::add_scene(
+    GameContext& ctx, const SceneLabel& label, std::shared_ptr<Scene> screen
 ) {
     m_screens[label] = std::move(screen);
 }
 
-void ScreenManager::ScreenManager::switch_to(const Screen::ScreenLabel& label) {
+void SceneManager::SceneManager::switch_to(GameContext& ctx, const SceneLabel& label) {
     if (m_current_screen) {
-        m_current_screen->on_exit(m_registry);
+        m_current_screen->on_exit(ctx.registry);
     }
     m_current_screen = m_screens[label];
     m_current_screen_label = label;
     if (m_current_screen) {
-        m_current_screen->on_enter(m_registry);
+        m_current_screen->on_enter(ctx.registry);
     }
 }
 
-void ScreenManager::ScreenManager::shutdown() {
+void SceneManager::SceneManager::shutdown() {
     Clay_Raylib_Close();
 }
