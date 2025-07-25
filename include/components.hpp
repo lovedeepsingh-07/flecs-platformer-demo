@@ -32,11 +32,15 @@ struct PhysicsComponent {
 struct PhysicsSensorData {
     std::string id;
 };
-struct GroundSensorComponent {
-    bool on_ground;
-};
 
 struct ControllerComponent {};
+struct MovementComponent {
+    bool left;
+    bool right;
+    bool on_ground;
+    bool jump_requested;
+};
+
 struct CameraComponent {};
 
-} // namespace components
+}

@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-void TileWorld::setup(flecs::world& registry, b2WorldId world_id) {
+void TileWorldModule::setup(GameContext& ctx, b2WorldId world_id) {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file("assets/map.xml");
     if (!result) {
@@ -52,7 +52,7 @@ void TileWorld::setup(flecs::world& registry, b2WorldId world_id) {
                     * tile_height;
 
                 flecs::entity tile_entity{
-                    registry.entity()
+                    ctx.registry.entity()
                         .set(components::PositionComponent{
                             tile_x - (tile_width / 2), tile_y - (tile_height / 2) })
                         .set(components::SizeComponent{ tile_width, tile_height })
@@ -105,7 +105,7 @@ void TileWorld::setup(flecs::world& registry, b2WorldId world_id) {
         body_chain_def.enableSensorEvents = true;
         b2CreateChain(body_id, &body_chain_def);
         flecs::entity object_collider_entity{
-            registry.entity().set(components::PhysicsComponent{ body_id })
+            ctx.registry.entity().set(components::PhysicsComponent{ body_id })
         };
     }
 }

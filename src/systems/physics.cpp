@@ -2,9 +2,9 @@
 #include "components.hpp"
 #include "systems.hpp"
 
-void PhysicsSystem::update(flecs::world& registry) {
+void PhysicsSystem::update(GameContext& ctx) {
     flecs::system physics_sys =
-        registry
+        ctx.registry
             .system<components::PositionComponent, components::SizeComponent, components::PhysicsComponent>()
             .each([](components::PositionComponent& pos, const components::SizeComponent& size,
                      const components::PhysicsComponent& phy) {

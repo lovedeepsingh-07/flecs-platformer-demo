@@ -1,10 +1,9 @@
 #pragma once
 
-#include "scene.hpp"
 #include <cstdint>
 #include <functional>
 
-namespace EventSystem {
+namespace EventEngine {
 
 enum class EventType : std::uint8_t { WindowQuitEvent, SceneSwitchEvent };
 
@@ -12,7 +11,7 @@ class Event {};
 class WindowQuitEvent : public Event {};
 class SceneSwitchEvent : public Event {
   public:
-    SceneLabel to;
+    std::uint8_t to;
 };
 
 template <EventType>
@@ -30,7 +29,7 @@ struct HandlerSignature<EventType::SceneSwitchEvent> {
 template <EventType E>
 using EventHandler = typename HandlerSignature<E>::handler;
 
-class EventSystem {
+class EventEngine {
   private:
     template <EventType E>
     struct HandlerStorage {
@@ -45,16 +44,16 @@ class EventSystem {
   public:
     template <EventType E>
     void on(EventHandler<E> handler) {
-        EventSystem::HandlerStorage<E>& storage = get_storage<E>();
+        EventEngine::HandlerStorage<E>& storage = get_storage<E>();
         storage.event_handlers.emplace_back(std::move(handler));
     }
     template <EventType E, typename... Args>
     void emit(Args&&... args) {
-        EventSystem::HandlerStorage<E>& storage = get_storage<E>();
+        EventEngine::HandlerStorage<E>& storage = get_storage<E>();
         for (EventHandler<E>& handler : storage.event_handlers) {
             handler(std::forward<Args>(args)...);
         }
     }
 };
 
-} // namespace EventSystem
+}

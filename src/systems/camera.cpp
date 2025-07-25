@@ -4,9 +4,9 @@
 #include "raymath.h"
 #include "systems.hpp"
 
-void CameraSystem::update(flecs::world& registry, Camera2D& camera) {
+void CameraSystem::update(GameContext& ctx, Camera2D& camera) {
     flecs::system camera_sys =
-        registry
+        ctx.registry
             .system<components::PositionComponent, components::CameraComponent>()
             .each([&camera](const components::PositionComponent& pos, const components::CameraComponent& cam) {
                 camera.offset = (Vector2){ (float)GetScreenWidth() / 2.0F,

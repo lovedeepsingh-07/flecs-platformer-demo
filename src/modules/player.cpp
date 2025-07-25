@@ -2,7 +2,7 @@
 #include "constants.hpp"
 #include "modules.hpp"
 
-void Player::setup(b2Vec2 pos, b2WorldId world_id, flecs::world& registry) {
+void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     // physical body setup
     b2Vec2 size{ (b2Vec2){ constants::PLAYER_WIDTH, constants::PLAYER_HEIGHT } };
     b2BodyDef body_def{ b2DefaultBodyDef() };
@@ -29,11 +29,12 @@ void Player::setup(b2Vec2 pos, b2WorldId world_id, flecs::world& registry) {
 
     // ecs entity setup
     flecs::entity player_entity{
-        registry.entity()
+        ctx.registry.entity()
             .set(components::PositionComponent{ pos.x - (size.x / 2), pos.y - (size.y / 2) })
             .set(components::SizeComponent{ size.x, size.y })
             .set(components::PhysicsComponent{ body_id })
-            .set(components::GroundSensorComponent{ .on_ground = false })
+            .set(components::MovementComponent{
+                .left = false, .right = false, .on_ground = false, .jump_requested = false })
             .add<components::ControllerComponent>()
             .add<components::CameraComponent>()
             .set(components::RectangleComponent{ RAYWHITE })

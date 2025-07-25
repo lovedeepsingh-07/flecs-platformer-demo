@@ -1,7 +1,6 @@
 #include "clay/clay.h"
 #include "interface.hpp"
 #include "raylib.h"
-#include "scene.hpp"
 #include "utils.hpp"
 
 void Interface::main_menu_GUI(GameContext& ctx) {
@@ -25,8 +24,8 @@ void Interface::main_menu_GUI(GameContext& ctx) {
                 },
             .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                ctx.event_system.emit<EventSystem::EventType::SceneSwitchEvent>(
-                    EventSystem::SceneSwitchEvent{ .to = SceneLabel::Game }
+                ctx.event_system.emit<EventEngine::EventType::SceneSwitchEvent>(
+                    EventEngine::SceneSwitchEvent{ .to = 1 }
                 );
             }
             CLAY_TEXT(
@@ -46,8 +45,8 @@ void Interface::main_menu_GUI(GameContext& ctx) {
                 },
             .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                ctx.event_system.emit<EventSystem::EventType::WindowQuitEvent>(
-                    EventSystem::WindowQuitEvent{}
+                ctx.event_system.emit<EventEngine::EventType::WindowQuitEvent>(
+                    EventEngine::WindowQuitEvent{}
                 );
             }
             CLAY_TEXT(

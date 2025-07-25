@@ -1,11 +1,9 @@
-#include "box2d/box2d.h"
 #include "components.hpp"
-#include "constants.hpp"
 #include "imgui.h"
 #include "interface.hpp"
 #include "rlImGui.h"
 
-void Interface::game_debug_GUI(flecs::world& registry) {
+void Interface::game_debug_GUI(GameContext& ctx) {
     rlImGuiBegin();
     bool open = true;
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoNav
@@ -26,28 +24,23 @@ void Interface::game_debug_GUI(flecs::world& registry) {
     ImGui::SetNextWindowBgAlpha(0.35F);
     if (ImGui::Begin("Player Information", &open, window_flags)) {
         flecs::system player_debug_display_sys =
-            registry
+            ctx.registry
                 .system<
                     components::PositionComponent, components::SizeComponent, components::PhysicsComponent,
-                    components::GroundSensorComponent, components::ControllerComponent, components::CameraComponent>()
-                .each([&registry](
-                          const components::PositionComponent& pos,
-                          const components::SizeComponent& size,
-                          const components::PhysicsComponent& phy,
-                          const components::GroundSensorComponent& ground_sensor,
-                          const components::ControllerComponent& controller,
-                          const components::CameraComponent& cam
-                      ) {
+                    components::MovementComponent, components::ControllerComponent, components::CameraComponent>()
+                .each([](const components::PositionComponent& pos,
+                         const components::SizeComponent& size,
+                         const components::PhysicsComponent& phy,
+                         components::MovementComponent& movement,
+                         const components::ControllerComponent& controller,
+                         const components::CameraComponent& cam) {
                     // player debug information
                     ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
-                    ImGui::Text("OnGround: %s", ground_sensor.on_ground ? "true" : "false");
+                    ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
 
                     // player debug actions
                     if (ImGui::Button("Jump Button")) {
-                        b2Vec2 vel = b2Body_GetLinearVelocity(phy.body_id);
-
-                        vel.y = constants::PLAYER_JUMP_VEL;
-                        b2Body_SetLinearVelocity(phy.body_id, vel);
+                        movement.jump_requested = true;
                     }
                 });
         player_debug_display_sys.run();

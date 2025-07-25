@@ -7,6 +7,6 @@ namespace Interface {
 
 void main_menu_GUI(GameContext& ctx);
 void game_GUI(GameContext& ctx);
-void game_debug_GUI(flecs::world& registry);
+void game_debug_GUI(GameContext& ctx);
 
-} // namespace Interface
+}

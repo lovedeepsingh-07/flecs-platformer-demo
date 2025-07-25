@@ -1,9 +1,9 @@
 #pragma once
 
-#include "event_system.hpp"
+#include "event_engine.hpp"
 #include "flecs.h"
 
 struct GameContext {
     flecs::world registry;
-    EventSystem::EventSystem event_system;
+    EventEngine::EventEngine event_system;
 };

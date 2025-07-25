@@ -2,10 +2,10 @@
 #include "raylib.h"
 #include "systems.hpp"
 
-void Render2DSystem::update(flecs::world& registry) {
+void Render2DSystem::update(GameContext& ctx) {
     // render texture
     flecs::system texture_sys =
-        registry
+        ctx.registry
             .system<components::PositionComponent, components::TextureComponent>()
             .each([](const components::PositionComponent& pos,
                      const components::TextureComponent& texture) {
@@ -19,7 +19,7 @@ void Render2DSystem::update(flecs::world& registry) {
 
     // render rectangles
     flecs::system rect_sys =
-        registry
+        ctx.registry
             .system<components::PositionComponent, components::SizeComponent, components::RectangleComponent>()
             .each([](const components::PositionComponent& pos,
                      const components::SizeComponent& size,

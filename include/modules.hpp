@@ -1,12 +1,13 @@
 #pragma once
 
 #include "box2d/box2d.h"
+#include "context.hpp"
 #include "flecs.h"
 
-namespace TileWorld {
-void setup(flecs::world& registry, b2WorldId world_id);
+namespace TileWorldModule {
+void setup(GameContext& ctx, b2WorldId world_id);
 }
 
-namespace Player {
-void setup(b2Vec2 pos, b2WorldId world_id, flecs::world& registry);
-} // namespace Player
+namespace PlayerModule {
+void setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx);
+}

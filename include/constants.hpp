@@ -23,4 +23,4 @@ constexpr float CAMERA_FRACTION_SPEED = 0.5F;
 
 constexpr KeyboardKey DEBUG_KEY = KEY_F3;
 
-} // namespace constants
+}

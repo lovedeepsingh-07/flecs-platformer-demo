@@ -7,7 +7,7 @@
 #include "scene.hpp"
 #include "systems.hpp"
 
-void GameScene::on_enter(flecs::world& registry) {
+void GameScene::on_enter(GameContext& ctx) {
     rlImGuiSetup(true);
     b2SetLengthUnitsPerMeter(constants::WORLD_SCALE);
     b2WorldDef world_def = b2DefaultWorldDef();
@@ -31,18 +31,19 @@ void GameScene::on_enter(flecs::world& registry) {
     m_camera_2d.zoom = 1.0F;
 
     // modules setup
-    Player::setup(player_pos, m_world_id, registry);
-    TileWorld::setup(registry, m_world_id);
+    PlayerModule::setup(player_pos, m_world_id, ctx);
+    TileWorldModule::setup(ctx, m_world_id);
 }
 
-void GameScene::on_update(flecs::world& registry) {
+void GameScene::on_update(GameContext& ctx) {
     b2World_Step(m_world_id, constants::TIME_STEP, constants::SUB_STEP_COUNT);
 
     // updating ECS systems
-    ControllerSystem::update(registry);
-    PhysicsSystem::update(registry);
-    PhysicsSensorSystem::update(registry, m_world_id);
-    CameraSystem::update(registry, m_camera_2d);
+    ControllerSystem::update(ctx);
+    MovementSystem::update(ctx);
+    PhysicsSystem::update(ctx);
+    PhysicsSensorSystem::update(ctx, m_world_id);
+    CameraSystem::update(ctx, m_camera_2d);
 
     if (IsKeyPressed(constants::DEBUG_KEY)) {
         m_debug_mode = !m_debug_mode;
@@ -50,21 +51,21 @@ void GameScene::on_update(flecs::world& registry) {
 }
 
 
-void GameScene::on_render(flecs::world& registry) {
+void GameScene::on_render(GameContext& ctx) {
     BeginMode2D(m_camera_2d);
-    Render2DSystem::update(registry);
+    Render2DSystem::update(ctx);
     if (m_debug_mode) {
         b2World_Draw(m_world_id, &m_world_debug_draw); // draw box2d shapes for debugging
     }
     EndMode2D();
 
     if (m_debug_mode) {
-        Interface::game_debug_GUI(registry);
+        Interface::game_debug_GUI(ctx);
     }
 }
 
-void GameScene::on_exit(flecs::world& registry) {
+void GameScene::on_exit(GameContext& ctx) {
     b2DestroyWorld(m_world_id);
-    registry.reset();
+    ctx.registry.reset();
     rlImGuiShutdown();
 }
