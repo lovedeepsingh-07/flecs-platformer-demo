@@ -13,9 +13,9 @@ namespace SceneManager {
 
 class SceneManager {
   private:
-    std::unordered_map<SceneLabel, std::shared_ptr<Scene>> m_screens;
-    std::shared_ptr<Scene> m_current_screen = nullptr;
-    SceneLabel m_current_screen_label{};
+    std::unordered_map<SceneLabel, std::shared_ptr<Scene>> m_scenes;
+    std::shared_ptr<Scene> m_current_scene = nullptr;
+    SceneLabel m_current_scene_label{};
 
   public:
     std::array<Font, 1> m_fonts{ GetFontDefault() };
@@ -25,7 +25,7 @@ class SceneManager {
     void init();
     void update(GameContext& ctx);
     void render(GameContext& ctx);
-    void add_scene(GameContext& ctx, const SceneLabel& label, std::shared_ptr<Scene> screen);
+    void add_scene(GameContext& ctx, const SceneLabel& label, std::shared_ptr<Scene> scene);
     void switch_to(GameContext& ctx, const SceneLabel& label);
     void shutdown();
 };

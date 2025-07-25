@@ -56,8 +56,13 @@ void TileWorld::setup(flecs::world& registry, b2WorldId world_id) {
                         .set(components::PositionComponent{
                             tile_x - (tile_width / 2), tile_y - (tile_height / 2) })
                         .set(components::SizeComponent{ tile_width, tile_height })
-                        .set(components::TextureComponent{ tileset_debug_texture, tile_rect_x,
-                                                           tile_rect_y, tile_width, tile_height })
+                        .set(components::TextureComponent{
+                            .texture = tileset_debug_texture,
+                            .x = tile_rect_x,
+                            .y = tile_rect_y,
+                            .width = tile_width,
+                            .height = tile_height,
+                        })
                 };
             }
         }

@@ -3,6 +3,7 @@
 #include "modules.hpp"
 
 void Player::setup(b2Vec2 pos, b2WorldId world_id, flecs::world& registry) {
+    // physical body setup
     b2Vec2 size{ (b2Vec2){ constants::PLAYER_WIDTH, constants::PLAYER_HEIGHT } };
     b2BodyDef body_def{ b2DefaultBodyDef() };
     body_def.type = b2_dynamicBody;
@@ -15,16 +16,18 @@ void Player::setup(b2Vec2 pos, b2WorldId world_id, flecs::world& registry) {
     body_shape_def.material.friction = 0.0F;
     b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
 
-    b2Polygon body_feet_polygon =
-        b2MakeOffsetBox(4, 3, (b2Vec2){ 0, constants::PLAYER_HEIGHT / 2 }, b2MakeRot(0));
-    b2ShapeDef body_feet_def = b2DefaultShapeDef();
-    body_feet_def.isSensor = true;
-    body_feet_def.enableSensorEvents = true;
+    // ground sensor setup
+    b2Polygon ground_sensor_polygon =
+        b2MakeOffsetBox(6, 4, (b2Vec2){ 0, constants::PLAYER_HEIGHT / 2 }, b2MakeRot(0));
+    b2ShapeDef ground_sensor_def = b2DefaultShapeDef();
+    ground_sensor_def.isSensor = true;
+    ground_sensor_def.enableSensorEvents = true;
     auto* sensor_data =
         new components::PhysicsSensorData{ .id = "ground_sensor" };
-    body_feet_def.userData = sensor_data;
-    b2CreatePolygonShape(body_id, &body_feet_def, &body_feet_polygon);
+    ground_sensor_def.userData = sensor_data;
+    b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
+    // ecs entity setup
     flecs::entity player_entity{
         registry.entity()
             .set(components::PositionComponent{ pos.x - (size.x / 2), pos.y - (size.y / 2) })

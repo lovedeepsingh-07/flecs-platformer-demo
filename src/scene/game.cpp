@@ -29,9 +29,9 @@ void GameScene::on_enter(flecs::world& registry) {
     m_camera_2d.offset = (Vector2){ screen_width / 2.0F, screen_height / 2.0F };
     m_camera_2d.rotation = 0.0F;
     m_camera_2d.zoom = 1.0F;
-    Player::setup(player_pos, m_world_id, registry);
 
-    // world
+    // modules setup
+    Player::setup(player_pos, m_world_id, registry);
     TileWorld::setup(registry, m_world_id);
 }
 
@@ -40,7 +40,8 @@ void GameScene::on_update(flecs::world& registry) {
 
     // updating ECS systems
     ControllerSystem::update(registry);
-    PhysicsSystem::update(registry, m_world_id);
+    PhysicsSystem::update(registry);
+    PhysicsSensorSystem::update(registry, m_world_id);
     CameraSystem::update(registry, m_camera_2d);
 
     if (IsKeyPressed(constants::DEBUG_KEY)) {

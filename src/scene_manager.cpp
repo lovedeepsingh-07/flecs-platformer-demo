@@ -37,7 +37,7 @@ void SceneManager::SceneManager::init() {
 }
 
 void SceneManager::SceneManager::update(GameContext& ctx) {
-    m_current_screen->on_update(ctx.registry);
+    m_current_scene->on_update(ctx.registry);
 }
 
 void SceneManager::SceneManager::render(GameContext& ctx) {
@@ -48,32 +48,32 @@ void SceneManager::SceneManager::render(GameContext& ctx) {
 
     // clay UI
     Clay_BeginLayout();
-    if (m_current_screen_label == SceneLabel::MainMenu) {
+    if (m_current_scene_label == SceneLabel::MainMenu) {
         Interface::main_menu_GUI(ctx);
     }
-    if (m_current_screen_label == SceneLabel::Game) {
+    if (m_current_scene_label == SceneLabel::Game) {
         Interface::game_GUI(ctx);
     }
     Clay_RenderCommandArray render_commands = Clay_EndLayout();
 
-    m_current_screen->on_render(ctx.registry);
+    m_current_scene->on_render(ctx.registry);
     Clay_Raylib_Render(render_commands, m_fonts.data());
 }
 
 void SceneManager::SceneManager::add_scene(
-    GameContext& ctx, const SceneLabel& label, std::shared_ptr<Scene> screen
+    GameContext& ctx, const SceneLabel& label, std::shared_ptr<Scene> scene
 ) {
-    m_screens[label] = std::move(screen);
+    m_scenes[label] = std::move(scene);
 }
 
 void SceneManager::SceneManager::switch_to(GameContext& ctx, const SceneLabel& label) {
-    if (m_current_screen) {
-        m_current_screen->on_exit(ctx.registry);
+    if (m_current_scene) {
+        m_current_scene->on_exit(ctx.registry);
     }
-    m_current_screen = m_screens[label];
-    m_current_screen_label = label;
-    if (m_current_screen) {
-        m_current_screen->on_enter(ctx.registry);
+    m_current_scene = m_scenes[label];
+    m_current_scene_label = label;
+    if (m_current_scene) {
+        m_current_scene->on_enter(ctx.registry);
     }
 }
 
