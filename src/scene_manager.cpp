@@ -49,10 +49,10 @@ void SceneManager::SceneManager::render(GameContext& ctx) {
     // clay UI
     Clay_BeginLayout();
     if (m_current_screen_label == SceneLabel::MainMenu) {
-        Interface::main_menu_GUI(ctx, this);
+        Interface::main_menu_GUI(ctx);
     }
     if (m_current_screen_label == SceneLabel::Game) {
-        Interface::game_GUI(ctx, this);
+        Interface::game_GUI(ctx);
     }
     Clay_RenderCommandArray render_commands = Clay_EndLayout();
 

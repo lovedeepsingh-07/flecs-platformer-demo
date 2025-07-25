@@ -2,10 +2,9 @@
 #include "interface.hpp"
 #include "raylib.h"
 #include "scene.hpp"
-#include "scene_manager.hpp"
 #include "utils.hpp"
 
-void Interface::main_menu_GUI(GameContext& ctx, SceneManager::SceneManager* scene_manager) {
+void Interface::main_menu_GUI(GameContext& ctx) {
     CLAY({ .id = CLAY_ID("main_menu_MainContainer"),
            .layout = { .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                        .padding = CLAY_PADDING_ALL(16),
@@ -26,7 +25,9 @@ void Interface::main_menu_GUI(GameContext& ctx, SceneManager::SceneManager* scen
                 },
             .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                scene_manager->switch_to(ctx, SceneLabel::Game);
+                ctx.event_system.emit<EventSystem::EventType::SceneSwitchEvent>(
+                    EventSystem::SceneSwitchEvent{ .to = SceneLabel::Game }
+                );
             }
             CLAY_TEXT(
                 CLAY_STRING("Play"),
@@ -45,7 +46,9 @@ void Interface::main_menu_GUI(GameContext& ctx, SceneManager::SceneManager* scen
                 },
             .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                ctx.should_quit_game = true;
+                ctx.event_system.emit<EventSystem::EventType::WindowQuitEvent>(
+                    EventSystem::WindowQuitEvent{}
+                );
             }
             CLAY_TEXT(
                 CLAY_STRING("Quit"),

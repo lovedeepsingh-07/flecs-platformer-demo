@@ -4,7 +4,7 @@
 #include "scene.hpp"
 #include "utils.hpp"
 
-void Interface::game_GUI(GameContext& ctx, SceneManager::SceneManager* scene_manager) {
+void Interface::game_GUI(GameContext& ctx) {
     CLAY({ .id = CLAY_ID("game_MainContainer"),
            .layout = { .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                        .padding = CLAY_PADDING_ALL(16),
@@ -25,7 +25,9 @@ void Interface::game_GUI(GameContext& ctx, SceneManager::SceneManager* scene_man
                 },
             .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                scene_manager->switch_to(ctx, SceneLabel::MainMenu);
+                ctx.event_system.emit<EventSystem::EventType::SceneSwitchEvent>(
+                    EventSystem::SceneSwitchEvent{ .to = SceneLabel::MainMenu }
+                );
             }
             CLAY_TEXT(
                 CLAY_STRING("Exit"),
