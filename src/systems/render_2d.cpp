@@ -6,13 +6,15 @@ void Render2DSystem::update(GameContext& ctx) {
     // render texture
     flecs::system texture_sys =
         ctx.registry
-            .system<components::PositionComponent, components::TextureComponent>()
+            .system<components::PositionComponent, components::SizeComponent, components::TextureComponent>()
             .each([](const components::PositionComponent& pos,
+                     const components::SizeComponent& size,
                      const components::TextureComponent& texture) {
-                DrawTextureRec(
+                DrawTexturePro(
                     texture.texture,
                     (Rectangle){ texture.x, texture.y, texture.width, texture.height },
-                    (Vector2){ pos.x, pos.y }, WHITE
+                    (Rectangle){ pos.x, pos.y, size.width, size.height },
+                    (Vector2){ 0, 0 }, 0.0F, WHITE
                 );
             });
     texture_sys.run();

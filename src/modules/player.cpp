@@ -14,6 +14,7 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     b2ShapeDef body_shape_def = b2DefaultShapeDef();
     body_shape_def.density = 1.0F;
     body_shape_def.material.friction = 0.0F;
+    body_shape_def.material.restitution = 0.0F;
     b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
 
     // ground sensor setup
