@@ -4,13 +4,14 @@
 
 void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     // physical body setup
-    b2Vec2 size{ (b2Vec2){ constants::PLAYER_WIDTH, constants::PLAYER_HEIGHT } };
+    b2Vec2 shape_size{ (b2Vec2){ constants::PLAYER_COLLIDER_WIDTH,
+                                 constants::PLAYER_COLLIDER_HEIGHT } };
     b2BodyDef body_def{ b2DefaultBodyDef() };
     body_def.type = b2_dynamicBody;
     body_def.position = pos;
     body_def.fixedRotation = true;
     b2BodyId body_id = b2CreateBody(world_id, &body_def);
-    b2Polygon body_polygon = b2MakeBox(size.x / 2, size.y / 2);
+    b2Polygon body_polygon = b2MakeBox(shape_size.x / 2, shape_size.y / 2);
     b2ShapeDef body_shape_def = b2DefaultShapeDef();
     body_shape_def.density = 1.0F;
     body_shape_def.material.friction = 0.0F;
@@ -28,16 +29,29 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     ground_sensor_def.userData = sensor_data;
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
+    std::unordered_map<std::string, Texture2D> animation_states = {
+        { "idle", LoadTexture("assets/player/idle.png") },
+        { "run", LoadTexture("assets/player/run.png") },
+        { "attack", LoadTexture("assets/player/attack.png") },
+        { "hurt", LoadTexture("assets/player/hurt.png") }
+    };
+
     // ecs entity setup
     flecs::entity player_entity{
         ctx.registry.entity()
-            .set(components::PositionComponent{ pos.x - (size.x / 2), pos.y - (size.y / 2) })
-            .set(components::SizeComponent{ size.x, size.y })
+            .set(components::PositionComponent{ pos.x - (shape_size.x / 2),
+                                                pos.y - (shape_size.y / 2) })
+            .set(components::SizeComponent{ 96, 48 }) // how big we want to render the texture
             .set(components::PhysicsComponent{ body_id })
             .set(components::MovementComponent{
                 .left = false, .right = false, .on_ground = false, .jump_requested = false })
             .add<components::ControllerComponent>()
             .add<components::CameraComponent>()
-            .set(components::RectangleComponent{ RAYWHITE })
+            .set(components::TextureComponent{
+                .texture = animation_states["run"], .x = 32, .y = 48, .width = 96, .height = 32, .flipped = false }
+            ) // the location and size of the rectangle from the texture that we want to render
+            .set(components::AnimationComponent{
+                .curr_frame = 1, .frame_width = 96, .frame_height = 96, .elapsed_time = 0.0F }) // aztual size of each frame in the texture
+            .set(components::AnimationStatesComponent{ .states = animation_states })
     };
 }

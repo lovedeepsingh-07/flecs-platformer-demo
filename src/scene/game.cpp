@@ -44,6 +44,7 @@ void GameScene::on_update(GameContext& ctx) {
     PhysicsSystem::update(ctx);
     PhysicsSensorSystem::update(ctx, m_world_id);
     CameraSystem::update(ctx, m_camera_2d);
+    AnimationSystem::update(ctx);
 
     if (IsKeyPressed(constants::DEBUG_KEY)) {
         m_debug_mode = !m_debug_mode;

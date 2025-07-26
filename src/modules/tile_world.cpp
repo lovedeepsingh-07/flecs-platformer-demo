@@ -62,6 +62,7 @@ void TileWorldModule::setup(GameContext& ctx, b2WorldId world_id) {
                             .y = tile_rect_y,
                             .width = tile_width,
                             .height = tile_height,
+                            .flipped = false,
                         })
                 };
             }

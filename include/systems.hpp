@@ -31,3 +31,6 @@ void update(GameContext& ctx, b2WorldId world_id);
 namespace Render2DSystem {
 void update(GameContext& ctx);
 }
+namespace AnimationSystem {
+void update(GameContext& ctx);
+}

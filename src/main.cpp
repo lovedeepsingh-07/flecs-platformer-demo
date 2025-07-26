@@ -39,10 +39,9 @@ int main() {
         //     background_texture,
         //     (Rectangle){ 0, 0, (float)background_texture.width,
         //                  (float)background_texture.height },
-        //     (Rectangle){ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
-        //     (Vector2){ 0, 0 }, 0.0F, WHITE
+        //     (Rectangle){ 0, 0, (float)GetScreenWidth(),
+        //     (float)GetScreenHeight() }, (Vector2){ 0, 0 }, 0.0F, WHITE
         // );
-        // DrawTextureEx(background_texture, (Vector2){ 0, 0 }, 0.0F, 1.0F, WHITE);
 
         scene_manager.render(ctx);
 
