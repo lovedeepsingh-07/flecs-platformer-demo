@@ -23,6 +23,17 @@ void MovementSystem::update(GameContext& ctx) {
                     vel.x = 0.0F;
                 }
 
+                if (vel.y > 0) {
+                    movement.jumping = false;
+                    movement.falling = true;
+                } else if (vel.y < 0) {
+                    movement.jumping = true;
+                    movement.falling = false;
+                } else {
+                    movement.jumping = false;
+                    movement.falling = false;
+                }
+
                 movement.jump_requested = false;
                 b2Body_SetLinearVelocity(phy.body_id, vel);
             });

@@ -37,6 +37,8 @@ void Interface::game_debug_GUI(GameContext& ctx) {
                     // player debug information
                     ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
                     ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
+                    ImGui::Text("Jumping: %s", movement.jumping ? "true" : "false");
+                    ImGui::Text("Falling: %s", movement.falling ? "true" : "false");
 
                     // player debug actions
                     if (ImGui::Button("Jump Button")) {

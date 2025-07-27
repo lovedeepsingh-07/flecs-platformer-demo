@@ -32,6 +32,7 @@ struct AnimationComponent {
     float frame_width;
     float frame_height;
     float elapsed_time;
+    bool loop;
 };
 struct AnimationStatesComponent {
     std::unordered_map<std::string, Texture2D> states; // <animation_state, animation_texture>
@@ -49,6 +50,8 @@ struct MovementComponent {
     bool left;
     bool right;
     bool on_ground;
+    bool jumping;
+    bool falling;
     bool jump_requested;
 };
 

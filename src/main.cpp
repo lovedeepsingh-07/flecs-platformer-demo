@@ -27,7 +27,7 @@ int main() {
         }
     );
 
-    // Texture2D background_texture = LoadTexture("assets/background.png");
+    Texture2D background_texture = LoadTexture("assets/background.png");
 
     while (!should_quit_game) {
         scene_manager.update(ctx);
@@ -35,13 +35,13 @@ int main() {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        // DrawTexturePro(
-        //     background_texture,
-        //     (Rectangle){ 0, 0, (float)background_texture.width,
-        //                  (float)background_texture.height },
-        //     (Rectangle){ 0, 0, (float)GetScreenWidth(),
-        //     (float)GetScreenHeight() }, (Vector2){ 0, 0 }, 0.0F, WHITE
-        // );
+        DrawTexturePro(
+            background_texture,
+            (Rectangle){ 0, 0, (float)background_texture.width,
+                         (float)background_texture.height },
+            (Rectangle){ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
+            (Vector2){ 0, 0 }, 0.0F, WHITE
+        );
 
         scene_manager.render(ctx);
 
@@ -49,7 +49,7 @@ int main() {
     }
 
     scene_manager.shutdown();
-    // UnloadTexture(background_texture);
+    UnloadTexture(background_texture);
 
     return 0;
 }
