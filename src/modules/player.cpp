@@ -1,6 +1,7 @@
 #include "components.hpp"
 #include "constants.hpp"
 #include "modules.hpp"
+#include <iostream>
 
 void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     // physical body setup
@@ -29,12 +30,12 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     ground_sensor_def.userData = sensor_data;
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
-    std::unordered_map<std::string, Texture2D> animation_states = {
-        { "idle", LoadTexture("assets/player/idle.png") },
-        { "run", LoadTexture("assets/player/run.png") },
-        { "jump", LoadTexture("assets/player/jump.png") },
-        { "land", LoadTexture("assets/player/land.png") },
-        { "dash", LoadTexture("assets/player/dash.png") },
+    std::unordered_map<std::string, components::AnimationStateData> animation_states = {
+        { "idle", { LoadTexture("assets/player/idle.png"), false } },
+        { "run", { LoadTexture("assets/player/run.png"), false } },
+        { "jump", { LoadTexture("assets/player/jump.png"), false } },
+        { "land", { LoadTexture("assets/player/land.png"), false } },
+        { "dash", { LoadTexture("assets/player/dash.png"), false } },
     };
 
     // ecs entity setup
@@ -49,11 +50,14 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
             .add<components::ControllerComponent>()
             .add<components::CameraComponent>()
             .set(components::TextureComponent{
-                .texture = animation_states["idle"], .x = 128, .y = 192, .width = 256, .height = 256, .flipped = false }
+                .texture = animation_states["idle"].texture, .x = 128, .y = 192, .width = 256, .height = 256, .flipped = false }
             ) // the location and size of the rectangle from the texture that we want to render
             .set(components::AnimationComponent{
-                .curr_frame = 0, .frame_width = 512, .frame_height = 512, .elapsed_time = 0.0F, .loop = true }
-            ) // aztual size of each frame in the texture
-            .set(components::AnimationStatesComponent{ .states = animation_states })
+                .curr_frame = 0,
+                .frame_width = 512,
+                .frame_height = 512,
+                .elapsed_time = 0.0F,
+            }) // aztual size of each frame in the texture
+            .set(components::AnimationStatesComponent{ .curr_state = "idle", .states = animation_states })
     };
 }

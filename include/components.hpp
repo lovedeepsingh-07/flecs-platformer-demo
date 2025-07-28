@@ -28,14 +28,19 @@ struct TextureComponent {
     bool flipped;
 };
 struct AnimationComponent {
-    uint8_t curr_frame;
+    int curr_frame;
     float frame_width;
     float frame_height;
     float elapsed_time;
+    bool playing;
+};
+struct AnimationStateData {
+    Texture2D texture;
     bool loop;
 };
 struct AnimationStatesComponent {
-    std::unordered_map<std::string, Texture2D> states; // <animation_state, animation_texture>
+    std::string curr_state;
+    std::unordered_map<std::string, AnimationStateData> states; // <animation_state, animation_texture>
 };
 
 struct PhysicsComponent {

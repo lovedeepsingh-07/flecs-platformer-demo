@@ -23,12 +23,15 @@ void MovementSystem::update(GameContext& ctx) {
                     vel.x = 0.0F;
                 }
 
-                if (vel.y > 0) {
-                    movement.jumping = false;
-                    movement.falling = true;
-                } else if (vel.y < 0) {
-                    movement.jumping = true;
-                    movement.falling = false;
+                if (!movement.on_ground) {
+                    if (vel.y < 0) {
+                        movement.jumping = true;
+                        movement.falling = false;
+                    }
+                    if (vel.y > 0) {
+                        movement.jumping = false;
+                        movement.falling = true;
+                    }
                 } else {
                     movement.jumping = false;
                     movement.falling = false;
