@@ -35,16 +35,17 @@ std::unordered_map<std::string, components::AnimationClip> Utils::generate_anima
             curr_clip.frames.emplace_back((components::AnimationFrame
             ){ .duration = frame_duration,
                .source_rect = (Rectangle){
-                   .x = ((float)i * sprite_size.x) + (sprite_size.x / 2),
-                   .y = (3 * sprite_size.y)
-                       / 4, // TODO: this is highly specific for these player sprites,
-                            // it assumes that the player is (3/4)*sprite_height
-                            // from the top, which might be different for other
-                            // sprites, you can add a `sprite_height_ratio` to the input tuple
+                   .x = ((float)i * canvas_size.x) + (sprite_size.x / 2),
+                   // .y = 192,
+                   .y = (3 * sprite_size.y) / 4, // TODO: this is highly specific for these player sprites,
+                   // it assumes that the player is (3/4)*sprite_height
+                   // from the top, which might be different for other
+                   // sprites, you can add a `sprite_height_ratio` to the input tuple
                    .width = sprite_size.x,
                    .height = sprite_size.y,
                } });
         }
+        clip_output[key] = curr_clip;
     }
     return clip_output;
 };

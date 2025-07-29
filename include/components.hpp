@@ -39,7 +39,7 @@ struct AnimationStatesComponent {
 };
 struct AnimationComponent {
     std::string curr_state;
-    int current_frame_index = 0;
+    int curr_frame_index = 0;
     float time_accumulator = 0.0F;
     bool playing = true;
     bool finished = false;

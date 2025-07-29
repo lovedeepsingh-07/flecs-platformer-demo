@@ -13,7 +13,9 @@ void Render2DSystem::update(GameContext& ctx) {
                 float source_width = texture.flipped ? -texture.source_rect.width
                                                      : texture.source_rect.width;
                 DrawTexturePro(
-                    texture.texture, texture.source_rect,
+                    texture.texture,
+                    (Rectangle){ texture.source_rect.x, texture.source_rect.y,
+                                 source_width, texture.source_rect.height },
                     (Rectangle){ pos.x, pos.y, size.width, size.height },
                     (Vector2){ 0, 0 }, 0.0F, WHITE
                 );

@@ -54,11 +54,11 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
                 .left = false, .right = false, .on_ground = false, .jump_requested = false })
             .add<components::ControllerComponent>()
             .add<components::CameraComponent>()
-            // .set(components::TextureComponent{
-            //     .texture = animation_clips["idle"].texture,
-            //     .source_rect = animation_clips["idle"].frames[0].source_rect,
-            //     .flipped = false,
-            // })
+            .set(components::TextureComponent{
+                .texture = animation_clips["idle"].texture,
+                .source_rect = animation_clips["idle"].frames[0].source_rect,
+                .flipped = false,
+            })
             .set(components::AnimationComponent{
                 .curr_state = "idle",
             })
