@@ -34,3 +34,6 @@ void update(GameContext& ctx);
 namespace AnimationSystem {
 void update(GameContext& ctx);
 }
+namespace AnimationStatesSystem {
+void update(GameContext& ctx);
+}

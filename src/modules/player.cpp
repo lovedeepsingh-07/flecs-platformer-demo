@@ -1,7 +1,7 @@
 #include "components.hpp"
 #include "constants.hpp"
 #include "modules.hpp"
-#include <iostream>
+#include "utils.hpp"
 
 void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     // physical body setup
@@ -30,13 +30,18 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     ground_sensor_def.userData = sensor_data;
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
-    std::unordered_map<std::string, components::AnimationStateData> animation_states = {
-        { "idle", { LoadTexture("assets/player/idle.png"), false } },
-        { "run", { LoadTexture("assets/player/run.png"), false } },
-        { "jump", { LoadTexture("assets/player/jump.png"), false } },
-        { "land", { LoadTexture("assets/player/land.png"), false } },
-        { "dash", { LoadTexture("assets/player/dash.png"), false } },
-    };
+    // animation && texture setup
+    std::unordered_map<std::string, components::AnimationClip> animation_clips = Utils::generate_animation_clips({
+        { "idle",
+          { LoadTexture("assets/player/idle.png"), true, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+        { "run", { LoadTexture("assets/player/run.png"), true, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+        { "jump",
+          { LoadTexture("assets/player/jump.png"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+        { "land",
+          { LoadTexture("assets/player/land.png"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+        { "dash",
+          { LoadTexture("assets/player/dash.png"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+    });
 
     // ecs entity setup
     flecs::entity player_entity{
@@ -49,15 +54,16 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
                 .left = false, .right = false, .on_ground = false, .jump_requested = false })
             .add<components::ControllerComponent>()
             .add<components::CameraComponent>()
-            .set(components::TextureComponent{
-                .texture = animation_states["idle"].texture, .x = 128, .y = 192, .width = 256, .height = 256, .flipped = false }
-            ) // the location and size of the rectangle from the texture that we want to render
+            // .set(components::TextureComponent{
+            //     .texture = animation_clips["idle"].texture,
+            //     .source_rect = animation_clips["idle"].frames[0].source_rect,
+            //     .flipped = false,
+            // })
             .set(components::AnimationComponent{
-                .curr_frame = 0,
-                .frame_width = 512,
-                .frame_height = 512,
-                .elapsed_time = 0.0F,
-            }) // aztual size of each frame in the texture
-            .set(components::AnimationStatesComponent{ .curr_state = "idle", .states = animation_states })
+                .curr_state = "idle",
+            })
+            .set(components::AnimationStatesComponent{
+                .clips = animation_clips,
+            })
     };
 }

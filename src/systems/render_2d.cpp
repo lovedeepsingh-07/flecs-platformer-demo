@@ -10,10 +10,10 @@ void Render2DSystem::update(GameContext& ctx) {
             .each([](const components::PositionComponent& pos,
                      const components::SizeComponent& size,
                      const components::TextureComponent& texture) {
-                float source_width = texture.flipped ? -texture.width : texture.width;
+                float source_width = texture.flipped ? -texture.source_rect.width
+                                                     : texture.source_rect.width;
                 DrawTexturePro(
-                    texture.texture,
-                    (Rectangle){ texture.x, texture.y, source_width, texture.height },
+                    texture.texture, texture.source_rect,
                     (Rectangle){ pos.x, pos.y, size.width, size.height },
                     (Vector2){ 0, 0 }, 0.0F, WHITE
                 );

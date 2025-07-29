@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace components {
 
@@ -21,26 +22,27 @@ struct RectangleComponent {
 
 struct TextureComponent {
     Texture2D texture;
-    float x;
-    float y;
-    float width;
-    float height;
+    Rectangle source_rect;
     bool flipped;
 };
-struct AnimationComponent {
-    int curr_frame;
-    float frame_width;
-    float frame_height;
-    float elapsed_time;
-    bool playing;
+struct AnimationFrame {
+    float duration;
+    Rectangle source_rect;
 };
-struct AnimationStateData {
+struct AnimationClip {
+    std::vector<AnimationFrame> frames;
     Texture2D texture;
     bool loop;
 };
 struct AnimationStatesComponent {
+    std::unordered_map<std::string, AnimationClip> clips;
+};
+struct AnimationComponent {
     std::string curr_state;
-    std::unordered_map<std::string, AnimationStateData> states; // <animation_state, animation_texture>
+    int current_frame_index = 0;
+    float time_accumulator = 0.0F;
+    bool playing = true;
+    bool finished = false;
 };
 
 struct PhysicsComponent {
