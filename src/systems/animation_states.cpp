@@ -16,49 +16,53 @@ void AnimationStatesSystem::update(GameContext& ctx) {
             });
     texture_flipping_sys.run();
 
-    flecs::system animation_states_sys =
-        ctx.registry
-            .system<components::MovementComponent, components::AttackComponent, components::AnimationComponent, components::AnimationStatesComponent>()
-            .each([](const components::MovementComponent& movement,
-                     components::AttackComponent& attack, components::AnimationComponent& animation,
-                     components::AnimationStatesComponent& animation_states) {
+    flecs::query<> animation_states_query =
+        ctx.registry.query_builder()
+            .with<components::MovementComponent>()
+            .with<components::AttackComponent>()
+            .with<components::AnimationComponent>()
+            .with<components::AnimationStatesComponent>()
+            .build();
+
+    ctx.registry.defer_begin();
+    animation_states_query.run([](flecs::iter& iter) {
+        while (iter.next()) {
+            auto movement = iter.field<components::MovementComponent>(0);
+            auto attack = iter.field<components::AttackComponent>(1);
+            auto animation = iter.field<components::AnimationComponent>(2);
+            for (auto i : iter) {
+                flecs::entity curr_entity = iter.entity(i);
                 std::string new_state;
-
-                // if (attack.attacking) {
-                //     if (!movement.on_ground) {
-                //         new_state = "attack_air";
-                //     } else {
-                //         new_state = "attack_1";
-                //     }
-                // } else {
-                //     if (!movement.on_ground) {
-                //         new_state = "jump";
-                //     } else if (movement.left || movement.right) {
-                //         new_state = "run";
-                //     } else {
-                //         new_state = "idle";
-                //     }
-                // }
-                if (!movement.on_ground) {
-                    new_state = "jump";
-                } else if (movement.left || movement.right) {
-                    new_state = "run";
+                if (attack[i].attacking) {
+                    if (!movement[i].on_ground) {
+                        new_state = "attack_air";
+                    } else {
+                        new_state = "attack_3";
+                    }
                 } else {
-                    new_state = "idle";
+                    if (!movement[i].on_ground) {
+                        new_state = "jump";
+                    } else if (movement[i].left || movement[i].right) {
+                        new_state = "run";
+                    } else {
+                        new_state = "idle";
+                    }
+                }
+                if (animation[i].curr_state != new_state) {
+                    animation[i].curr_state = new_state;
+                    animation[i].curr_frame_index = 0;
+                    animation[i].time_accumulator = 0.0F;
+                    animation[i].playing = true;
+                    animation[i].finished = false;
                 }
 
-
-                if (animation.curr_state != new_state) {
-                    animation.curr_state = new_state;
-                    animation.curr_frame_index = 0;
-                    animation.time_accumulator = 0.0F;
-                    animation.playing = true;
-                    animation.finished = false;
+                if (attack[i].attacking && animation[i].finished
+                    && curr_entity.has<components::AttackEventComponent>()) {
+                    attack[i].attacking = false;
+                    curr_entity.remove<components::AttackEventComponent>();
                 }
-
-                if (attack.attacking && animation.finished) {
-                    attack.attacking = false;
-                }
-            });
-    animation_states_sys.run();
+            }
+        }
+    });
+    ctx.registry.defer_end();
 }

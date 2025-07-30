@@ -15,6 +15,7 @@ void player_debug(GameContext& ctx) {
             .with<components::MovementComponent>()
             .with<components::ControllerComponent>()
             .with<components::CameraComponent>()
+            .with<components::AttackComponent>()
             .build();
     ctx.registry.defer_begin();
     player_debug_display_query.run([](flecs::iter& iter) {
@@ -24,6 +25,7 @@ void player_debug(GameContext& ctx) {
             auto animation = iter.field<components::AnimationComponent>(4);
             auto animation_states = iter.field<components::AnimationStatesComponent>(5);
             auto movement = iter.field<components::MovementComponent>(6);
+            auto attack = iter.field<components::AttackComponent>(9);
             for (auto i : iter) {
                 flecs::entity curr_entity = iter.entity(i);
                 // player debug information
@@ -40,6 +42,7 @@ void player_debug(GameContext& ctx) {
                 ImGui::Text("Animation Playing: %s", animation[i].playing ? "true" : "false");
                 ImGui::Text("Animation Finished: %s", animation[i].finished ? "true" : "false");
                 ImGui::Text("Texture Flipped: %s", texture[i].flipped ? "true" : "false");
+                ImGui::Text("Attacking: %s", attack[i].attacking ? "true" : "false");
 
                 // player debug actions
                 if (ImGui::Button("Jump Button")

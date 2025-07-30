@@ -94,5 +94,6 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
             .set(components::AnimationStatesComponent{
                 .clips = animation_clips,
             })
+            .set(components::AttackComponent{ .attacking = false })
     };
 }
