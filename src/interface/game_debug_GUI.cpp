@@ -3,6 +3,46 @@
 #include "interface.hpp"
 #include "rlImGui.h"
 
+void player_debug(GameContext& ctx) {
+    flecs::system player_debug_display_sys =
+        ctx.registry
+            .system<
+                components::PositionComponent, components::SizeComponent, components::PhysicsComponent,
+                components::TextureComponent, components::AnimationComponent, components::AnimationStatesComponent,
+                components::MovementComponent, components::ControllerComponent, components::CameraComponent>()
+            .each([](const components::PositionComponent& pos,
+                     const components::SizeComponent& size,
+                     const components::PhysicsComponent& phy,
+                     const components::TextureComponent& texture,
+                     components::AnimationComponent& animation,
+                     components::AnimationStatesComponent& animation_states,
+                     components::MovementComponent& movement,
+                     const components::ControllerComponent& controller,
+                     const components::CameraComponent& cam) {
+                // player debug information
+                ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
+                ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
+                ImGui::Text("Jumping: %s", movement.jumping ? "true" : "false");
+                ImGui::Text("Falling: %s", movement.falling ? "true" : "false");
+                ImGui::Text("Curr Frame Index: %d", animation.curr_frame_index);
+                ImGui::Text("Curr Animation State: %s", animation.curr_state.c_str());
+                ImGui::Text(
+                    "Loop Animation: %s",
+                    animation_states.clips[animation.curr_state].loop ? "true" : "false"
+                );
+                ImGui::Text("Animation Playing: %s", animation.playing ? "true" : "false");
+                ImGui::Text("Animation Finished: %s", animation.finished ? "true" : "false");
+                ImGui::Text("Animation Finished: %s", animation.finished ? "true" : "false");
+                ImGui::Text("Texture Flipped: %s", texture.flipped ? "true" : "false");
+
+                // player debug actions
+                if (ImGui::Button("Jump Button")) {
+                    movement.jump_requested = true;
+                }
+            });
+    player_debug_display_sys.run();
+}
+
 void Interface::game_debug_GUI(GameContext& ctx) {
     rlImGuiBegin();
     bool open = true;
@@ -23,45 +63,7 @@ void Interface::game_debug_GUI(GameContext& ctx) {
 
     ImGui::SetNextWindowBgAlpha(0.35F);
     if (ImGui::Begin("Player Information", &open, window_flags)) {
-        flecs::system player_debug_display_sys =
-            ctx.registry
-                .system<
-                    components::PositionComponent, components::SizeComponent, components::PhysicsComponent,
-                    components::TextureComponent, components::AnimationComponent, components::AnimationStatesComponent,
-                    components::MovementComponent, components::ControllerComponent, components::CameraComponent>()
-                .each([](const components::PositionComponent& pos,
-                         const components::SizeComponent& size,
-                         const components::PhysicsComponent& phy,
-                         const components::TextureComponent& texture,
-                         components::AnimationComponent& animation,
-                         components::AnimationStatesComponent& animation_states,
-                         components::MovementComponent& movement,
-                         const components::ControllerComponent& controller,
-                         const components::CameraComponent& cam) {
-                    // player debug information
-                    ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
-                    ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
-                    ImGui::Text("Jumping: %s", movement.jumping ? "true" : "false");
-                    ImGui::Text("Falling: %s", movement.falling ? "true" : "false");
-                    ImGui::Text("Curr Frame Index: %d", animation.curr_frame_index);
-                    ImGui::Text("Curr Animation State: %s", animation.curr_state.c_str());
-                    ImGui::Text(
-                        "Loop Animation: %s",
-                        animation_states.clips[animation.curr_state].loop
-                            ? "true"
-                            : "false"
-                    );
-                    ImGui::Text("Animation Playing: %s", animation.playing ? "true" : "false");
-                    ImGui::Text("Animation Finished: %s", animation.finished ? "true" : "false");
-                    ImGui::Text("Animation Finished: %s", animation.finished ? "true" : "false");
-                    ImGui::Text("Texture Flipped: %s", texture.flipped ? "true" : "false");
-
-                    // player debug actions
-                    if (ImGui::Button("Jump Button")) {
-                        movement.jump_requested = true;
-                    }
-                });
-        player_debug_display_sys.run();
+        player_debug(ctx);
     }
     ImGui::End();
     rlImGuiEnd();

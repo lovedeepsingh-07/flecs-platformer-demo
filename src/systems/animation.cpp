@@ -1,6 +1,7 @@
 #include "components.hpp"
 #include "systems.hpp"
 
+// TODO: To make this easier, consider using tools to generate sprite frame data (like Aseprite JSON export or a custom importer) instead of manually defining rectangles.
 void AnimationSystem::update(GameContext& ctx) {
     flecs::system animation_sys =
         ctx.registry
@@ -43,6 +44,3 @@ void AnimationSystem::update(GameContext& ctx) {
             });
     animation_sys.run();
 }
-
-
-// TODO: To make this easier, consider using tools to generate sprite frame data (like Aseprite JSON export or a custom importer) instead of manually defining rectangles.
