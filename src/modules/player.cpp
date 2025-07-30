@@ -30,17 +30,24 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
     ground_sensor_def.userData = sensor_data;
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
-    // animation && texture setup
+    // texture setup
+    ctx.texture_engine.load_texture("player_idle", "assets/player/idle.png");
+    ctx.texture_engine.load_texture("player_run", "assets/player/run.png");
+    ctx.texture_engine.load_texture("player_jump", "assets/player/jump.png");
+    ctx.texture_engine.load_texture("player_land", "assets/player/land.png");
+    ctx.texture_engine.load_texture("player_dash", "assets/player/dash.png");
+    // animation setup
     std::unordered_map<std::string, components::AnimationClip> animation_clips = Utils::generate_animation_clips({
         { "idle",
-          { LoadTexture("assets/player/idle.png"), true, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-        { "run", { LoadTexture("assets/player/run.png"), true, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+          { ctx.texture_engine.get_texture("player_idle"), true, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+        { "run",
+          { ctx.texture_engine.get_texture("player_run"), true, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
         { "jump",
-          { LoadTexture("assets/player/jump.png"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+          { ctx.texture_engine.get_texture("player_jump"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
         { "land",
-          { LoadTexture("assets/player/land.png"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+          { ctx.texture_engine.get_texture("player_land"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
         { "dash",
-          { LoadTexture("assets/player/dash.png"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
+          { ctx.texture_engine.get_texture("player_dash"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
     });
 
     // ecs entity setup

@@ -30,7 +30,9 @@ void TileWorldModule::setup(GameContext& ctx, b2WorldId world_id) {
                       .find_child_by_attribute("tileset", "source", "tiles-debug.xml")
                       .attribute("firstgid")
                       .value());
-    Texture2D tileset_debug_texture = LoadTexture("assets/tiles-debug.png");
+    ctx.texture_engine.load_texture("tiles_debug", "assets/tiles-debug.png");
+    Texture2D tileset_debug_texture =
+        ctx.texture_engine.get_texture("tiles_debug");
     int map_width = std::stoi(tile_layer.attribute("width").value());
     int map_height = std::stoi(tile_layer.attribute("height").value());
 

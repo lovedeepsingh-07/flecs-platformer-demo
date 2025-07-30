@@ -1,3 +1,4 @@
+#include "context.hpp"
 #define CLAY_IMPLEMENTATION
 #include "clay/clay.h"
 #include "raylib.h"
@@ -5,8 +6,11 @@
 
 int main() {
     bool should_quit_game = false;
-    GameContext ctx{ .registry = flecs::world{},
-                     .event_system = EventEngine::EventEngine{} };
+    GameContext ctx{
+        .registry = flecs::world{},
+        .event_system = EventEngine::EventEngine{},
+        .texture_engine = TextureEngine{},
+    };
 
 
     SceneManager scene_manager{ SceneManager() };
@@ -27,7 +31,9 @@ int main() {
         }
     );
 
-    Texture2D background_texture = LoadTexture("assets/background.png");
+    ctx.texture_engine.load_texture("main_background", "assets/background.png");
+    Texture2D background_texture =
+        ctx.texture_engine.get_texture("main_background");
 
     while (!should_quit_game) {
         scene_manager.update(ctx);
@@ -49,7 +55,7 @@ int main() {
     }
 
     scene_manager.shutdown();
-    UnloadTexture(background_texture);
+    ctx.texture_engine.unload_textures();
 
     return 0;
 }
