@@ -59,8 +59,12 @@ struct MovementComponent {
     bool on_ground;
     bool jumping;
     bool falling;
-    bool jump_requested;
 };
+struct AttackComponent {
+    bool attacking;
+};
+struct JumpEventComponent {};
+struct AttackEventComponent {};
 
 struct CameraComponent {};
 

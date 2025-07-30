@@ -1,3 +1,0 @@
-namespace GameEvent {
-struct AttackEvent {};
-}

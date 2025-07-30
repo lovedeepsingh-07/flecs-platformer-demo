@@ -1,14 +1,11 @@
 #include "box2d/box2d.h"
 #include "box2d/types.h"
-#include "components.hpp"
 #include "constants.hpp"
-#include "game_events.hpp"
 #include "interface.hpp"
 #include "modules.hpp"
 #include "rlImGui.h"
 #include "scene.hpp"
 #include "systems.hpp"
-#include <iostream>
 
 void GameScene::on_enter(GameContext& ctx) {
     rlImGuiSetup(true);
@@ -37,19 +34,18 @@ void GameScene::on_enter(GameContext& ctx) {
     PlayerModule::setup(player_pos, m_world_id, ctx);
     TileWorldModule::setup(ctx, m_world_id);
 
-    ctx.registry
-        .observer<components::ControllerComponent, components::PositionComponent>()
-        .event<GameEvent::AttackEvent>()
-        .each([](const components::ControllerComponent& controller,
-                 const components::PositionComponent& pos) {
-            std::cout << "(" << pos.x << "," << pos.y << ")" << '\n';
-        });
+    // ctx.registry
+    //     .observer<components::ControllerComponent, components::PositionComponent>()
+    //     .event<GameEvent::AttackEvent>()
+    //     .each([](const components::ControllerComponent& controller,
+    //              const components::PositionComponent& pos) {
+    //         std::cout << "(" << pos.x << "," << pos.y << ")" << '\n';
+    //     });
 }
 
 void GameScene::on_update(GameContext& ctx) {
     b2World_Step(m_world_id, constants::TIME_STEP, constants::SUB_STEP_COUNT);
 
-    // updating ECS systems
     ControllerSystem::update(ctx);
     MovementSystem::update(ctx);
     PhysicsSystem::update(ctx);
@@ -57,29 +53,30 @@ void GameScene::on_update(GameContext& ctx) {
     CameraSystem::update(ctx, m_camera_2d);
     AnimationStatesSystem::update(ctx);
     AnimationSystem::update(ctx);
+    AttackSystem::update(ctx);
 
     if (IsKeyPressed(constants::DEBUG_KEY)) {
         m_debug_mode = !m_debug_mode;
     }
 
-    if (IsKeyPressed(KEY_ENTER)) {
-        flecs::query<> event_query = ctx.registry.query_builder()
-                                         .with<components::ControllerComponent>()
-                                         .with<components::PositionComponent>()
-                                         .build();
-        event_query.run([&](flecs::iter& iter) {
-            while (iter.next()) {
-                for (auto i : iter) {
-                    auto curr_entity = iter.entity(i);
-                    ctx.registry.event<GameEvent::AttackEvent>()
-                        .id<components::ControllerComponent>()
-                        .id<components::PositionComponent>()
-                        .entity(curr_entity)
-                        .emit();
-                }
-            }
-        });
-    }
+    // if (IsKeyPressed(KEY_ENTER)) {
+    //     flecs::query<> event_query = ctx.registry.query_builder()
+    //                                      .with<components::ControllerComponent>()
+    //                                      .with<components::PositionComponent>()
+    //                                      .build();
+    //     event_query.run([&](flecs::iter& iter) {
+    //         while (iter.next()) {
+    //             for (auto i : iter) {
+    //                 auto curr_entity = iter.entity(i);
+    //                 ctx.registry.event<GameEvent::AttackEvent>()
+    //                     .id<components::ControllerComponent>()
+    //                     .id<components::PositionComponent>()
+    //                     .entity(curr_entity)
+    //                     .emit();
+    //             }
+    //         }
+    //     });
+    // }
 }
 
 

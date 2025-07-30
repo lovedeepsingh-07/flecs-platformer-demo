@@ -77,7 +77,10 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx) {
             .set(components::SizeComponent{ 96, 90 }) // how big we want to render the texture
             .set(components::PhysicsComponent{ body_id })
             .set(components::MovementComponent{
-                .left = false, .right = false, .on_ground = false, .jump_requested = false })
+                .left = false,
+                .right = false,
+                .on_ground = false,
+            })
             .add<components::ControllerComponent>()
             .add<components::CameraComponent>()
             .set(components::TextureComponent{

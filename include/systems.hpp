@@ -15,6 +15,9 @@ void update(GameContext& ctx);
 namespace MovementSystem {
 void update(GameContext& ctx);
 }
+namespace AttackSystem {
+void update(GameContext& ctx);
+}
 
 namespace PhysicsSystem {
 void update(GameContext& ctx);
