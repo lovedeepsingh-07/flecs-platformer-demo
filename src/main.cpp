@@ -1,8 +1,8 @@
 #include "context.hpp"
 #define CLAY_IMPLEMENTATION
-#include "clay/clay.h"
-#include "raylib.h"
 #include "scene_manager.hpp"
+#include <clay/clay.h>
+#include <raylib.h>
 
 int main() {
     bool should_quit_game = false;

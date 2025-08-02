@@ -1,7 +1,7 @@
 #include "components.hpp"
-#include "imgui.h"
 #include "interface.hpp"
-#include "rlImGui.h"
+#include <imgui.h>
+#include <rlImGui.h>
 
 void player_debug(GameContext& ctx) {
     flecs::query<> player_debug_display_query =

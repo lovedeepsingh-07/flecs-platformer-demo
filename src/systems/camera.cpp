@@ -1,8 +1,8 @@
 #include "components.hpp"
 #include "constants.hpp"
-#include "raylib.h"
-#include "raymath.h"
 #include "systems.hpp"
+#include <raylib.h>
+#include <raymath.h>
 
 void CameraSystem::update(GameContext& ctx, Camera2D& camera) {
     flecs::system camera_sys =

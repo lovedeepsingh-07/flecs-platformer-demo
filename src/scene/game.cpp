@@ -1,11 +1,10 @@
-#include "box2d/box2d.h"
-#include "box2d/types.h"
 #include "constants.hpp"
 #include "interface.hpp"
 #include "modules.hpp"
-#include "rlImGui.h"
 #include "scene.hpp"
 #include "systems.hpp"
+#include <box2d/box2d.h>
+#include <rlImGui.h>
 
 void GameScene::on_enter(GameContext& ctx) {
     rlImGuiSetup(true);

@@ -1,6 +1,6 @@
-#include "box2d/box2d.h"
 #include "components.hpp"
 #include "systems.hpp"
+#include <box2d/box2d.h>
 
 void PhysicsSensorSystem::update(GameContext& ctx, b2WorldId world_id) {
     flecs::query<> sensor_query =

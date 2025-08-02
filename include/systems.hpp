@@ -1,8 +1,8 @@
 #pragma once
 
-#include "box2d/types.h"
 #include "context.hpp"
-#include "raylib.h"
+#include <box2d/box2d.h>
+#include <raylib.h>
 
 namespace CameraSystem {
 void update(GameContext& ctx, Camera2D& camera);

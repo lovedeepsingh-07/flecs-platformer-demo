@@ -1,6 +1,6 @@
 #include "components.hpp"
-#include "raylib.h"
 #include "systems.hpp"
+#include <raylib.h>
 
 void ControllerSystem::update(GameContext& ctx) {
     flecs::query<> controller_query = ctx.registry.query_builder()

@@ -1,7 +1,7 @@
 #include "utils.hpp"
-#include "clay/clay.h"
-#include "raylib.h"
+#include <clay/clay.h>
 #include <iostream>
+#include <raylib.h>
 
 Clay_Color Utils::RaylibColorToClayColor(Color rayColor) {
     Clay_Color clayColor;

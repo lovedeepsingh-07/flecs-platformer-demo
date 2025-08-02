@@ -1,9 +1,8 @@
 #pragma once
 
-#include "box2d/types.h"
 #include "context.hpp"
 #include "raylib.h"
-#include <cstdint>
+#include <box2d/box2d.h>
 
 class Scene {
   public:

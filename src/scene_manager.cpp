@@ -1,12 +1,12 @@
 #include "scene_manager.hpp"
-#include "clay/clay.h"
-#include "clay/renderers/raylib/clay_renderer_raylib.c"
 #include "constants.hpp"
 #include "interface.hpp"
-#include "raylib.h"
 #include "scene.hpp"
 #include "utils.hpp"
+#include <clay/clay.h>
+#include <clay/renderers/raylib/clay_renderer_raylib.c>
 #include <memory>
+#include <raylib.h>
 #include <utility>
 
 void SceneManager::SceneManager::init() {

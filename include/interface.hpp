@@ -1,7 +1,7 @@
 #pragma once
 
-#include "clay/clay.h"
 #include "context.hpp"
+#include <clay/clay.h>
 
 namespace Interface {
 

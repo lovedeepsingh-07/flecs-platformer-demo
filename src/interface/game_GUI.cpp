@@ -1,7 +1,6 @@
-#include "clay/clay.h"
 #include "interface.hpp"
-#include "raylib.h"
 #include "utils.hpp"
+#include <raylib.h>
 
 void Interface::game_GUI(GameContext& ctx) {
     CLAY({ .id = CLAY_ID("game_MainContainer"),

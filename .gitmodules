@@ -22,3 +22,6 @@
 [submodule "external/rapidcsv"]
 	path = external/rapidcsv
 	url = https://github.com/d99kris/rapidcsv
+[submodule "external/yaml-cpp"]
+	path = external/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp

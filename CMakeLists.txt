@@ -12,6 +12,7 @@ add_subdirectory(${EXTERNAL_DIR}/flecs)
 add_subdirectory(${EXTERNAL_DIR}/box2d)
 add_subdirectory(${EXTERNAL_DIR}/pugixml)
 add_subdirectory(${EXTERNAL_DIR}/rapidcsv)
+add_subdirectory(${EXTERNAL_DIR}/yaml-cpp)
 
 set(IMGUI_SOURCES
     ${EXTERNAL_DIR}/imgui/imgui.cpp
@@ -44,6 +45,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	box2d
 	pugixml
 	rapidcsv
+	yaml-cpp::yaml-cpp
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE PLATFORM_DESKTOP)

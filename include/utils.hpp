@@ -1,8 +1,8 @@
 #pragma once
 
-#include "clay/clay.h"
 #include "components.hpp"
-#include "raylib.h"
+#include <clay/clay.h>
+#include <raylib.h>
 #include <unordered_map>
 
 namespace Utils {

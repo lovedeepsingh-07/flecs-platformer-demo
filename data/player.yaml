@@ -1,0 +1,39 @@
+states:
+  - idle:
+      can_transition_to:
+        - run:
+            frame: 0
+        - jump:
+            frame: 0
+        - attack_1:
+            frame: 2
+      animation_data:
+        sprite_sheet: "some_path_idle"
+        frames:
+          - [0, 0, 512, 512]
+          - [512, 0, 512, 512]
+          - [1024, 0, 512, 512]
+          - [1536, 0, 512, 512]
+          - [2048, 0, 512, 512]
+          - [2560, 0, 512, 512]
+          - [3072, 0, 512, 512]
+          - [3584, 0, 512, 512]
+  - run:
+      can_transition_to:
+        - idle:
+            frame: 0
+        - jump:
+            frame: 0
+        - attack_1:
+            frame: 0
+      animation_data:
+        sprite_sheet: "some_path_run"
+        frames:
+          - [0, 0, 512, 512]
+          - [512, 0, 512, 512]
+          - [1024, 0, 512, 512]
+          - [1536, 0, 512, 512]
+          - [2048, 0, 512, 512]
+          - [2560, 0, 512, 512]
+          - [3072, 0, 512, 512]
+          - [3584, 0, 512, 512]

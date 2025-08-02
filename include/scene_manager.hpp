@@ -1,8 +1,6 @@
 #pragma once
 
-#include "clay/clay.h"
 #include "context.hpp"
-#include "raylib.h"
 #include "scene.hpp"
 #include <array>
 #include <memory>
