@@ -2,7 +2,7 @@
 #include "utils.hpp"
 #include <raylib.h>
 
-void Interface::main_menu_GUI(GameContext& ctx) {
+void Interface::main_menu_GUI(GameContext::GameContext& ctx) {
     CLAY({ .id = CLAY_ID("main_menu_MainContainer"),
            .layout = { .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                        .padding = CLAY_PADDING_ALL(16),

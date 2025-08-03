@@ -2,7 +2,7 @@
 #include "systems.hpp"
 #include <raylib.h>
 
-void Render2DSystem::update(GameContext& ctx) {
+void Render2DSystem::update(GameContext::GameContext& ctx) {
     // render texture
     flecs::system texture_sys =
         ctx.registry

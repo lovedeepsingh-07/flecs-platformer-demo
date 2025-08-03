@@ -2,6 +2,8 @@
 #include <string>
 #include <unordered_map>
 
+namespace TextureEngine {
+
 class TextureEngine {
   private:
     std::unordered_map<std::string, Texture2D> m_textures;
@@ -24,3 +26,5 @@ class TextureEngine {
         }
     }
 };
+
+}

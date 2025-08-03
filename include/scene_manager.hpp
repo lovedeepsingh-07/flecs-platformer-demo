@@ -6,10 +6,12 @@
 #include <memory>
 #include <unordered_map>
 
+namespace SceneManager {
+
 class SceneManager {
   private:
-    std::unordered_map<std::uint8_t, std::shared_ptr<Scene>> m_scenes;
-    std::shared_ptr<Scene> m_current_scene = nullptr;
+    std::unordered_map<std::uint8_t, std::shared_ptr<Scene::Scene>> m_scenes;
+    std::shared_ptr<Scene::Scene> m_current_scene = nullptr;
     std::uint8_t m_current_scene_index;
 
   public:
@@ -18,9 +20,11 @@ class SceneManager {
     SceneManager() = default;
     ~SceneManager() = default;
     void init();
-    void update(GameContext& ctx);
-    void render(GameContext& ctx);
-    void add_scene(GameContext& ctx, const std::uint8_t& index, std::shared_ptr<Scene> scene);
-    void switch_to(GameContext& ctx, const std::uint8_t& index);
+    void update(GameContext::GameContext& ctx);
+    void render(GameContext::GameContext& ctx);
+    void add_scene(GameContext::GameContext& ctx, const std::uint8_t& index, std::shared_ptr<Scene::Scene> scene);
+    void switch_to(GameContext::GameContext& ctx, const std::uint8_t& index);
     void shutdown();
+};
+
 };

@@ -2,7 +2,7 @@
 #include "systems.hpp"
 #include <box2d/box2d.h>
 
-void PhysicsSystem::update(GameContext& ctx) {
+void PhysicsSystem::update(GameContext::GameContext& ctx) {
     flecs::system physics_sys =
         ctx.registry
             .system<components::PositionComponent, components::SizeComponent, components::PhysicsComponent>()

@@ -5,9 +5,9 @@
 #include <flecs.h>
 
 namespace TileWorldModule {
-void setup(GameContext& ctx, b2WorldId world_id);
+void setup(GameContext::GameContext& ctx, b2WorldId world_id);
 }
 
 namespace PlayerModule {
-void setup(b2Vec2 pos, b2WorldId world_id, GameContext& ctx);
+void setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContext& ctx);
 }

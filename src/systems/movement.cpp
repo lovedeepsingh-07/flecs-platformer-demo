@@ -3,7 +3,7 @@
 #include "systems.hpp"
 #include <box2d/box2d.h>
 
-void MovementSystem::update(GameContext& ctx) {
+void MovementSystem::update(GameContext::GameContext& ctx) {
     flecs::query<> movement_query = ctx.registry.query_builder()
                                         .with<components::PhysicsComponent>()
                                         .with<components::MovementComponent>()

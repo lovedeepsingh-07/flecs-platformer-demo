@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-void TileWorldModule::setup(GameContext& ctx, b2WorldId world_id) {
+void TileWorldModule::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file("assets/map.xml");
     if (!result) {

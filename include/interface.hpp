@@ -5,8 +5,8 @@
 
 namespace Interface {
 
-void main_menu_GUI(GameContext& ctx);
-void game_GUI(GameContext& ctx);
-void game_debug_GUI(GameContext& ctx);
+void main_menu_GUI(GameContext::GameContext& ctx);
+void game_GUI(GameContext::GameContext& ctx);
+void game_debug_GUI(GameContext::GameContext& ctx);
 
 }

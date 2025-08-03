@@ -4,7 +4,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void CameraSystem::update(GameContext& ctx, Camera2D& camera) {
+void CameraSystem::update(GameContext::GameContext& ctx, Camera2D& camera) {
     flecs::system camera_sys =
         ctx.registry
             .system<components::PositionComponent, components::CameraComponent>()

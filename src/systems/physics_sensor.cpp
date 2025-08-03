@@ -2,7 +2,7 @@
 #include "systems.hpp"
 #include <box2d/box2d.h>
 
-void PhysicsSensorSystem::update(GameContext& ctx, b2WorldId world_id) {
+void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
     flecs::query<> sensor_query =
         ctx.registry.query_builder().with<components::MovementComponent>().build();
 

@@ -1,7 +1,7 @@
 #include "components.hpp"
 #include "systems.hpp"
 
-void AnimationStatesSystem::update(GameContext& ctx) {
+void AnimationStatesSystem::update(GameContext::GameContext& ctx) {
     flecs::system texture_flipping_sys =
         ctx.registry
             .system<components::TextureComponent, components::MovementComponent>()

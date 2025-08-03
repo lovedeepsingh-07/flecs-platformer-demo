@@ -5,9 +5,13 @@
 #include "texture_engine.hpp"
 #include <flecs.h>
 
+namespace GameContext {
+
 struct GameContext {
     flecs::world registry;
     EventEngine::EventEngine event_system;
-    TextureEngine texture_engine;
+    TextureEngine::TextureEngine texture_engine;
     StateEngine::StateEngine state_engine;
 };
+
+}

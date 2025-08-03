@@ -1,7 +1,7 @@
 #include "components.hpp"
 #include "systems.hpp"
 
-void AttackSystem::update(GameContext& ctx) {
+void AttackSystem::update(GameContext::GameContext& ctx) {
     flecs::query<> attack_query =
         ctx.registry.query_builder().with<components::AttackComponent>().build();
     ctx.registry.defer_begin();

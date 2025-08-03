@@ -36,11 +36,11 @@ void SceneManager::SceneManager::init() {
     Clay_SetMeasureTextFunction(Raylib_MeasureText, m_fonts.data());
 }
 
-void SceneManager::SceneManager::update(GameContext& ctx) {
+void SceneManager::SceneManager::update(GameContext::GameContext& ctx) {
     m_current_scene->on_update(ctx);
 }
 
-void SceneManager::SceneManager::render(GameContext& ctx) {
+void SceneManager::SceneManager::render(GameContext::GameContext& ctx) {
     Clay_SetLayoutDimensions((Clay_Dimensions
     ){ .width = (float)GetScreenWidth(), .height = (float)GetScreenHeight() });
     Vector2 mouse_pos = GetMousePosition();
@@ -61,12 +61,12 @@ void SceneManager::SceneManager::render(GameContext& ctx) {
 }
 
 void SceneManager::SceneManager::add_scene(
-    GameContext& ctx, const std::uint8_t& index, std::shared_ptr<Scene> scene
+    GameContext::GameContext& ctx, const std::uint8_t& index, std::shared_ptr<Scene::Scene> scene
 ) {
     m_scenes[index] = std::move(scene);
 }
 
-void SceneManager::SceneManager::switch_to(GameContext& ctx, const std::uint8_t& index) {
+void SceneManager::SceneManager::switch_to(GameContext::GameContext& ctx, const std::uint8_t& index) {
     if (m_current_scene) {
         m_current_scene->on_exit(ctx);
     }

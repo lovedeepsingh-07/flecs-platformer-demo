@@ -6,7 +6,7 @@
 #include <box2d/box2d.h>
 #include <rlImGui.h>
 
-void GameScene::on_enter(GameContext& ctx) {
+void Scene::GameScene::on_enter(GameContext::GameContext& ctx) {
     rlImGuiSetup(true);
     b2SetLengthUnitsPerMeter(constants::WORLD_SCALE);
     b2WorldDef world_def = b2DefaultWorldDef();
@@ -42,7 +42,7 @@ void GameScene::on_enter(GameContext& ctx) {
     //     });
 }
 
-void GameScene::on_update(GameContext& ctx) {
+void Scene::GameScene::on_update(GameContext::GameContext& ctx) {
     b2World_Step(m_world_id, constants::TIME_STEP, constants::SUB_STEP_COUNT);
 
     ControllerSystem::update(ctx);
@@ -50,9 +50,9 @@ void GameScene::on_update(GameContext& ctx) {
     PhysicsSystem::update(ctx);
     PhysicsSensorSystem::update(ctx, m_world_id);
     CameraSystem::update(ctx, m_camera_2d);
-    AnimationStatesSystem::update(ctx);
-    AnimationSystem::update(ctx);
-    AttackSystem::update(ctx);
+    // AnimationStatesSystem::update(ctx);
+    // AnimationSystem::update(ctx);
+    // AttackSystem::update(ctx);
 
     if (IsKeyPressed(constants::DEBUG_KEY)) {
         m_debug_mode = !m_debug_mode;
@@ -79,7 +79,7 @@ void GameScene::on_update(GameContext& ctx) {
 }
 
 
-void GameScene::on_render(GameContext& ctx) {
+void Scene::GameScene::on_render(GameContext::GameContext& ctx) {
     BeginMode2D(m_camera_2d);
     Render2DSystem::update(ctx);
     if (m_debug_mode) {
@@ -92,7 +92,7 @@ void GameScene::on_render(GameContext& ctx) {
     }
 }
 
-void GameScene::on_exit(GameContext& ctx) {
+void Scene::GameScene::on_exit(GameContext::GameContext& ctx) {
     b2DestroyWorld(m_world_id);
     ctx.registry.reset();
     rlImGuiShutdown();

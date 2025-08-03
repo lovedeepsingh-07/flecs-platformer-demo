@@ -4,22 +4,24 @@
 #include "raylib.h"
 #include <box2d/box2d.h>
 
+namespace Scene {
+
 class Scene {
   public:
     virtual ~Scene() = default;
-    virtual void on_enter(GameContext& ctx) = 0;
-    virtual void on_update(GameContext& ctx) = 0;
-    virtual void on_render(GameContext& ctx) = 0;
-    virtual void on_exit(GameContext& ctx) = 0;
+    virtual void on_enter(GameContext::GameContext& ctx) = 0;
+    virtual void on_update(GameContext::GameContext& ctx) = 0;
+    virtual void on_render(GameContext::GameContext& ctx) = 0;
+    virtual void on_exit(GameContext::GameContext& ctx) = 0;
 };
 
 class MainMenuScene : public Scene {
   public:
     ~MainMenuScene() override = default;
-    void on_enter(GameContext& ctx) override;
-    void on_update(GameContext& ctx) override;
-    void on_render(GameContext& ctx) override;
-    void on_exit(GameContext& ctx) override;
+    void on_enter(GameContext::GameContext& ctx) override;
+    void on_update(GameContext::GameContext& ctx) override;
+    void on_render(GameContext::GameContext& ctx) override;
+    void on_exit(GameContext::GameContext& ctx) override;
 };
 class GameScene : public Scene {
   private:
@@ -30,8 +32,10 @@ class GameScene : public Scene {
 
   public:
     ~GameScene() override = default;
-    void on_enter(GameContext& ctx) override;
-    void on_update(GameContext& ctx) override;
-    void on_render(GameContext& ctx) override;
-    void on_exit(GameContext& ctx) override;
+    void on_enter(GameContext::GameContext& ctx) override;
+    void on_update(GameContext::GameContext& ctx) override;
+    void on_render(GameContext::GameContext& ctx) override;
+    void on_exit(GameContext::GameContext& ctx) override;
 };
+
+}

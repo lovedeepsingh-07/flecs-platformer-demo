@@ -1,22 +1,23 @@
-#include "context.hpp"
 #define CLAY_IMPLEMENTATION
+#include "context.hpp"
 #include "scene_manager.hpp"
 #include <clay/clay.h>
 #include <raylib.h>
 
 int main() {
     bool should_quit_game = false;
-    GameContext ctx{
+    GameContext::GameContext ctx{
         .registry = flecs::world{},
         .event_system = EventEngine::EventEngine{},
-        .texture_engine = TextureEngine{},
+        .texture_engine = TextureEngine::TextureEngine{},
+        .state_engine = StateEngine::StateEngine{},
     };
 
 
-    SceneManager scene_manager{ SceneManager() };
+    SceneManager::SceneManager scene_manager{ SceneManager::SceneManager() };
     scene_manager.init();
-    scene_manager.add_scene(ctx, 0, std::make_shared<MainMenuScene>());
-    scene_manager.add_scene(ctx, 1, std::make_shared<GameScene>());
+    scene_manager.add_scene(ctx, 0, std::make_shared<Scene::MainMenuScene>());
+    scene_manager.add_scene(ctx, 1, std::make_shared<Scene::GameScene>());
     scene_manager.switch_to(ctx, 0);
 
     // global event handlers
