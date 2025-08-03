@@ -9,7 +9,7 @@ struct State_can_transition_to {
 };
 
 struct State_animation_data {
-    std::string sprite_sheet;
+    std::string texture_id;
     std::vector<Rectangle> frames;
 };
 

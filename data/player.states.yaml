@@ -8,7 +8,7 @@ states:
         - attack_1:
             frame: 2
       animation_data:
-        sprite_sheet: "some_path_idle"
+        texture_id: "player_idle"
         frames:
           - [0, 0, 512, 512]
           - [512, 0, 512, 512]
@@ -27,7 +27,7 @@ states:
         - attack_1:
             frame: 0
       animation_data:
-        sprite_sheet: "some_path_run"
+        texture_id: "player_run"
         frames:
           - [0, 0, 512, 512]
           - [512, 0, 512, 512]
