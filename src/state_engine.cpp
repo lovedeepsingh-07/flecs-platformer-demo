@@ -39,6 +39,7 @@ void StateEngine::StateEngine::load_state_registry(
             State_animation_data animation_data;
             animation_data.texture_id =
                 animation_data_yaml["texture_id"].as<std::string>();
+            animation_data.loop = animation_data_yaml["loop"].as<bool>();
             YAML::Node frames_yaml = animation_data_yaml["frames"];
             for (const YAML::Node& curr_frame_yaml : frames_yaml) {
                 animation_data.frames.emplace_back(Rectangle{

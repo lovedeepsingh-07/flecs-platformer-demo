@@ -34,9 +34,9 @@ void update(GameContext::GameContext& ctx, b2WorldId world_id);
 namespace Render2DSystem {
 void update(GameContext::GameContext& ctx);
 }
-namespace AnimationSystem {
+namespace StateSystem {
 void update(GameContext::GameContext& ctx);
 }
-namespace AnimationStatesSystem {
+namespace AnimationSystem {
 void update(GameContext::GameContext& ctx);
 }

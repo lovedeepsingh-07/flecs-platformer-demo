@@ -31,43 +31,20 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
     // texture setup
-    // ctx.texture_engine.load_texture("player_idle", "assets/player/idle.png");
-    // ctx.texture_engine.load_texture("player_run", "assets/player/run.png");
-    // ctx.texture_engine.load_texture("player_jump", "assets/player/jump.png");
-    // ctx.texture_engine.load_texture("player_land", "assets/player/land.png");
-    // ctx.texture_engine.load_texture("player_dash", "assets/player/dash.png");
-    // ctx.texture_engine.load_texture("player_attack_1", "assets/player/attack_1.png");
-    // ctx.texture_engine.load_texture("player_attack_2", "assets/player/attack_2.png");
-    // ctx.texture_engine.load_texture("player_attack_3", "assets/player/attack_3.png");
-    // ctx.texture_engine.load_texture("player_attack_air", "assets/player/air_attack.png");
-    // ctx.texture_engine.load_texture("player_hit", "assets/player/hit.png");
-    // ctx.texture_engine.load_texture("player_death", "assets/player/death.png");
+    ctx.texture_engine.load_texture("player_idle", "assets/player/idle.png");
+    ctx.texture_engine.load_texture("player_run", "assets/player/run.png");
+    ctx.texture_engine.load_texture("player_jump", "assets/player/jump.png");
+    ctx.texture_engine.load_texture("player_land", "assets/player/land.png");
+    ctx.texture_engine.load_texture("player_dash", "assets/player/dash.png");
+    ctx.texture_engine.load_texture("player_attack_1", "assets/player/attack_1.png");
+    ctx.texture_engine.load_texture("player_attack_2", "assets/player/attack_2.png");
+    ctx.texture_engine.load_texture("player_attack_3", "assets/player/attack_3.png");
+    ctx.texture_engine.load_texture("player_attack_air", "assets/player/air_attack.png");
+    ctx.texture_engine.load_texture("player_hit", "assets/player/hit.png");
+    ctx.texture_engine.load_texture("player_death", "assets/player/death.png");
 
-    // animation setup
-    // std::unordered_map<std::string, components::AnimationClip> animation_clips = Utils::generate_animation_clips({
-    //     { "idle",
-    //       { ctx.texture_engine.get_texture("player_idle"), true, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "run",
-    //       { ctx.texture_engine.get_texture("player_run"), true, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "jump",
-    //       { ctx.texture_engine.get_texture("player_jump"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "land",
-    //       { ctx.texture_engine.get_texture("player_land"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "dash",
-    //       { ctx.texture_engine.get_texture("player_dash"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "attack_1",
-    //       { ctx.texture_engine.get_texture("player_attack_1"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "attack_2",
-    //       { ctx.texture_engine.get_texture("player_attack_2"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "attack_3",
-    //       { ctx.texture_engine.get_texture("player_attack_3"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "attack_air",
-    //       { ctx.texture_engine.get_texture("player_attack_air"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "hit",
-    //       { ctx.texture_engine.get_texture("player_hit"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    //     { "death",
-    //       { ctx.texture_engine.get_texture("player_death"), false, (Vector2){ 512, 512 }, { 256, 256 }, 0.1F } },
-    // });
+    // state setup
+    ctx.state_engine.load_state_registry("player", "data/player.states.yaml");
 
     // ecs entity setup
     flecs::entity player_entity{
@@ -77,20 +54,26 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
             .set(components::SizeComponent{ 96, 90 }) // how big we want to render the texture
             .set(components::PhysicsComponent{ body_id })
             .set(components::MovementComponent{
-                .left = false,
-                .right = false,
+                .left_idle_right = 0,
                 .on_ground = false,
             })
             .add<components::ControllerComponent>()
             .add<components::CameraComponent>()
-        // .set(components::TextureComponent{
-        //     .texture = animation_clips["idle"].texture,
-        //     .source_rect = animation_clips["idle"].frames[0].source_rect,
-        //     .flipped = false,
-        // })
-        // .set(components::AnimationComponent{
-        //     .curr_state = "idle",
-        // })
+            .set(components::StateRegistryComponent{ .state_registry_id =
+                                                         "player" })
+            .set(components::StateComponent{
+                .curr_state_id = "idle",
+            })
+            .set(components::TextureComponent{
+                .texture = ctx.texture_engine.get_texture(ctx.state_engine
+                                                              .get_state_registry("player")["idle"]
+                                                              .animation_data.texture_id),
+                .source_rect =
+                    ctx.state_engine.get_state_registry("player")["idle"]
+                        .animation_data.frames[0],
+                .flipped = false,
+            })
+            .set(components::AnimationComponent{})
         // .set(components::AnimationStatesComponent{
         //     .clips = animation_clips,
         // })

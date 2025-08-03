@@ -24,9 +24,9 @@ void MovementSystem::update(GameContext::GameContext& ctx) {
                     curr_entity.remove<components::JumpEventComponent>();
                 }
 
-                if (movement[i].left) {
+                if (movement[i].left_idle_right == -1) {
                     vel.x = -3.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
-                } else if (movement[i].right) {
+                } else if (movement[i].left_idle_right == 1) {
                     vel.x = 3.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
                 } else {
                     vel.x = 0.0F;

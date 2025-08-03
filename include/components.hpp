@@ -3,8 +3,6 @@
 #include <box2d/box2d.h>
 #include <raylib.h>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 namespace components {
 
@@ -25,24 +23,19 @@ struct TextureComponent {
     Rectangle source_rect;
     bool flipped;
 };
-struct AnimationFrame {
-    float duration;
-    Rectangle source_rect;
-};
-struct AnimationClip {
-    std::vector<AnimationFrame> frames;
-    Texture2D texture;
-    bool loop;
-};
-struct AnimationStatesComponent {
-    std::unordered_map<std::string, AnimationClip> clips;
-};
 struct AnimationComponent {
-    std::string curr_state;
     int curr_frame_index = 0;
     float time_accumulator = 0.0F;
     bool playing = true;
     bool finished = false;
+};
+
+struct StateRegistryComponent {
+    std::string state_registry_id;
+};
+
+struct StateComponent {
+    std::string curr_state_id;
 };
 
 struct PhysicsComponent {
@@ -54,17 +47,16 @@ struct PhysicsSensorData {
 
 struct ControllerComponent {};
 struct MovementComponent {
-    bool left;
-    bool right;
+    int8_t left_idle_right{ 0 };
     bool on_ground;
     bool jumping;
     bool falling;
 };
-struct AttackComponent {
-    bool attacking;
-};
+// struct AttackComponent {
+//     bool attacking;
+// };
 struct JumpEventComponent {};
-struct AttackEventComponent {};
+// struct AttackEventComponent {};
 
 struct CameraComponent {};
 

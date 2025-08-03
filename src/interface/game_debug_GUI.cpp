@@ -9,10 +9,11 @@ void player_debug(GameContext::GameContext& ctx) {
             .with<components::PositionComponent>()
             .with<components::SizeComponent>()
             .with<components::PhysicsComponent>()
-            // .with<components::TextureComponent>()
-            // .with<components::AnimationComponent>()
+            .with<components::TextureComponent>()
+            .with<components::AnimationComponent>()
             // .with<components::AnimationStatesComponent>()
             // .with<components::AttackComponent>()
+            .with<components::StateComponent>()
             .with<components::MovementComponent>()
             .with<components::ControllerComponent>()
             .with<components::CameraComponent>()
@@ -21,11 +22,12 @@ void player_debug(GameContext::GameContext& ctx) {
     player_debug_display_query.run([](flecs::iter& iter) {
         while (iter.next()) {
             auto pos = iter.field<components::PositionComponent>(0);
-            // auto texture = iter.field<components::TextureComponent>(3);
-            // auto animation = iter.field<components::AnimationComponent>(4);
+            auto texture = iter.field<components::TextureComponent>(3);
+            auto animation = iter.field<components::AnimationComponent>(4);
+            auto curr_state = iter.field<components::StateComponent>(5);
             // auto animation_states = iter.field<components::AnimationStatesComponent>(5);
             // auto attack = iter.field<components::AttackComponent>(9);
-            auto movement = iter.field<components::MovementComponent>(3);
+            auto movement = iter.field<components::MovementComponent>(6);
             for (auto i : iter) {
                 flecs::entity curr_entity = iter.entity(i);
                 // player debug information
@@ -33,15 +35,12 @@ void player_debug(GameContext::GameContext& ctx) {
                 ImGui::Text("OnGround: %s", movement[i].on_ground ? "true" : "false");
                 ImGui::Text("Jumping: %s", movement[i].jumping ? "true" : "false");
                 ImGui::Text("Falling: %s", movement[i].falling ? "true" : "false");
-                // ImGui::Text("Curr Frame Index: %d", animation[i].curr_frame_index);
-                // ImGui::Text("Curr Animation State: %s", animation[i].curr_state.c_str());
-                // ImGui::Text(
-                //     "Loop Animation: %s",
-                //     animation_states[i].clips[animation[i].curr_state].loop ? "true" : "false"
-                // );
-                // ImGui::Text("Animation Playing: %s", animation[i].playing ? "true" : "false");
-                // ImGui::Text("Animation Finished: %s", animation[i].finished ? "true" : "false");
-                // ImGui::Text("Texture Flipped: %s", texture[i].flipped ? "true" : "false");
+                ImGui::Text("Left_Idle_Right: %d", movement[i].left_idle_right);
+                ImGui::Text("Curr State: %s", curr_state[i].curr_state_id.c_str());
+                ImGui::Text("Curr Frame Index: %d", animation[i].curr_frame_index);
+                ImGui::Text("Animation Playing: %s", animation[i].playing ? "true" : "false");
+                ImGui::Text("Animation Finished: %s", animation[i].finished ? "true" : "false");
+                ImGui::Text("Texture Flipped: %s", texture[i].flipped ? "true" : "false");
                 // ImGui::Text("Attacking: %s", attack[i].attacking ? "true" : "false");
 
                 // player debug actions

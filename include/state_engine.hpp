@@ -1,3 +1,5 @@
+#pragma once
+
 #include <raylib.h>
 #include <yaml-cpp/yaml.h>
 
@@ -11,6 +13,7 @@ struct State_can_transition_to {
 struct State_animation_data {
     std::string texture_id;
     std::vector<Rectangle> frames;
+    bool loop;
 };
 
 struct State {

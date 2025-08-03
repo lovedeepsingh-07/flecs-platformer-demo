@@ -18,16 +18,14 @@ void ControllerSystem::update(GameContext::GameContext& ctx) {
                     && movement[i].on_ground) {
                     curr_entity.add<components::JumpEventComponent>();
                 }
-                if (IsKeyPressed(KEY_J)
-                    && !curr_entity.has<components::AttackEventComponent>()
-                    && movement[i].on_ground) {
-                    curr_entity.add<components::AttackEventComponent>();
+                if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+                    movement[i].left_idle_right = -1;
                 }
-                if (!movement[i].right) {
-                    movement[i].left = IsKeyDown(KEY_A);
+                if (!IsKeyDown(KEY_A) && IsKeyDown(KEY_D)) {
+                    movement[i].left_idle_right = 1;
                 }
-                if (!movement[i].left) {
-                    movement[i].right = IsKeyDown(KEY_D);
+                if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+                    movement[i].left_idle_right = 0;
                 }
             }
         }
