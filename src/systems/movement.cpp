@@ -5,9 +5,9 @@
 
 void MovementSystem::update(GameContext::GameContext& ctx) {
     ctx.registry
-        .system<components::PhysicsComponent, components::MovementComponent>()
+        .system<components::PhysicsComponent, components::MovementComponent, components::AttackComponent>()
         .each([](flecs::entity curr_entity, components::PhysicsComponent& phy,
-                 components::MovementComponent& movement) {
+                 components::MovementComponent& movement, components::AttackComponent& attack) {
             b2Vec2 vel = b2Body_GetLinearVelocity(phy.body_id);
 
             if (curr_entity.has<components::JumpEventComponent>() && movement.on_ground) {
@@ -15,11 +15,15 @@ void MovementSystem::update(GameContext::GameContext& ctx) {
                 curr_entity.remove<components::JumpEventComponent>();
             }
 
-            if (movement.left_idle_right == -1) {
-                vel.x = -3.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
-            } else if (movement.left_idle_right == 1) {
-                vel.x = 3.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
-            } else {
+            if (!attack.attacking) {
+                if (movement.left_idle_right == -1) {
+                    vel.x = -3.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
+                } else if (movement.left_idle_right == 1) {
+                    vel.x = 3.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
+                } else {
+                    vel.x = 0.0F;
+                }
+            } else if (movement.on_ground) {
                 vel.x = 0.0F;
             }
 

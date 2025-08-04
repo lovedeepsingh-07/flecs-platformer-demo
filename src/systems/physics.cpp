@@ -3,16 +3,15 @@
 #include <box2d/box2d.h>
 
 void PhysicsSystem::update(GameContext::GameContext& ctx) {
-    flecs::system physics_sys =
-        ctx.registry
-            .system<components::PositionComponent, components::SizeComponent, components::PhysicsComponent>()
-            .each([](components::PositionComponent& pos, const components::SizeComponent& size,
-                     const components::PhysicsComponent& phy) {
-                b2Vec2 body_pos = b2Body_GetPosition(phy.body_id);
-                pos.x = body_pos.x - (size.width / 2);
-                pos.y = body_pos.y - (size.height / 2);
-            });
-    physics_sys.run();
+    ctx.registry
+        .system<components::PositionComponent, components::SizeComponent, components::PhysicsComponent>()
+        .each([](components::PositionComponent& pos, const components::SizeComponent& size,
+                 const components::PhysicsComponent& phy) {
+            b2Vec2 body_pos = b2Body_GetPosition(phy.body_id);
+            pos.x = body_pos.x - (size.width / 2);
+            pos.y = body_pos.y - (size.height / 2);
+        })
+        .run();
 }
 
 void PhysicsSystem::draw_solid_polygon(

@@ -74,9 +74,6 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
                 .flipped = false,
             })
             .set(components::AnimationComponent{})
-        // .set(components::AnimationStatesComponent{
-        //     .clips = animation_clips,
-        // })
-        // .set(components::AttackComponent{ .attacking = false })
+            .set(components::AttackComponent{ .attacking = false })
     };
 }

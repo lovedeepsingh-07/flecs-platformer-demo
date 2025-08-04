@@ -3,11 +3,13 @@
 
 void StateSystem::update(GameContext::GameContext& ctx) {
     ctx.registry
-        .system<components::StateRegistryComponent, components::StateComponent, components::MovementComponent, components::AnimationComponent>()
+        .system<
+            components::StateRegistryComponent, components::StateComponent, components::MovementComponent,
+            components::AttackComponent, components::AnimationComponent>()
         .each([&ctx](
                   flecs::entity curr_entity, components::StateRegistryComponent& state_registry,
                   components::StateComponent& state, components::MovementComponent& movement,
-                  components::AnimationComponent& animation
+                  components::AttackComponent& attack, components::AnimationComponent& animation
               ) {
             StateEngine::StateRegistry& curr_registry =
                 ctx.state_engine.get_state_registry(state_registry.state_registry_id);
@@ -15,17 +17,27 @@ void StateSystem::update(GameContext::GameContext& ctx) {
 
             std::string next_state_id = state.curr_state_id;
 
-            if ((movement.jumping || movement.falling) && !movement.on_ground) {
-                if (curr_state.can_transition_to.contains("jump")) {
-                    next_state_id = "jump";
-                }
-            } else if (movement.left_idle_right == 0) {
-                if (curr_state.can_transition_to.contains("idle")) {
-                    next_state_id = "idle";
+            if (attack.attacking) {
+                if ((movement.jumping || movement.falling) && !movement.on_ground) {
+                    if (curr_state.can_transition_to.contains("attack_air")) {
+                        next_state_id = "attack_air";
+                    }
+                } else if (curr_state.can_transition_to.contains("attack_1")) {
+                    next_state_id = "attack_1";
                 }
             } else {
-                if (curr_state.can_transition_to.contains("run")) {
-                    next_state_id = "run";
+                if ((movement.jumping || movement.falling) && !movement.on_ground) {
+                    if (curr_state.can_transition_to.contains("jump")) {
+                        next_state_id = "jump";
+                    }
+                } else if (movement.left_idle_right == 0) {
+                    if (curr_state.can_transition_to.contains("idle")) {
+                        next_state_id = "idle";
+                    }
+                } else {
+                    if (curr_state.can_transition_to.contains("run")) {
+                        next_state_id = "run";
+                    }
                 }
             }
 

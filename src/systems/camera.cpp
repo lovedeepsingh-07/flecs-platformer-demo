@@ -5,24 +5,23 @@
 #include <raymath.h>
 
 void CameraSystem::update(GameContext::GameContext& ctx, Camera2D& camera) {
-    flecs::system camera_sys =
-        ctx.registry
-            .system<components::PositionComponent, components::CameraComponent>()
-            .each([&camera](const components::PositionComponent& pos, const components::CameraComponent& cam) {
-                camera.offset = (Vector2){ (float)GetScreenWidth() / 2.0F,
-                                           (float)GetScreenHeight() / 2.0F };
+    ctx.registry
+        .system<components::PositionComponent, components::CameraComponent>()
+        .each([&camera](const components::PositionComponent& pos, const components::CameraComponent& cam) {
+            camera.offset = (Vector2){ (float)GetScreenWidth() / 2.0F,
+                                       (float)GetScreenHeight() / 2.0F };
 
-                Vector2 diff = Vector2Subtract(Vector2(pos.x, pos.y), camera.target);
-                float length = Vector2Length(diff);
+            Vector2 diff = Vector2Subtract(Vector2(pos.x, pos.y), camera.target);
+            float length = Vector2Length(diff);
 
-                if (length > constants::MIN_CAMERA_EFFECT_LENGTH) {
-                    float speed =
-                        fmaxf(constants::CAMERA_FRACTION_SPEED * length, constants::MIN_CAMERA_SPEED);
-                    camera.target =
-                        Vector2Add(camera.target, Vector2Scale(diff, speed * GetFrameTime() / length));
-                }
-            });
-    camera_sys.run();
+            if (length > constants::MIN_CAMERA_EFFECT_LENGTH) {
+                float speed =
+                    fmaxf(constants::CAMERA_FRACTION_SPEED * length, constants::MIN_CAMERA_SPEED);
+                camera.target =
+                    Vector2Add(camera.target, Vector2Scale(diff, speed * GetFrameTime() / length));
+            }
+        })
+        .run();
 }
 
 // void UpdateCameraCenter(Camera2D *camera, Player *player, float delta,

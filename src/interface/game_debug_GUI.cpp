@@ -7,13 +7,15 @@ void player_debug(GameContext::GameContext& ctx) {
     ctx.registry
         .system<
             components::PositionComponent, components::SizeComponent, components::PhysicsComponent,
-            components::TextureComponent, components::AnimationComponent, components::StateComponent,
-            components::MovementComponent, components::ControllerComponent, components::CameraComponent>()
+            components::TextureComponent, components::AnimationComponent,
+            components::StateComponent, components::AttackComponent, components::MovementComponent,
+            components::ControllerComponent, components::CameraComponent>()
         .each([](flecs::entity curr_entity, const components::PositionComponent& pos,
                  const components::SizeComponent& size, const components::PhysicsComponent& phy,
                  const components::TextureComponent& texture,
                  const components::AnimationComponent& animation,
                  const components::StateComponent& state,
+                 const components::AttackComponent& attack,
                  const components::MovementComponent& movement,
                  const components::ControllerComponent& controller,
                  const components::CameraComponent& camera) {
@@ -27,7 +29,7 @@ void player_debug(GameContext::GameContext& ctx) {
             ImGui::Text("Animation Playing: %s", animation.playing ? "true" : "false");
             ImGui::Text("Animation Finished: %s", animation.finished ? "true" : "false");
             ImGui::Text("Texture Flipped: %s", texture.flipped ? "true" : "false");
-            // ImGui::Text("Attacking: %s", attack.attacking ? "true" : "false");
+            ImGui::Text("Attacking: %s", attack.attacking ? "true" : "false");
 
             // player debug actions
             if (ImGui::Button("Jump Button")

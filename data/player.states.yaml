@@ -58,6 +58,8 @@ states:
       can_transition_to:
         - idle:
             frame: 0
+        - run:
+            frame: 0
         - jump:
             frame: 0
       animation_data:
@@ -72,6 +74,8 @@ states:
   - attack_air:
       can_transition_to:
         - idle:
+            frame: 0
+        - run:
             frame: 0
         - jump:
             frame: -1
