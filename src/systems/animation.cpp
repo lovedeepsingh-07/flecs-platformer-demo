@@ -5,8 +5,8 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
     flecs::system texture_flipping_sys =
         ctx.registry
             .system<components::TextureComponent, components::MovementComponent>()
-            .each([](components::TextureComponent& texture,
-                     const components::MovementComponent& movement) {
+            .each([](flecs::entity curr_entity, components::TextureComponent& texture,
+                     components::MovementComponent& movement) {
                 if (movement.left_idle_right == -1) {
                     texture.flipped = true;
                 }
@@ -20,7 +20,7 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
         ctx.registry
             .system<components::TextureComponent, components::AnimationComponent, components::StateRegistryComponent, components::StateComponent>()
             .each([&ctx](
-                      components::TextureComponent& texture,
+                      flecs::entity curr_entity, components::TextureComponent& texture,
                       components::AnimationComponent& animation,
                       components::StateRegistryComponent& state_registry,
                       components::StateComponent& state

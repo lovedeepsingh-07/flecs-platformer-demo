@@ -3,32 +3,24 @@
 #include <raylib.h>
 
 void ControllerSystem::update(GameContext::GameContext& ctx) {
-    flecs::query<> controller_query = ctx.registry.query_builder()
-                                          .with<components::ControllerComponent>()
-                                          .with<components::MovementComponent>()
-                                          .build();
-    ctx.registry.defer_begin();
-    controller_query.run([](flecs::iter& iter) {
-        while (iter.next()) {
-            auto movement = iter.field<components::MovementComponent>(1);
-            for (auto i : iter) {
-                flecs::entity curr_entity = iter.entity(i);
-                if (IsKeyPressed(KEY_SPACE)
-                    && !curr_entity.has<components::JumpEventComponent>()
-                    && movement[i].on_ground) {
-                    curr_entity.add<components::JumpEventComponent>();
-                }
-                if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
-                    movement[i].left_idle_right = -1;
-                }
-                if (!IsKeyDown(KEY_A) && IsKeyDown(KEY_D)) {
-                    movement[i].left_idle_right = 1;
-                }
-                if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
-                    movement[i].left_idle_right = 0;
-                }
+    ctx.registry
+        .system<components::MovementComponent, components::ControllerComponent>()
+        .each([](flecs::entity curr_entity, components::MovementComponent& movement,
+                 const components::ControllerComponent& controller) {
+            if (IsKeyPressed(KEY_SPACE)
+                && !curr_entity.has<components::JumpEventComponent>()
+                && movement.on_ground) {
+                curr_entity.add<components::JumpEventComponent>();
             }
-        }
-    });
-    ctx.registry.defer_end();
+            if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+                movement.left_idle_right = -1;
+            }
+            if (!IsKeyDown(KEY_A) && IsKeyDown(KEY_D)) {
+                movement.left_idle_right = 1;
+            }
+            if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+                movement.left_idle_right = 0;
+            }
+        })
+        .run();
 }

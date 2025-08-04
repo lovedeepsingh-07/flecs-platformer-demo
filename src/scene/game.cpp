@@ -52,6 +52,7 @@ void Scene::GameScene::on_update(GameContext::GameContext& ctx) {
     CameraSystem::update(ctx, m_camera_2d);
     AnimationSystem::update(ctx);
     StateSystem::update(ctx);
+    AttackSystem::update(ctx);
 
     if (IsKeyPressed(constants::DEBUG_KEY)) {
         m_debug_mode = !m_debug_mode;

@@ -52,11 +52,11 @@ struct MovementComponent {
     bool jumping;
     bool falling;
 };
-// struct AttackComponent {
-//     bool attacking;
-// };
+struct AttackComponent {
+    bool attacking;
+};
 struct JumpEventComponent {};
-// struct AttackEventComponent {};
+struct AttackEventComponent {};
 
 struct CameraComponent {};
 

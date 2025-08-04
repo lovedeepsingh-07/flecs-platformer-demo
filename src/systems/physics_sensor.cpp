@@ -3,11 +3,8 @@
 #include <box2d/box2d.h>
 
 void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
-    flecs::query<> sensor_query =
-        ctx.registry.query_builder().with<components::MovementComponent>().build();
-
-    sensor_query.run([&](flecs::iter& it) {
-        while (it.next()) {
+    ctx.registry.system<components::MovementComponent>()
+        .each([&world_id](flecs::entity curr_entity, components::MovementComponent& movement) {
             b2SensorEvents sensorEvents = b2World_GetSensorEvents(world_id);
             for (int i = 0; i < sensorEvents.beginCount; ++i) {
                 b2SensorBeginTouchEvent* beginTouch = sensorEvents.beginEvents + i;
@@ -16,12 +13,8 @@ void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_
                     auto* sensor_data =
                         static_cast<components::PhysicsSensorData*>(b2Shape_GetUserData(shape_id));
                     if (sensor_data != nullptr && sensor_data->id == "ground_sensor") {
-                        auto movement = it.field<components::MovementComponent>(0);
-                        for (auto i : it) {
-                            auto curr_entity = it.entity(i);
-                            if (curr_entity.has<components::MovementComponent>()) {
-                                movement[i].on_ground = true;
-                            }
+                        if (curr_entity.has<components::MovementComponent>()) {
+                            movement.on_ground = true;
                         }
                     }
                 }
@@ -33,16 +26,12 @@ void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_
                     auto* sensor_data =
                         static_cast<components::PhysicsSensorData*>(b2Shape_GetUserData(shape_id));
                     if (sensor_data != nullptr && sensor_data->id == "ground_sensor") {
-                        auto movement = it.field<components::MovementComponent>(0);
-                        for (auto i : it) {
-                            auto curr_entity = it.entity(i);
-                            if (curr_entity.has<components::MovementComponent>()) {
-                                movement[i].on_ground = false;
-                            }
+                        if (curr_entity.has<components::MovementComponent>()) {
+                            movement.on_ground = false;
                         }
                     }
                 }
             }
-        }
-    });
+        })
+        .run();
 }
