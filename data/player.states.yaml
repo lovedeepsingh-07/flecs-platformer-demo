@@ -1,49 +1,37 @@
 states:
   - idle:
       can_transition_to:
-        - run:
+        - walk:
             frame: 0
         - jump:
             frame: 0
-        - attack_1:
+        - attack:
             frame: 0
       animation_data:
         loop: true
         texture_id: "player_idle"
         frames:
-          - [0, 0, 512, 512]
-          - [512, 0, 512, 512]
-          - [1024, 0, 512, 512]
-          - [1536, 0, 512, 512]
-          - [2048, 0, 512, 512]
-          - [2560, 0, 512, 512]
-          - [3072, 0, 512, 512]
-          - [3584, 0, 512, 512]
-  - run:
+          - [0, 0, 128, 128]
+  - walk:
       can_transition_to:
         - idle:
             frame: 0
         - jump:
             frame: 0
-        - attack_1:
+        - attack:
             frame: 0
       animation_data:
         loop: true
-        texture_id: "player_run"
+        texture_id: "player_walk"
         frames:
-          - [0, 0, 512, 512]
-          - [512, 0, 512, 512]
-          - [1024, 0, 512, 512]
-          - [1536, 0, 512, 512]
-          - [2048, 0, 512, 512]
-          - [2560, 0, 512, 512]
-          - [3072, 0, 512, 512]
-          - [3584, 0, 512, 512]
+          - [0, 0, 128, 128]
+          - [128, 0, 128, 128]
+          - [256, 0, 128, 128]
   - jump:
       can_transition_to:
         - idle:
             frame: 0
-        - run:
+        - walk:
             frame: 0
         - attack_air:
             frame: 0
@@ -51,31 +39,28 @@ states:
         loop: false
         texture_id: "player_jump"
         frames:
-          - [0, 0, 512, 512]
-          - [512, 0, 512, 512]
-          - [1024, 0, 512, 512]
-  - attack_1:
+          - [0, 0, 128, 128]
+  - attack:
       can_transition_to:
         - idle:
             frame: 0
-        - run:
+        - walk:
             frame: 0
         - jump:
             frame: 0
       animation_data:
         loop: false
-        texture_id: "player_attack_1"
+        texture_id: "player_attack"
         frames:
-          - [0, 0, 512, 512]
-          - [512, 0, 512, 512]
-          - [1024, 0, 512, 512]
-          - [1536, 0, 512, 512]
-          - [2048, 0, 512, 512]
+          - [0, 0, 256, 256]
+          - [256, 0, 256, 256]
+          - [512, 0, 256, 256]
+          - [768, 0, 256, 256]
   - attack_air:
       can_transition_to:
         - idle:
             frame: 0
-        - run:
+        - walk:
             frame: 0
         - jump:
             frame: -1
@@ -83,5 +68,6 @@ states:
         loop: false
         texture_id: "player_attack_air"
         frames:
-          - [0, 0, 512, 512]
-          - [512, 0, 512, 512]
+          - [0, 0, 128, 128]
+          - [128, 0, 128, 128]
+          - [256, 0, 128, 128]

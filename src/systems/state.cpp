@@ -22,8 +22,8 @@ void StateSystem::update(GameContext::GameContext& ctx) {
                     if (curr_state.can_transition_to.contains("attack_air")) {
                         next_state_id = "attack_air";
                     }
-                } else if (curr_state.can_transition_to.contains("attack_1")) {
-                    next_state_id = "attack_1";
+                } else if (curr_state.can_transition_to.contains("attack")) {
+                    next_state_id = "attack";
                 }
             } else {
                 if ((movement.jumping || movement.falling) && !movement.on_ground) {
@@ -35,8 +35,8 @@ void StateSystem::update(GameContext::GameContext& ctx) {
                         next_state_id = "idle";
                     }
                 } else {
-                    if (curr_state.can_transition_to.contains("run")) {
-                        next_state_id = "run";
+                    if (curr_state.can_transition_to.contains("walk")) {
+                        next_state_id = "walk";
                     }
                 }
             }

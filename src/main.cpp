@@ -32,23 +32,11 @@ int main() {
         }
     );
 
-    ctx.texture_engine.load_texture("main_background", "assets/background.png");
-    Texture2D background_texture =
-        ctx.texture_engine.get_texture("main_background");
-
     while (!should_quit_game) {
         scene_manager.update(ctx);
 
         BeginDrawing();
         ClearBackground(BLACK);
-
-        DrawTexturePro(
-            background_texture,
-            (Rectangle){ 0, 0, (float)background_texture.width,
-                         (float)background_texture.height },
-            (Rectangle){ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
-            (Vector2){ 0, 0 }, 0.0F, WHITE
-        );
 
         scene_manager.render(ctx);
 

@@ -32,16 +32,10 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
 
     // texture setup
     ctx.texture_engine.load_texture("player_idle", "assets/player/idle.png");
-    ctx.texture_engine.load_texture("player_run", "assets/player/run.png");
+    ctx.texture_engine.load_texture("player_walk", "assets/player/walk.png");
     ctx.texture_engine.load_texture("player_jump", "assets/player/jump.png");
-    ctx.texture_engine.load_texture("player_land", "assets/player/land.png");
-    ctx.texture_engine.load_texture("player_dash", "assets/player/dash.png");
-    ctx.texture_engine.load_texture("player_attack_1", "assets/player/attack_1.png");
-    ctx.texture_engine.load_texture("player_attack_2", "assets/player/attack_2.png");
-    ctx.texture_engine.load_texture("player_attack_3", "assets/player/attack_3.png");
-    ctx.texture_engine.load_texture("player_attack_air", "assets/player/air_attack.png");
-    ctx.texture_engine.load_texture("player_hit", "assets/player/hit.png");
-    ctx.texture_engine.load_texture("player_death", "assets/player/death.png");
+    ctx.texture_engine.load_texture("player_attack", "assets/player/sword_slash_vertical.png");
+    ctx.texture_engine.load_texture("player_attack_air", "assets/player/horizontal_air_slash.png");
 
     // state setup
     ctx.state_engine.load_state_registry("player", "data/player.states.yaml");
