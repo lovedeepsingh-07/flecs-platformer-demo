@@ -48,10 +48,8 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
         ctx.registry.entity()
             .set(components::PositionComponent{ pos.x - (shape_size.x / 2),
                                                 pos.y - (shape_size.y / 2) })
-            .set(components::SizeComponent{
-                starting_state.animation_data.frames[0].width,
-                starting_state.animation_data.frames[0].height }) // how big we want to render the texture
             .set(components::PhysicsComponent{ body_id })
+            .set(components::BaseColliderComponent{ shape_size.x, shape_size.y })
             .set(components::MovementComponent{
                 .left_idle_right = 0,
                 .on_ground = false,

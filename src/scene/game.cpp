@@ -1,3 +1,4 @@
+#include "components.hpp"
 #include "constants.hpp"
 #include "interface.hpp"
 #include "modules.hpp"
@@ -32,14 +33,6 @@ void Scene::GameScene::on_enter(GameContext::GameContext& ctx) {
     // modules setup
     PlayerModule::setup(player_pos, m_world_id, ctx);
     TileWorldModule::setup(ctx, m_world_id);
-
-    // ctx.registry
-    //     .observer<components::ControllerComponent, components::PositionComponent>()
-    //     .event<GameEvent::AttackEvent>()
-    //     .each([](const components::ControllerComponent& controller,
-    //              const components::PositionComponent& pos) {
-    //         std::cout << "(" << pos.x << "," << pos.y << ")" << '\n';
-    //     });
 }
 
 void Scene::GameScene::on_update(GameContext::GameContext& ctx) {
@@ -58,25 +51,6 @@ void Scene::GameScene::on_update(GameContext::GameContext& ctx) {
     if (IsKeyPressed(constants::DEBUG_KEY)) {
         m_debug_mode = !m_debug_mode;
     }
-
-    // if (IsKeyPressed(KEY_ENTER)) {
-    //     flecs::query<> event_query = ctx.registry.query_builder()
-    //                                      .with<components::ControllerComponent>()
-    //                                      .with<components::PositionComponent>()
-    //                                      .build();
-    //     event_query.run([&](flecs::iter& iter) {
-    //         while (iter.next()) {
-    //             for (auto i : iter) {
-    //                 auto curr_entity = iter.entity(i);
-    //                 ctx.registry.event<GameEvent::AttackEvent>()
-    //                     .id<components::ControllerComponent>()
-    //                     .id<components::PositionComponent>()
-    //                     .entity(curr_entity)
-    //                     .emit();
-    //             }
-    //         }
-    //     });
-    // }
 }
 
 
@@ -86,6 +60,21 @@ void Scene::GameScene::on_render(GameContext::GameContext& ctx) {
     if (m_debug_mode) {
         b2World_Draw(m_world_id, &m_world_debug_draw); // draw box2d shapes for debugging
     }
+
+    if (m_debug_mode) {
+        ctx.registry
+            .system<components::PositionComponent, components::StateComponent, components::BaseColliderComponent>()
+            .each([](components::PositionComponent& pos, components::StateComponent& state,
+                     components::BaseColliderComponent& base_collider) {
+                DrawText(
+                    state.curr_state_id.c_str(),
+                    (int)(pos.x - (base_collider.width / 2.0F)),
+                    (int)(pos.y - (base_collider.height / 2) - 12), 12, WHITE
+                ); // here we do - 12 because that is the font-size so font-height too, and we want the text to be anchored at bottom right of this pos
+            })
+            .run();
+    }
+
     EndMode2D();
 
     if (m_debug_mode) {

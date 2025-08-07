@@ -53,22 +53,19 @@ void TileWorldModule::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
                     std::floor(tile_index / ((float)tileset_debug_texture.width / tile_width))
                     * tile_height;
 
-                flecs::entity tile_entity{
-                    ctx.registry.entity()
-                        .set(components::PositionComponent{ tile_x, tile_y })
-                        .set(components::SizeComponent{ tile_width, tile_height })
-                        .set(components::TextureComponent{
-                            .texture = tileset_debug_texture,
-                            .source_rect =
-                                (Rectangle){
-                                    .x = tile_rect_x,
-                                    .y = tile_rect_y,
-                                    .width = tile_width,
-                                    .height = tile_height,
-                                },
-                            .flipped = false,
-                        })
-                };
+                flecs::entity tile_entity{ ctx.registry.entity()
+                                               .set(components::PositionComponent{ tile_x, tile_y })
+                                               .set(components::TextureComponent{
+                                                   .texture = tileset_debug_texture,
+                                                   .source_rect =
+                                                       (Rectangle){
+                                                           .x = tile_rect_x,
+                                                           .y = tile_rect_y,
+                                                           .width = tile_width,
+                                                           .height = tile_height,
+                                                       },
+                                                   .flipped = false,
+                                               }) };
             }
         }
     }

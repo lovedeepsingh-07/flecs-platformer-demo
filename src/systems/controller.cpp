@@ -22,10 +22,10 @@ void ControllerSystem::update(GameContext::GameContext& ctx) {
                 && !attack.attacking) {
                 curr_entity.add<components::AttackEventComponent>();
             }
-            if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+            if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !attack.attacking) {
                 movement.left_idle_right = -1;
             }
-            if (!IsKeyDown(KEY_A) && IsKeyDown(KEY_D)) {
+            if (!IsKeyDown(KEY_A) && IsKeyDown(KEY_D) && !attack.attacking) {
                 movement.left_idle_right = 1;
             }
             if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {

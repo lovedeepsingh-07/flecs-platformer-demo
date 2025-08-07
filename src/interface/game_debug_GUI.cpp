@@ -1,17 +1,17 @@
 #include "components.hpp"
 #include "interface.hpp"
+#include "raylib.h"
 #include <imgui.h>
 #include <rlImGui.h>
 
 void player_debug(GameContext::GameContext& ctx) {
     ctx.registry
         .system<
-            components::PositionComponent, components::SizeComponent, components::PhysicsComponent,
-            components::TextureComponent, components::AnimationComponent,
-            components::StateComponent, components::AttackComponent, components::MovementComponent,
-            components::ControllerComponent, components::CameraComponent>()
+            components::PositionComponent, components::PhysicsComponent, components::TextureComponent,
+            components::AnimationComponent, components::StateComponent, components::AttackComponent,
+            components::MovementComponent, components::ControllerComponent, components::CameraComponent>()
         .each([](flecs::entity curr_entity, const components::PositionComponent& pos,
-                 const components::SizeComponent& size, const components::PhysicsComponent& phy,
+                 const components::PhysicsComponent& phy,
                  const components::TextureComponent& texture,
                  const components::AnimationComponent& animation,
                  const components::StateComponent& state,
