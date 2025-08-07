@@ -55,8 +55,7 @@ void TileWorldModule::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
 
                 flecs::entity tile_entity{
                     ctx.registry.entity()
-                        .set(components::PositionComponent{
-                            tile_x - (tile_width / 2), tile_y - (tile_height / 2) })
+                        .set(components::PositionComponent{ tile_x, tile_y })
                         .set(components::SizeComponent{ tile_width, tile_height })
                         .set(components::TextureComponent{
                             .texture = tileset_debug_texture,

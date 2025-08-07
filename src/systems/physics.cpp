@@ -4,12 +4,11 @@
 
 void PhysicsSystem::update(GameContext::GameContext& ctx) {
     ctx.registry
-        .system<components::PositionComponent, components::SizeComponent, components::PhysicsComponent>()
-        .each([](components::PositionComponent& pos, const components::SizeComponent& size,
-                 const components::PhysicsComponent& phy) {
+        .system<components::PositionComponent, components::PhysicsComponent>()
+        .each([](components::PositionComponent& pos, const components::PhysicsComponent& phy) {
             b2Vec2 body_pos = b2Body_GetPosition(phy.body_id);
-            pos.x = body_pos.x - (size.width / 2);
-            pos.y = body_pos.y - (size.height / 2);
+            pos.x = body_pos.x;
+            pos.y = body_pos.y;
         })
         .run();
 }

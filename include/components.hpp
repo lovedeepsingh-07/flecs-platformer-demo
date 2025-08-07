@@ -15,6 +15,8 @@ struct SizeComponent {
     float height;
 };
 struct RectangleComponent {
+    float width;
+    float height;
     Color color;
 };
 

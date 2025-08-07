@@ -40,12 +40,17 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
     // state setup
     ctx.state_engine.load_state_registry("player", "data/player.states.yaml");
 
+    StateEngine::State starting_state =
+        ctx.state_engine.get_state_registry("player")["idle"];
+
     // ecs entity setup
     flecs::entity player_entity{
         ctx.registry.entity()
             .set(components::PositionComponent{ pos.x - (shape_size.x / 2),
                                                 pos.y - (shape_size.y / 2) })
-            .set(components::SizeComponent{ 96, 90 }) // how big we want to render the texture
+            .set(components::SizeComponent{
+                starting_state.animation_data.frames[0].width,
+                starting_state.animation_data.frames[0].height }) // how big we want to render the texture
             .set(components::PhysicsComponent{ body_id })
             .set(components::MovementComponent{
                 .left_idle_right = 0,
@@ -59,12 +64,9 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
                 .curr_state_id = "idle",
             })
             .set(components::TextureComponent{
-                .texture = ctx.texture_engine.get_texture(ctx.state_engine
-                                                              .get_state_registry("player")["idle"]
-                                                              .animation_data.texture_id),
-                .source_rect =
-                    ctx.state_engine.get_state_registry("player")["idle"]
-                        .animation_data.frames[0],
+                .texture =
+                    ctx.texture_engine.get_texture(starting_state.animation_data.texture_id),
+                .source_rect = starting_state.animation_data.frames[0],
                 .flipped = false,
             })
             .set(components::AnimationComponent{})
