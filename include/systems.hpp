@@ -16,7 +16,7 @@ namespace MovementSystem {
 void update(GameContext::GameContext& ctx);
 }
 namespace AttackSystem {
-void update(GameContext::GameContext& ctx);
+void update(GameContext::GameContext& ctx, b2WorldId world_id);
 }
 
 namespace PhysicsSystem {

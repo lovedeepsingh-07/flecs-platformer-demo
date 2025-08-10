@@ -1,7 +1,7 @@
 #include "components.hpp"
 #include "constants.hpp"
 #include "modules.hpp"
-// #include "utils.hpp"
+#include "utils.hpp"
 
 void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContext& ctx) {
     // physical body setup
@@ -25,10 +25,11 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
     b2ShapeDef ground_sensor_def = b2DefaultShapeDef();
     ground_sensor_def.isSensor = true;
     ground_sensor_def.enableSensorEvents = true;
-    auto* sensor_data =
-        new components::PhysicsSensorData{ .id = "ground_sensor" };
+    auto* sensor_data = new Utils::ShapeUserData{ ._id = "ground_sensor" };
     ground_sensor_def.userData = sensor_data;
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
+
+    // attack raycast setup
 
     // texture setup
     ctx.texture_engine.load_texture("player_idle", "assets/player/idle.png");

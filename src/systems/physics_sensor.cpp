@@ -1,5 +1,6 @@
 #include "components.hpp"
 #include "systems.hpp"
+#include "utils.hpp"
 #include <box2d/box2d.h>
 
 void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
@@ -11,11 +12,9 @@ void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_
                 b2ShapeId shape_id = beginTouch->sensorShapeId;
                 if (b2Shape_IsSensor(shape_id)) {
                     auto* sensor_data =
-                        static_cast<components::PhysicsSensorData*>(b2Shape_GetUserData(shape_id));
-                    if (sensor_data != nullptr && sensor_data->id == "ground_sensor") {
-                        if (curr_entity.has<components::MovementComponent>()) {
-                            movement.on_ground = true;
-                        }
+                        static_cast<Utils::ShapeUserData*>(b2Shape_GetUserData(shape_id));
+                    if (sensor_data != nullptr && sensor_data->_id == "ground_sensor") {
+                        movement.on_ground = true;
                     }
                 }
             }
@@ -24,11 +23,9 @@ void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_
                 b2ShapeId shape_id = endTouch->sensorShapeId;
                 if (b2Shape_IsSensor(shape_id)) {
                     auto* sensor_data =
-                        static_cast<components::PhysicsSensorData*>(b2Shape_GetUserData(shape_id));
-                    if (sensor_data != nullptr && sensor_data->id == "ground_sensor") {
-                        if (curr_entity.has<components::MovementComponent>()) {
-                            movement.on_ground = false;
-                        }
+                        static_cast<Utils::ShapeUserData*>(b2Shape_GetUserData(shape_id));
+                    if (sensor_data != nullptr && sensor_data->_id == "ground_sensor") {
+                        movement.on_ground = false;
                     }
                 }
             }

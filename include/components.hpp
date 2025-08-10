@@ -47,10 +47,6 @@ struct PhysicsComponent {
     b2BodyId body_id;
 };
 
-struct PhysicsSensorData {
-    std::string id;
-};
-
 struct ControllerComponent {};
 
 struct MovementComponent {
@@ -62,6 +58,11 @@ struct MovementComponent {
 
 struct AttackComponent {
     bool attacking;
+};
+
+struct RayCastComponent {
+    Vector2 start_pos;
+    Vector2 end_pos;
 };
 
 struct JumpEventComponent {};

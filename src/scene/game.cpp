@@ -40,7 +40,7 @@ void Scene::GameScene::on_update(GameContext::GameContext& ctx) {
 
     // TODO: this order is somehow important to state system and animations: Controller -> Attack -> State -> Animation
     ControllerSystem::update(ctx);
-    AttackSystem::update(ctx);
+    AttackSystem::update(ctx, m_world_id);
     StateSystem::update(ctx);
     MovementSystem::update(ctx);
     PhysicsSystem::update(ctx);
