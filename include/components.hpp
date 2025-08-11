@@ -1,8 +1,10 @@
 #pragma once
 
+#include "utils.hpp"
 #include <box2d/box2d.h>
 #include <raylib.h>
 #include <string>
+#include <vector>
 
 namespace components {
 
@@ -60,9 +62,14 @@ struct AttackComponent {
     bool attacking;
 };
 
-struct RayCastComponent {
-    Vector2 start_pos;
-    Vector2 end_pos;
+struct PermanentRayCastComponent {
+    Utils::RayCastUserData user_data;
+    b2QueryFilter filter;
+    Vector2 start_offset;
+    Vector2 translation;
+};
+struct PermanentRayCastListComponent {
+    std::vector<PermanentRayCastComponent> items;
 };
 
 struct JumpEventComponent {};

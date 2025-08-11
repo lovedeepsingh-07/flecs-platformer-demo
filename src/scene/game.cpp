@@ -30,9 +30,13 @@ void Scene::GameScene::on_enter(GameContext::GameContext& ctx) {
     m_camera_2d.rotation = 0.0F;
     m_camera_2d.zoom = 1.0F;
 
+    // enemy
+    b2Vec2 enemy_pos{ (b2Vec2){ (screen_width / 2.0F) + 30.0F, 0 } };
+
     // modules setup
-    PlayerModule::setup(player_pos, m_world_id, ctx);
     TileWorldModule::setup(ctx, m_world_id);
+    PlayerModule::setup(player_pos, m_world_id, ctx);
+    EnemyModule::setup(enemy_pos, m_world_id, ctx);
 }
 
 void Scene::GameScene::on_update(GameContext::GameContext& ctx) {
@@ -56,9 +60,10 @@ void Scene::GameScene::on_update(GameContext::GameContext& ctx) {
 
 void Scene::GameScene::on_render(GameContext::GameContext& ctx) {
     BeginMode2D(m_camera_2d);
-    Render2DSystem::update(ctx);
+    Render2DSystem::render(ctx);
     if (m_debug_mode) {
         b2World_Draw(m_world_id, &m_world_debug_draw); // draw box2d shapes for debugging
+        Render2DSystem::render_raycasts(ctx);
     }
 
     if (m_debug_mode) {

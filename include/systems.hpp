@@ -32,7 +32,8 @@ void update(GameContext::GameContext& ctx, b2WorldId world_id);
 }
 
 namespace Render2DSystem {
-void update(GameContext::GameContext& ctx);
+void render(GameContext::GameContext& ctx);
+void render_raycasts(GameContext::GameContext& ctx);
 }
 namespace StateSystem {
 void update(GameContext::GameContext& ctx);

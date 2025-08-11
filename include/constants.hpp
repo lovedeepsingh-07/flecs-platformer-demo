@@ -17,7 +17,15 @@ constexpr float PLAYER_WIDTH = 32.0F;
 constexpr float PLAYER_HEIGHT = 48.0F;
 constexpr float PLAYER_COLLIDER_WIDTH = 32.0F;
 constexpr float PLAYER_COLLIDER_HEIGHT = 48.0F;
+constexpr float PLAYER_ATTACK_RAYCAST_LENGTH = 56.0F;
 constexpr float PLAYER_JUMP_VEL = -5.0F * WORLD_SCALE * FORCE_CONST;
+
+constexpr float ENEMY_WIDTH = 32.0F;
+constexpr float ENEMY_HEIGHT = 48.0F;
+constexpr float ENEMY_COLLIDER_WIDTH = 32.0F;
+constexpr float ENEMY_COLLIDER_HEIGHT = 48.0F;
+constexpr float ENEMY_ATTACK_RAYCAST_LENGTH = 56.0F;
+constexpr float ENEMY_JUMP_VEL = -5.0F * WORLD_SCALE * FORCE_CONST;
 
 constexpr float MIN_CAMERA_SPEED = 30;
 constexpr float MIN_CAMERA_EFFECT_LENGTH = 30;

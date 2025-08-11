@@ -15,3 +15,7 @@ Clay_Color Utils::RaylibColorToClayColor(Color rayColor) {
 void Utils::HandleClayErrors(Clay_ErrorData errorData) {
     std::cout << errorData.errorText.chars << "\n";
 }
+
+float Utils::cast_result_fcn(b2ShapeId shapeId, b2Vec2 point, b2Vec2 normal, float fraction, void* context) {
+    return 1;
+}

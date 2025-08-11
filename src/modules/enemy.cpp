@@ -4,10 +4,10 @@
 #include "utils.hpp"
 #include <vector>
 
-void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContext& ctx) {
+void EnemyModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContext& ctx) {
     // physical body setup
-    b2Vec2 shape_size{ (b2Vec2){ constants::PLAYER_COLLIDER_WIDTH,
-                                 constants::PLAYER_COLLIDER_HEIGHT } };
+    b2Vec2 shape_size{ (b2Vec2){ constants::ENEMY_COLLIDER_WIDTH,
+                                 constants::ENEMY_COLLIDER_HEIGHT } };
     b2BodyDef body_def{ b2DefaultBodyDef() };
     body_def.type = b2_dynamicBody;
     body_def.position = pos;
@@ -18,54 +18,54 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
     body_shape_def.density = 1.0F;
     body_shape_def.material.friction = 0.0F;
     body_shape_def.material.restitution = 0.0F;
-    body_shape_def.filter.categoryBits = Utils::EntityCategories::PLAYER;
+    body_shape_def.filter.categoryBits = Utils::EntityCategories::ENEMY;
     b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
 
     // ground sensor setup
     b2Polygon ground_sensor_polygon =
-        b2MakeOffsetBox(6, 4, (b2Vec2){ 0, constants::PLAYER_HEIGHT / 2 }, b2MakeRot(0));
+        b2MakeOffsetBox(6, 4, (b2Vec2){ 0, constants::ENEMY_HEIGHT / 2 }, b2MakeRot(0));
     b2ShapeDef ground_sensor_def = b2DefaultShapeDef();
     ground_sensor_def.isSensor = true;
     ground_sensor_def.enableSensorEvents = true;
-    ground_sensor_def.filter.categoryBits = Utils::EntityCategories::PLAYER;
+    ground_sensor_def.filter.categoryBits = Utils::EntityCategories::ENEMY;
     auto* sensor_data = new Utils::ShapeUserData{ ._id = "ground_sensor" };
     ground_sensor_def.userData = sensor_data;
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
     // attack raycast setup
     b2QueryFilter raycast_filter = b2DefaultQueryFilter();
-    raycast_filter.maskBits = Utils::EntityCategories::ENEMY;
+    raycast_filter.maskBits = Utils::EntityCategories::PLAYER;
     Utils::RayCastUserData raycast_user_data =
-        Utils::RayCastUserData{ ._id = "player_raycast" };
+        Utils::RayCastUserData{ ._id = "enemy_raycast" };
     std::vector<components::PermanentRayCastComponent> raycast_list(2);
     raycast_list.emplace_back(components::PermanentRayCastComponent{
         .user_data = raycast_user_data,
         .filter = raycast_filter,
-        .start_offset = (Vector2){ 0, -constants::PLAYER_COLLIDER_HEIGHT / 4 },
-        .translation = (Vector2){ constants::PLAYER_ATTACK_RAYCAST_LENGTH, 0 },
+        .start_offset = (Vector2){ 0, -constants::ENEMY_COLLIDER_HEIGHT / 4 },
+        .translation = (Vector2){ constants::ENEMY_ATTACK_RAYCAST_LENGTH, 0 },
     });
     raycast_list.emplace_back(components::PermanentRayCastComponent{
         .user_data = raycast_user_data,
         .filter = raycast_filter,
-        .start_offset = (Vector2){ 0, constants::PLAYER_COLLIDER_HEIGHT / 4 },
-        .translation = (Vector2){ constants::PLAYER_ATTACK_RAYCAST_LENGTH, 0 },
+        .start_offset = (Vector2){ 0, constants::ENEMY_COLLIDER_HEIGHT / 4 },
+        .translation = (Vector2){ constants::ENEMY_ATTACK_RAYCAST_LENGTH, 0 },
     });
 
     // texture setup
-    ctx.texture_engine.load_texture("player_idle", "assets/player/idle.png");
-    ctx.texture_engine.load_texture("player_walk", "assets/player/walk.png");
-    ctx.texture_engine.load_texture("player_jump", "assets/player/jump.png");
-    ctx.texture_engine.load_texture("player_attack", "assets/player/sword_slash_vertical.png");
-    ctx.texture_engine.load_texture("player_attack_air", "assets/player/horizontal_air_slash.png");
+    ctx.texture_engine.load_texture("enemy_idle", "assets/enemy/idle.png");
+    ctx.texture_engine.load_texture("enemy_walk", "assets/enemy/walk.png");
+    ctx.texture_engine.load_texture("enemy_jump", "assets/enemy/jump.png");
+    ctx.texture_engine.load_texture("enemy_attack", "assets/enemy/sword_slash_vertical.png");
+    ctx.texture_engine.load_texture("enemy_attack_air", "assets/enemy/horizontal_air_slash.png");
 
     // state setup
-    ctx.state_engine.load_state_registry("player", "data/player.states.yaml");
+    ctx.state_engine.load_state_registry("enemy", "data/enemy.states.yaml");
 
     StateEngine::State starting_state =
-        ctx.state_engine.get_state_registry("player")["idle"];
+        ctx.state_engine.get_state_registry("enemy")["idle"];
 
     // ecs entity setup
-    flecs::entity player_entity{
+    flecs::entity enemy_entity{
         ctx.registry.entity()
             .set(components::PositionComponent{ pos.x - (shape_size.x / 2),
                                                 pos.y - (shape_size.y / 2) })
@@ -75,10 +75,8 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
                 .left_idle_right = 0,
                 .on_ground = false,
             })
-            .add<components::ControllerComponent>()
-            .add<components::CameraComponent>()
             .set(components::StateRegistryComponent{ .state_registry_id =
-                                                         "player" })
+                                                         "enemy" })
             .set(components::StateComponent{
                 .curr_state_id = "idle",
             })
