@@ -16,6 +16,7 @@ namespace MovementSystem {
 void update(GameContext::GameContext& ctx);
 }
 namespace AttackSystem {
+void setup(GameContext::GameContext& ctx, b2WorldId world_id);
 void update(GameContext::GameContext& ctx, b2WorldId world_id);
 }
 

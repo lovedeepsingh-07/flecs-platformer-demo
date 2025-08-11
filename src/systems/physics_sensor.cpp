@@ -13,7 +13,7 @@ void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_
                 if (b2Shape_IsSensor(shape_id)) {
                     auto* sensor_data =
                         static_cast<Utils::ShapeUserData*>(b2Shape_GetUserData(shape_id));
-                    if (sensor_data != nullptr && sensor_data->_id == "ground_sensor") {
+                    if (sensor_data != nullptr && sensor_data->_id.ends_with("sensor_ground")) {
                         movement.on_ground = true;
                     }
                 }
@@ -24,7 +24,7 @@ void PhysicsSensorSystem::update(GameContext::GameContext& ctx, b2WorldId world_
                 if (b2Shape_IsSensor(shape_id)) {
                     auto* sensor_data =
                         static_cast<Utils::ShapeUserData*>(b2Shape_GetUserData(shape_id));
-                    if (sensor_data != nullptr && sensor_data->_id == "ground_sensor") {
+                    if (sensor_data != nullptr && sensor_data->_id.ends_with("sensor_ground")) {
                         movement.on_ground = false;
                     }
                 }

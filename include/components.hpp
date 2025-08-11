@@ -74,6 +74,7 @@ struct PermanentRayCastListComponent {
 
 struct JumpEventComponent {};
 struct AttackEventComponent {};
+struct AttackHitEventComponent {};
 
 struct CameraComponent {};
 

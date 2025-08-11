@@ -37,6 +37,7 @@ void Scene::GameScene::on_enter(GameContext::GameContext& ctx) {
     TileWorldModule::setup(ctx, m_world_id);
     PlayerModule::setup(player_pos, m_world_id, ctx);
     EnemyModule::setup(enemy_pos, m_world_id, ctx);
+    AttackSystem::setup(ctx, m_world_id);
 }
 
 void Scene::GameScene::on_update(GameContext::GameContext& ctx) {

@@ -1,6 +1,5 @@
 #include "components.hpp"
 #include "interface.hpp"
-#include "raylib.h"
 #include <imgui.h>
 #include <rlImGui.h>
 
