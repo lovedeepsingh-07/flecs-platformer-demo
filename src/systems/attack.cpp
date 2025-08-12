@@ -10,35 +10,18 @@ void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
         .each([](const components::PositionComponent& pos) {
             std::cout << "(" << pos.x << "," << pos.y << ")" << '\n';
         });
-    ctx.registry.observer<components::AttackEventComponent>()
-        .with<components::AttackComponent>()
-        .with<components::TextureComponent>()
-        .filter()
-        .with<components::MovementComponent>()
-        .filter()
-        .with<components::PositionComponent>()
-        .filter()
-        .event(flecs::OnAdd)
-        .each([](flecs::entity curr_entity, const components::AttackEventComponent& attack_event) {
-            auto attack = curr_entity.get<components::AttackComponent>();
-            auto texture = curr_entity.get<components::TextureComponent>();
-            auto movement = curr_entity.get<components::MovementComponent>();
-            auto pos = curr_entity.get<components::PositionComponent>();
-            std::cout << "shit works!" << '\n';
-        });
-}
-
-void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
     ctx.registry
-        .system<components::AttackComponent, components::TextureComponent, components::MovementComponent, components::PositionComponent>()
-        .each([&ctx, &world_id](
-                  flecs::entity curr_entity, components::AttackComponent& attack,
-                  const components::TextureComponent& texture,
-                  const components::MovementComponent& movement, components::PositionComponent& pos
+        .observer<
+            components::AttackEventComponent, components::AttackComponent, components::TextureComponent,
+            components::MovementComponent, components::PositionComponent>()
+        .event(flecs::OnAdd)
+        .each([&ctx, world_id](
+                  flecs::entity curr_entity, const components::AttackEventComponent& attack_event,
+                  components::AttackComponent& attack, components::TextureComponent& texture,
+                  const components::MovementComponent& movement,
+                  const components::PositionComponent& pos
               ) {
-            if (curr_entity.has<components::AttackEventComponent>() && !attack.attacking) {
-                attack.attacking = true;
-            }
+            attack.attacking = true;
 
 
             // singular raycast
@@ -114,6 +97,7 @@ void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
                     }
                 }
             }
-        })
-        .run();
+        });
 }
+
+void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {}
