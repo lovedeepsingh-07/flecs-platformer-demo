@@ -38,6 +38,8 @@ void Scene::GameScene::on_enter(GameContext::GameContext& ctx) {
     PlayerModule::setup(player_pos, m_world_id, ctx);
     EnemyModule::setup(enemy_pos, m_world_id, ctx);
     AttackSystem::setup(ctx, m_world_id);
+    HealthSystem::setup(ctx);
+    KnockbackSystem::setup(ctx);
 }
 
 void Scene::GameScene::on_update(GameContext::GameContext& ctx) {
@@ -68,6 +70,7 @@ void Scene::GameScene::on_render(GameContext::GameContext& ctx) {
     }
 
     if (m_debug_mode) {
+        // render states above players
         ctx.registry
             .system<components::PositionComponent, components::StateComponent, components::BaseColliderComponent>()
             .each([](components::PositionComponent& pos, components::StateComponent& state,

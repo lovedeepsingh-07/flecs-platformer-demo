@@ -1,4 +1,5 @@
 #include "components.hpp"
+#include "constants.hpp"
 #include "systems.hpp"
 #include <raylib.h>
 
@@ -28,6 +29,26 @@ void Render2DSystem::render(GameContext::GameContext& ctx) {
         .each([](const components::PositionComponent& pos,
                  const components::RectangleComponent& rect) {
             DrawRectangle((int)pos.x, (int)pos.y, (int)rect.width, (int)rect.height, rect.color);
+        })
+        .run();
+
+    // render healthbars
+    ctx.registry
+        .system<components::HealthComponent, components::BaseColliderComponent, components::PositionComponent>()
+        .each([](const components::HealthComponent& health,
+                 const components::BaseColliderComponent& base_collider,
+                 const components::PositionComponent& pos) {
+            int pos_x = (int)pos.x - (int)(constants::HEALTHBAR_WIDTH / 2);
+
+            DrawRectangle(
+                pos_x, (int)(pos.y - base_collider.height),
+                (int)(constants::HEALTHBAR_WIDTH * (health.health / health.max_health)),
+                constants::HEALTHBAR_HEIGHT, GREEN
+            );
+            DrawRectangleLines(
+                pos_x, (int)(pos.y - base_collider.height),
+                constants::HEALTHBAR_WIDTH, constants::HEALTHBAR_HEIGHT, WHITE
+            );
         })
         .run();
 }

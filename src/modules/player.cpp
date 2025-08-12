@@ -94,4 +94,11 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
             .source_rect = starting_state.animation_data.frames[0],
             .flipped = false,
         });
+
+    // setup health
+    player_entity.set(components::HealthComponent{
+        ._owner = player_entity,
+        .health = constants::MAX_PLAYER_HEALTH,
+        .max_health = constants::MAX_PLAYER_HEALTH,
+    });
 }

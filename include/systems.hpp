@@ -20,6 +20,13 @@ void setup(GameContext::GameContext& ctx, b2WorldId world_id);
 void update(GameContext::GameContext& ctx, b2WorldId world_id);
 }
 
+namespace HealthSystem {
+void setup(GameContext::GameContext& ctx);
+}
+namespace KnockbackSystem {
+void setup(GameContext::GameContext& ctx);
+}
+
 namespace PhysicsSystem {
 void update(GameContext::GameContext& ctx);
 void draw_solid_polygon(

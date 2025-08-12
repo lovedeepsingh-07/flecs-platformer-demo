@@ -2,14 +2,8 @@
 #include "systems.hpp"
 #include "utils.hpp"
 #include <box2d/box2d.h>
-#include <iostream>
 
 void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
-    ctx.registry.observer<components::PositionComponent>()
-        .event<components::AttackHitEventComponent>()
-        .each([](const components::PositionComponent& pos) {
-            std::cout << "(" << pos.x << "," << pos.y << ")" << '\n';
-        });
     ctx.registry
         .observer<
             components::AttackEventComponent, components::AttackComponent, components::TextureComponent,
@@ -50,11 +44,9 @@ void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
                     );
                 }
 
-                if (cast_context.hit && attack.attacking) {
-                    ctx.registry.event<components::AttackHitEventComponent>()
-                        .id<components::PositionComponent>()
-                        .entity(cast_context.hit_entity)
-                        .emit();
+                if (cast_context.hit && attack.attacking
+                    && !cast_context.hit_entity.has<components::AttackHitEventComponent>()) {
+                    cast_context.hit_entity.add<components::AttackHitEventComponent>();
                 }
             }
 
@@ -88,12 +80,9 @@ void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
                         );
                     }
 
-                    if (cast_context.hit && attack.attacking) {
-                        ctx.registry
-                            .event<components::AttackHitEventComponent>()
-                            .id<components::PositionComponent>()
-                            .entity(cast_context.hit_entity)
-                            .emit();
+                    if (cast_context.hit && attack.attacking
+                        && !cast_context.hit_entity.has<components::AttackHitEventComponent>()) {
+                        cast_context.hit_entity.add<components::AttackHitEventComponent>();
                     }
                 }
             }

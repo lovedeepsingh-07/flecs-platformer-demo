@@ -19,6 +19,7 @@ constexpr float PLAYER_COLLIDER_WIDTH = 32.0F;
 constexpr float PLAYER_COLLIDER_HEIGHT = 48.0F;
 constexpr float PLAYER_ATTACK_RAYCAST_LENGTH = 56.0F;
 constexpr float PLAYER_JUMP_VEL = -5.0F * WORLD_SCALE * FORCE_CONST;
+constexpr float MAX_PLAYER_HEALTH = 100.0F;
 
 constexpr float ENEMY_WIDTH = 32.0F;
 constexpr float ENEMY_HEIGHT = 48.0F;
@@ -26,10 +27,14 @@ constexpr float ENEMY_COLLIDER_WIDTH = 32.0F;
 constexpr float ENEMY_COLLIDER_HEIGHT = 48.0F;
 constexpr float ENEMY_ATTACK_RAYCAST_LENGTH = 56.0F;
 constexpr float ENEMY_JUMP_VEL = -5.0F * WORLD_SCALE * FORCE_CONST;
+constexpr float MAX_ENEMY_HEALTH = 100.0F;
 
 constexpr float MIN_CAMERA_SPEED = 30;
 constexpr float MIN_CAMERA_EFFECT_LENGTH = 30;
 constexpr float CAMERA_FRACTION_SPEED = 0.5F;
+
+constexpr float HEALTHBAR_HEIGHT = 8.0F;
+constexpr float HEALTHBAR_WIDTH = 64.0F;
 
 constexpr KeyboardKey DEBUG_KEY = KEY_F3;
 

@@ -92,4 +92,11 @@ void EnemyModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContext
             .source_rect = starting_state.animation_data.frames[0],
             .flipped = false,
         });
+
+    // setup health
+    enemy_entity.set(components::HealthComponent{
+        ._owner = enemy_entity,
+        .health = constants::MAX_ENEMY_HEALTH,
+        .max_health = constants::MAX_ENEMY_HEALTH,
+    });
 }

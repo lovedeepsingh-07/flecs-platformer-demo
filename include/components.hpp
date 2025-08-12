@@ -72,6 +72,12 @@ struct PermanentRayCastListComponent {
     std::vector<PermanentRayCastComponent> items;
 };
 
+struct HealthComponent {
+    flecs::entity _owner;
+    float health;
+    float max_health;
+};
+
 struct JumpEventComponent {};
 struct AttackEventComponent {};
 struct AttackHitEventComponent {};
