@@ -5,18 +5,35 @@
 
 void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
     ctx.registry
-        .observer<
-            components::AttackEventComponent, components::AttackComponent, components::TextureComponent,
-            components::MovementComponent, components::PositionComponent>()
+        .observer<components::AttackEventComponent, components::AttackComponent>()
         .event(flecs::OnAdd)
         .each([&ctx, world_id](
                   flecs::entity curr_entity, const components::AttackEventComponent& attack_event,
-                  components::AttackComponent& attack, components::TextureComponent& texture,
-                  const components::MovementComponent& movement,
-                  const components::PositionComponent& pos
-              ) {
-            attack.attacking = true;
+                  components::AttackComponent& attack
+              ) { attack.attacking = true; });
+}
 
+void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
+    ctx.registry
+        .system<
+            components::AttackComponent, components::PositionComponent, components::MovementComponent,
+            components::TextureComponent, components::AnimationComponent,
+            components::StateRegistryComponent, components::StateComponent>()
+        .each([&ctx, world_id](
+                  flecs::entity curr_entity, components::AttackComponent& attack,
+                  const components::PositionComponent& pos,
+                  const components::MovementComponent& movement,
+                  const components::TextureComponent& texture,
+                  const components::AnimationComponent& animation,
+                  components::StateRegistryComponent& state_registry, components::StateComponent& state
+              ) {
+            StateEngine::StateRegistry& curr_registry =
+                ctx.state_engine.get_state_registry(state_registry.state_registry_id);
+            StateEngine::State curr_state = curr_registry[state.curr_state_id];
+
+            if (!(&attack.attacking)) {
+                return;
+            }
 
             // singular raycast
             if (curr_entity.has<components::PermanentRayCastComponent>()) {
@@ -44,8 +61,13 @@ void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
                     );
                 }
 
-                if (cast_context.hit && attack.attacking
-                    && !cast_context.hit_entity.has<components::AttackHitEventComponent>()) {
+                if (cast_context.hit && attack.attacking && !attack.hit_some_entity
+                    && !cast_context.hit_entity.has<components::AttackHitEventComponent>()
+                    && curr_state.animation_data
+                            .frames[animation.curr_frame_index]
+                            ._type
+                        == "active") {
+                    attack.hit_some_entity = true;
                     cast_context.hit_entity.add<components::AttackHitEventComponent>();
                 }
             }
@@ -80,13 +102,17 @@ void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
                         );
                     }
 
-                    if (cast_context.hit && attack.attacking
-                        && !cast_context.hit_entity.has<components::AttackHitEventComponent>()) {
+                    if (cast_context.hit && attack.attacking && !attack.hit_some_entity
+                        && !cast_context.hit_entity.has<components::AttackHitEventComponent>()
+                        && curr_state.animation_data
+                                .frames[animation.curr_frame_index]
+                                ._type
+                            == "active") {
+                        attack.hit_some_entity = true;
                         cast_context.hit_entity.add<components::AttackHitEventComponent>();
                     }
                 }
             }
-        });
+        })
+        .run();
 }
-
-void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {}

@@ -36,6 +36,8 @@ constexpr float CAMERA_FRACTION_SPEED = 0.5F;
 constexpr float HEALTHBAR_HEIGHT = 8.0F;
 constexpr float HEALTHBAR_WIDTH = 64.0F;
 
+constexpr float ANIMATION_FRAME_TIME = 0.1F;
+
 constexpr KeyboardKey DEBUG_KEY = KEY_F3;
 
 }

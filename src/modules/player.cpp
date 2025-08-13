@@ -91,7 +91,7 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
         .set(components::TextureComponent{
             .texture =
                 ctx.texture_engine.get_texture(starting_state.animation_data.texture_id),
-            .source_rect = starting_state.animation_data.frames[0],
+            .source_rect = starting_state.animation_data.frames[0].source_rect,
             .flipped = false,
         });
 

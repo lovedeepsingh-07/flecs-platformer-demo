@@ -60,6 +60,7 @@ struct MovementComponent {
 
 struct AttackComponent {
     bool attacking;
+    bool hit_some_entity{ false };
 };
 
 struct PermanentRayCastComponent {
@@ -80,6 +81,7 @@ struct HealthComponent {
 
 struct JumpEventComponent {};
 struct AttackEventComponent {};
+
 struct AttackHitEventComponent {};
 
 struct CameraComponent {};

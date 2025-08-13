@@ -7,17 +7,25 @@ void player_debug(GameContext::GameContext& ctx) {
     ctx.registry
         .system<
             components::PositionComponent, components::PhysicsComponent, components::TextureComponent,
-            components::AnimationComponent, components::StateComponent, components::AttackComponent,
-            components::MovementComponent, components::ControllerComponent, components::CameraComponent>()
-        .each([](flecs::entity curr_entity, const components::PositionComponent& pos,
-                 const components::PhysicsComponent& phy,
-                 const components::TextureComponent& texture,
-                 const components::AnimationComponent& animation,
-                 const components::StateComponent& state,
-                 const components::AttackComponent& attack,
-                 const components::MovementComponent& movement,
-                 const components::ControllerComponent& controller,
-                 const components::CameraComponent& camera) {
+            components::AnimationComponent, components::StateRegistryComponent,
+            components::StateComponent, components::AttackComponent, components::MovementComponent,
+            components::ControllerComponent, components::CameraComponent>()
+        .each([&ctx](
+                  flecs::entity curr_entity, const components::PositionComponent& pos,
+                  const components::PhysicsComponent& phy,
+                  const components::TextureComponent& texture,
+                  const components::AnimationComponent& animation,
+                  const components::StateRegistryComponent& state_registry,
+                  const components::StateComponent& state,
+                  const components::AttackComponent& attack,
+                  const components::MovementComponent& movement,
+                  const components::ControllerComponent& controller,
+                  const components::CameraComponent& camera
+              ) {
+            StateEngine::StateRegistry& curr_registry =
+                ctx.state_engine.get_state_registry(state_registry.state_registry_id);
+            StateEngine::State curr_state = curr_registry[state.curr_state_id];
+
             ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
             ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
             ImGui::Text("Jumping: %s", movement.jumping ? "true" : "false");
@@ -25,6 +33,11 @@ void player_debug(GameContext::GameContext& ctx) {
             ImGui::Text("Left_Idle_Right: %d", movement.left_idle_right);
             ImGui::Text("Curr State: %s", state.curr_state_id.c_str());
             ImGui::Text("Curr Frame Index: %d", animation.curr_frame_index);
+            ImGui::Text(
+                "Curr Frame Type: %s",
+                curr_state.animation_data.frames[animation.curr_frame_index]
+                    ._type.c_str()
+            );
             ImGui::Text("Animation Playing: %s", animation.playing ? "true" : "false");
             ImGui::Text("Animation Finished: %s", animation.finished ? "true" : "false");
             ImGui::Text("Texture Flipped: %s", texture.flipped ? "true" : "false");

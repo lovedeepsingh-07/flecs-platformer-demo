@@ -1,4 +1,5 @@
 #include "components.hpp"
+#include "constants.hpp"
 #include "systems.hpp"
 
 void AnimationSystem::update(GameContext::GameContext& ctx) {
@@ -28,20 +29,23 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
             StateEngine::StateRegistry& curr_registry =
                 ctx.state_engine.get_state_registry(state_registry.state_registry_id);
             StateEngine::State curr_state = curr_registry[state.curr_state_id];
+
             if (!animation.playing || animation.finished) {
                 if (attack.attacking
                     && curr_entity.has<components::AttackEventComponent>()) {
                     curr_entity.remove<components::AttackEventComponent>();
                     attack.attacking = false;
+                    attack.hit_some_entity = false;
                 }
                 return;
             }
+
             animation.time_accumulator += GetFrameTime();
-            const Rectangle curr_frame =
+            const StateEngine::AnimationFrame curr_frame =
                 curr_state.animation_data.frames[animation.curr_frame_index];
 
-            if (animation.time_accumulator >= 0.1F) {
-                animation.time_accumulator -= 0.1F;
+            if (animation.time_accumulator >= constants::ANIMATION_FRAME_TIME) {
+                animation.time_accumulator -= constants::ANIMATION_FRAME_TIME;
                 animation.curr_frame_index++;
 
                 if (animation.curr_frame_index
@@ -61,7 +65,7 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
             texture.texture =
                 ctx.texture_engine.get_texture(curr_state.animation_data.texture_id);
             texture.source_rect =
-                curr_state.animation_data.frames[animation.curr_frame_index];
+                curr_state.animation_data.frames[animation.curr_frame_index].source_rect;
         })
         .run();
 }

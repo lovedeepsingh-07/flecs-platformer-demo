@@ -5,15 +5,20 @@
 
 namespace StateEngine {
 
-struct State_can_transition_to {
-    std::string id;
-    int frame;
+struct AnimationFrame {
+    std::string _type;
+    Rectangle source_rect;
 };
 
 struct State_animation_data {
     std::string texture_id;
-    std::vector<Rectangle> frames;
+    std::vector<AnimationFrame> frames;
     bool loop;
+};
+
+struct State_can_transition_to {
+    std::string id;
+    int frame;
 };
 
 struct State {

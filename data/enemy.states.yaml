@@ -11,7 +11,8 @@ states:
         loop: true
         texture_id: "player_idle"
         frames:
-          - [0, 0, 128, 128]
+          - type: "active"
+            source_rect: [0, 0, 128, 128]
   - walk:
       can_transition_to:
         - idle:
@@ -24,9 +25,12 @@ states:
         loop: true
         texture_id: "player_walk"
         frames:
-          - [0, 0, 128, 128]
-          - [128, 0, 128, 128]
-          - [256, 0, 128, 128]
+          - type: "active"
+            source_rect: [0, 0, 128, 128]
+          - type: "active"
+            source_rect: [128, 0, 128, 128]
+          - type: "active"
+            source_rect: [256, 0, 128, 128]
   - jump:
       can_transition_to:
         - idle:
@@ -39,7 +43,8 @@ states:
         loop: false
         texture_id: "player_jump"
         frames:
-          - [0, 0, 128, 128]
+          - type: "active"
+            source_rect: [0, 0, 128, 128]
   - attack:
       can_transition_to:
         - idle:
@@ -52,10 +57,14 @@ states:
         loop: false
         texture_id: "player_attack"
         frames:
-          - [0, 0, 256, 256]
-          - [256, 0, 256, 256]
-          - [512, 0, 256, 256]
-          - [768, 0, 256, 256]
+          - type: "windup"
+            source_rect: [0, 0, 256, 256]
+          - type: "active"
+            source_rect: [256, 0, 256, 256]
+          - type: "recovery"
+            source_rect: [512, 0, 256, 256]
+          - type: "recovery"
+            source_rect: [768, 0, 256, 256]
   - attack_air:
       can_transition_to:
         - idle:
@@ -68,6 +77,9 @@ states:
         loop: false
         texture_id: "player_attack_air"
         frames:
-          - [0, 0, 128, 128]
-          - [128, 0, 128, 128]
-          - [256, 0, 128, 128]
+          - type: "windup"
+            source_rect: [0, 0, 128, 128]
+          - type: "active"
+            source_rect: [128, 0, 128, 128]
+          - type: "recovery"
+            source_rect: [256, 0, 128, 128]

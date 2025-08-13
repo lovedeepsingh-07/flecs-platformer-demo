@@ -42,12 +42,14 @@ void StateEngine::StateEngine::load_state_registry(
             animation_data.loop = animation_data_yaml["loop"].as<bool>();
             YAML::Node frames_yaml = animation_data_yaml["frames"];
             for (const YAML::Node& curr_frame_yaml : frames_yaml) {
-                animation_data.frames.emplace_back(Rectangle{
-                    curr_frame_yaml[0].as<float>(),
-                    curr_frame_yaml[1].as<float>(),
-                    curr_frame_yaml[2].as<float>(),
-                    curr_frame_yaml[3].as<float>(),
-                });
+                animation_data.frames.emplace_back(AnimationFrame{
+                    ._type = curr_frame_yaml["type"].as<std::string>(),
+                    .source_rect = Rectangle{
+                        curr_frame_yaml["source_rect"][0].as<float>(),
+                        curr_frame_yaml["source_rect"][1].as<float>(),
+                        curr_frame_yaml["source_rect"][2].as<float>(),
+                        curr_frame_yaml["source_rect"][3].as<float>(),
+                    } });
             }
             curr_state.animation_data = animation_data;
         }
