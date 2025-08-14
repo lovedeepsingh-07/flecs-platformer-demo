@@ -5,7 +5,7 @@
 void HealthSystem::setup(GameContext::GameContext& ctx) {
     ctx.registry
         .observer<components::AttackHitEventComponent, components::HealthComponent>()
-        .event(flecs::OnAdd)
+        .event(flecs::OnSet)
         .each([](flecs::entity curr_entity, const components::AttackHitEventComponent& attack_hit_event,
                  components::HealthComponent& health) {
             if (!(health.health <= 0)) {

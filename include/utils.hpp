@@ -9,8 +9,9 @@
 namespace Utils {
 
 enum EntityCategories : uint8_t {
-    PLAYER = 0x00000002,
-    ENEMY = 0x00000004,
+    GROUND = 0x01,
+    PLAYER = 0x02,
+    ENEMY = 0x04,
 };
 
 // the usual way of naming the ID is: entity_type_category

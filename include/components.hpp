@@ -81,8 +81,9 @@ struct HealthComponent {
 
 struct JumpEventComponent {};
 struct AttackEventComponent {};
-
-struct AttackHitEventComponent {};
+struct AttackHitEventComponent {
+    int direction;
+};
 
 struct CameraComponent {};
 

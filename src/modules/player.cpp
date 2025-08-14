@@ -24,6 +24,7 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
     body_shape_def.material.friction = 0.0F;
     body_shape_def.material.restitution = 0.0F;
     body_shape_def.filter.categoryBits = Utils::EntityCategories::PLAYER;
+    body_shape_def.filter.maskBits = Utils::EntityCategories::GROUND;
     body_shape_def.userData =
         new Utils::ShapeUserData{ ._id = "player_shape_body", ._owner = player_entity };
     b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
@@ -35,6 +36,7 @@ void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContex
     ground_sensor_def.isSensor = true;
     ground_sensor_def.enableSensorEvents = true;
     ground_sensor_def.filter.categoryBits = Utils::EntityCategories::PLAYER;
+    ground_sensor_def.filter.maskBits = Utils::EntityCategories::GROUND;
     ground_sensor_def.userData =
         new Utils::ShapeUserData{ ._id = "player_sensor_ground", ._owner = player_entity };
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);

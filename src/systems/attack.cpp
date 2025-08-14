@@ -2,6 +2,7 @@
 #include "systems.hpp"
 #include "utils.hpp"
 #include <box2d/box2d.h>
+#include <iostream>
 
 void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
     ctx.registry
@@ -68,7 +69,8 @@ void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
                             ._type
                         == "active") {
                     attack.hit_some_entity = true;
-                    cast_context.hit_entity.add<components::AttackHitEventComponent>();
+                    cast_context.hit_entity.set(components::AttackHitEventComponent{
+                        .direction = (texture.flipped ? -1 : 1) });
                 }
             }
 
@@ -109,7 +111,8 @@ void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
                                 ._type
                             == "active") {
                         attack.hit_some_entity = true;
-                        cast_context.hit_entity.add<components::AttackHitEventComponent>();
+                        cast_context.hit_entity.set(components::AttackHitEventComponent{
+                            .direction = (texture.flipped ? -1 : 1) });
                     }
                 }
             }

@@ -25,12 +25,14 @@ void player_debug(GameContext::GameContext& ctx) {
             StateEngine::StateRegistry& curr_registry =
                 ctx.state_engine.get_state_registry(state_registry.state_registry_id);
             StateEngine::State curr_state = curr_registry[state.curr_state_id];
+            b2Vec2 vel = b2Body_GetLinearVelocity(phy.body_id);
 
             ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
             ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
             ImGui::Text("Jumping: %s", movement.jumping ? "true" : "false");
             ImGui::Text("Falling: %s", movement.falling ? "true" : "false");
             ImGui::Text("Left_Idle_Right: %d", movement.left_idle_right);
+            ImGui::Text("Velocity_x: %f", vel.x);
             ImGui::Text("Curr State: %s", state.curr_state_id.c_str());
             ImGui::Text("Curr Frame Index: %d", animation.curr_frame_index);
             ImGui::Text(

@@ -105,6 +105,7 @@ void TileWorldModule::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
         body_chain_def.count = (int)vertices.size();
         body_chain_def.isLoop = true;
         body_chain_def.enableSensorEvents = true;
+        body_chain_def.filter.categoryBits = Utils::EntityCategories::GROUND;
         b2CreateChain(body_id, &body_chain_def);
         flecs::entity object_collider_entity{
             ctx.registry.entity().set(components::PhysicsComponent{ body_id })

@@ -21,6 +21,12 @@ constexpr float PLAYER_ATTACK_RAYCAST_LENGTH = 56.0F;
 constexpr float PLAYER_JUMP_VEL = -5.0F * WORLD_SCALE * FORCE_CONST;
 constexpr float MAX_PLAYER_HEALTH = 100.0F;
 
+constexpr float MAX_PLAYER_RUN_VEL = 3.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
+constexpr float ACCEL_GROUND = 12.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
+constexpr float ACCEL_AIR = 5.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
+constexpr float DECEL_GROUND = 12.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
+constexpr float DECEL_AIR = 2.0F * constants::WORLD_SCALE * constants::FORCE_CONST;
+
 constexpr float ENEMY_WIDTH = 32.0F;
 constexpr float ENEMY_HEIGHT = 48.0F;
 constexpr float ENEMY_COLLIDER_WIDTH = 32.0F;
