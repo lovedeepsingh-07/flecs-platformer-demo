@@ -1,6 +1,8 @@
 #pragma once
 
+#include "error.hpp"
 #include <raylib.h>
+#include <tl/expected.hpp>
 #include <yaml-cpp/yaml.h>
 
 namespace StateEngine {
@@ -12,8 +14,8 @@ struct AnimationFrame {
 
 struct State_animation_data {
     std::string texture_id;
-    std::vector<AnimationFrame> frames;
     bool loop;
+    std::vector<AnimationFrame> frames;
 };
 
 struct State_can_transition_to {
@@ -21,21 +23,41 @@ struct State_can_transition_to {
     int frame;
 };
 
-struct State {
+class State {
+  private:
+    std::unordered_map<std::string, State_can_transition_to> m_transitions;
+
+  public:
     std::string id;
-    std::unordered_map<std::string, State_can_transition_to> can_transition_to;
     State_animation_data animation_data;
+
+    tl::expected<void, error::StateEngineError>
+    load_transition(const std::string& transition_id, const State_can_transition_to& transition);
+    tl::expected<State_can_transition_to, error::StateEngineError>
+    get_transition(const std::string& transition_id);
+    tl::expected<bool, error::StateEngineError>
+    can_transition_to(const std::string& transition_id);
 };
 
-using StateRegistry = std::unordered_map<std::string, State>;
+class StateRegistry {
+  private:
+    std::unordered_map<std::string, State> m_states;
+
+  public:
+    tl::expected<void, error::StateEngineError>
+    load_state(const std::string& state_id, const State& state);
+    tl::expected<State, error::StateEngineError> get_state(const std::string& state_id);
+};
 
 class StateEngine {
   private:
     std::unordered_map<std::string, StateRegistry> m_state_registries;
 
   public:
-    void load_state_registry(const std::string& registry_id, const std::string& registry_file_path);
-    StateRegistry& get_state_registry(const std::string& registry_id);
+    tl::expected<void, error::StateEngineError>
+    load_state_registry(const std::string& registry_id, const std::string& registry_file_path);
+    tl::expected<StateRegistry, error::StateEngineError>
+    get_state_registry(const std::string& registry_id);
 };
 
 }

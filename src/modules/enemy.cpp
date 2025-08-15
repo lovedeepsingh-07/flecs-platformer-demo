@@ -79,9 +79,25 @@ void EnemyModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContext
     ctx.texture_engine.load_texture("player_attack_air", "assets/player/horizontal_air_slash.png");
 
     // state setup
-    ctx.state_engine.load_state_registry("enemy", "data/enemy.states.yaml");
-    StateEngine::State starting_state =
-        ctx.state_engine.get_state_registry("enemy")["idle"];
+    auto registry_load_result =
+        ctx.state_engine.load_state_registry("enemy", "data/enemy.states.yaml");
+    if (!registry_load_result) {
+        throw std::runtime_error(registry_load_result.error().message);
+    }
+
+    StateEngine::StateRegistry curr_registry;
+    auto state_registry_result = ctx.state_engine.get_state_registry("enemy");
+    if (!state_registry_result) {
+        throw std::runtime_error(state_registry_result.error().message);
+    }
+    curr_registry = *state_registry_result;
+
+    StateEngine::State starting_state;
+    auto state_result = curr_registry.get_state("idle");
+    if (!state_result) {
+        throw std::runtime_error(state_result.error().message);
+    }
+    starting_state = *state_result;
 
     enemy_entity
         .set(components::StateRegistryComponent{ .state_registry_id = "enemy" })

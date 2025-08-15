@@ -1,14 +1,22 @@
 #include "state_engine.hpp"
-#include <iostream>
 
-void StateEngine::StateEngine::load_state_registry(
-    const std::string& registry_id, const std::string& registry_file_path
-) {
+tl::expected<void, error::StateEngineError>
+StateEngine::StateEngine::load_state_registry(const std::string& registry_id, const std::string& registry_file_path) {
+    // check if a registry with the same ID already exists
+    const auto query_result = this->get_state_registry(registry_id);
+    if (query_result) {
+        return tl::unexpected(error::StateEngineError{
+            error::StateEngineError::Type::StateRegistry_LoadError,
+            "registry with this ID already exists" });
+    }
+
     YAML::Node states_yaml_root = YAML::LoadFile(registry_file_path);
-
     const YAML::Node& states_yaml = states_yaml_root["states"];
+
     if (!states_yaml || !states_yaml.IsSequence()) {
-        std::cerr << "Invalid or missing 'states' node." << '\n';
+        return tl::unexpected(error::StateEngineError{
+            error::StateEngineError::Type::StateRegistry_LoadError,
+            "unable to find 'states' node in YAML" });
     }
 
     StateRegistry state_registry;
@@ -30,7 +38,13 @@ void StateEngine::StateEngine::load_state_registry(
                     curr_transition_yaml.begin()->first.as<std::string>();
                 curr_transition.frame =
                     curr_transition_yaml.begin()->second["frame"].as<int>();
-                curr_state.can_transition_to[curr_transition.id] = curr_transition;
+                const auto transition_load_result =
+                    curr_state.load_transition(curr_transition.id, curr_transition);
+                if (!transition_load_result) {
+                    return tl::unexpected(error::StateEngineError{
+                        error::StateEngineError::Type::StateRegistry_LoadError,
+                        transition_load_result.error().message });
+                }
             }
 
             // animation_data
@@ -53,12 +67,89 @@ void StateEngine::StateEngine::load_state_registry(
             }
             curr_state.animation_data = animation_data;
         }
-        state_registry[curr_state.id] = curr_state;
+
+        const auto state_load_result = state_registry.load_state(curr_state.id, curr_state);
+        if (!state_load_result) {
+            return tl::unexpected(error::StateEngineError{
+                error::StateEngineError::Type::StateRegistry_LoadError,
+                state_load_result.error().message });
+        }
     }
-    this->m_state_registries[registry_id] = state_registry;
+
+    this->m_state_registries.emplace(registry_id, state_registry);
+    return {};
 }
 
-StateEngine::StateRegistry&
+tl::expected<StateEngine::StateRegistry, error::StateEngineError>
 StateEngine::StateEngine::get_state_registry(const std::string& registry_id) {
-    return m_state_registries[registry_id];
+    // check if a registry with this ID exists
+    auto iter = this->m_state_registries.find(registry_id);
+    if (iter == this->m_state_registries.end()) {
+        return tl::unexpected(error::StateEngineError{
+            error::StateEngineError::Type::StateRegistry_GetError,
+            "registry with this ID does not exist" });
+    }
+
+    return iter->second;
 }
+
+tl::expected<void, error::StateEngineError>
+StateEngine::StateRegistry::load_state(const std::string& state_id, const State& state) {
+    // check if a state with the same ID already exists
+    const auto query_result = this->get_state(state_id);
+    if (query_result) {
+        return tl::unexpected(error::StateEngineError{
+            error::StateEngineError::Type::State_LoadError, "state with this ID already exists" });
+    }
+
+    this->m_states.emplace(state_id, state);
+    return {};
+};
+
+tl::expected<StateEngine::State, error::StateEngineError>
+StateEngine::StateRegistry::get_state(const std::string& state_id) {
+    // check if a state with this ID exists
+    auto iter = this->m_states.find(state_id);
+    if (iter == this->m_states.end()) {
+        return tl::unexpected(error::StateEngineError{
+            error::StateEngineError::Type::State_GetError, "state with this ID does not exists" });
+    }
+
+    return iter->second;
+};
+
+tl::expected<void, error::StateEngineError>
+StateEngine::State::load_transition(const std::string& transition_id, const State_can_transition_to& transition) {
+    // check if a transition with the same ID already exists
+    const auto query_result = this->get_transition(transition_id);
+    if (query_result) {
+        return tl::unexpected(error::StateEngineError{
+            error::StateEngineError::Type::StateTransition_LoadError,
+            "transition with this ID already exists" });
+    }
+
+    this->m_transitions.emplace(transition_id, transition);
+    return {};
+};
+
+tl::expected<StateEngine::State_can_transition_to, error::StateEngineError>
+StateEngine::State::get_transition(const std::string& transition_id) {
+    // check if a transition with this ID exists
+    auto iter = this->m_transitions.find(transition_id);
+    if (iter == this->m_transitions.end()) {
+        return tl::unexpected(error::StateEngineError{
+            error::StateEngineError::Type::StateTransition_GetError,
+            "transition with this ID does not exists" });
+    }
+
+    return iter->second;
+};
+
+tl::expected<bool, error::StateEngineError>
+StateEngine::State::can_transition_to(const std::string& transition_id) {
+    auto iter = this->m_transitions.find(transition_id);
+    if (iter == this->m_transitions.end()) {
+        return false;
+    }
+    return true;
+};

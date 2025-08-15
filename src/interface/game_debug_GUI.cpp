@@ -22,9 +22,23 @@ void player_debug(GameContext::GameContext& ctx) {
                   const components::ControllerComponent& controller,
                   const components::CameraComponent& camera
               ) {
-            StateEngine::StateRegistry& curr_registry =
+            // get current registry
+            StateEngine::StateRegistry curr_registry;
+            auto state_registry_result =
                 ctx.state_engine.get_state_registry(state_registry.state_registry_id);
-            StateEngine::State curr_state = curr_registry[state.curr_state_id];
+            if (!state_registry_result) {
+                throw std::runtime_error(state_registry_result.error().message);
+            }
+            curr_registry = *state_registry_result;
+
+            // get current state
+            StateEngine::State curr_state;
+            auto state_result = curr_registry.get_state(state.curr_state_id);
+            if (!state_result) {
+                throw std::runtime_error(state_result.error().message);
+            }
+            curr_state = *state_result;
+
             b2Vec2 vel = b2Body_GetLinearVelocity(phy.body_id);
 
             ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);

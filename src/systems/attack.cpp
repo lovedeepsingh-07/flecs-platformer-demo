@@ -2,7 +2,7 @@
 #include "systems.hpp"
 #include "utils.hpp"
 #include <box2d/box2d.h>
-#include <iostream>
+#include <stdexcept>
 
 void AttackSystem::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
     ctx.registry
@@ -28,11 +28,24 @@ void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
                   const components::AnimationComponent& animation,
                   components::StateRegistryComponent& state_registry, components::StateComponent& state
               ) {
-            StateEngine::StateRegistry& curr_registry =
+            // get current state registry
+            StateEngine::StateRegistry curr_registry;
+            auto state_registry_result =
                 ctx.state_engine.get_state_registry(state_registry.state_registry_id);
-            StateEngine::State curr_state = curr_registry[state.curr_state_id];
+            if (!state_registry_result) {
+                throw std::runtime_error(state_registry_result.error().message);
+            }
+            curr_registry = *state_registry_result;
 
-            if (!(&attack.attacking)) {
+            // get current state
+            StateEngine::State curr_state;
+            auto state_result = curr_registry.get_state(state.curr_state_id);
+            if (!state_result) {
+                throw std::runtime_error(state_result.error().message);
+            }
+            curr_state = *state_result;
+
+            if (!attack.attacking) {
                 return;
             }
 
@@ -104,6 +117,7 @@ void AttackSystem::update(GameContext::GameContext& ctx, b2WorldId world_id) {
                         );
                     }
 
+                    // TODO: there is some fucking issue here! that bug appears here
                     if (cast_context.hit && attack.attacking && !attack.hit_some_entity
                         && !cast_context.hit_entity.has<components::AttackHitEventComponent>()
                         && curr_state.animation_data

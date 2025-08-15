@@ -13,6 +13,7 @@ add_subdirectory(${EXTERNAL_DIR}/box2d)
 add_subdirectory(${EXTERNAL_DIR}/pugixml)
 add_subdirectory(${EXTERNAL_DIR}/rapidcsv)
 add_subdirectory(${EXTERNAL_DIR}/yaml-cpp)
+add_subdirectory(${EXTERNAL_DIR}/expected)
 
 set(IMGUI_SOURCES
     ${EXTERNAL_DIR}/imgui/imgui.cpp
@@ -46,6 +47,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	pugixml
 	rapidcsv
 	yaml-cpp::yaml-cpp
+	expected
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE PLATFORM_DESKTOP)

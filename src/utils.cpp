@@ -17,9 +17,6 @@ void Utils::HandleClayErrors(Clay_ErrorData errorData) {
     std::cout << errorData.errorText.chars << "\n";
 }
 
-// GameContext
-// owner entity
-// entity getting hit
 float Utils::cast_result_fcn(b2ShapeId shape_id, b2Vec2 point, b2Vec2 normal, float fraction, void* context) {
     auto* cast_context = static_cast<Utils::CastContext*>(context);
     auto* entity_hit_shape_data =
