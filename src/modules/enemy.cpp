@@ -6,8 +6,9 @@
 
 void EnemyModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContext& ctx) {
     // enemy ECS entity
-    flecs::entity enemy_entity =
-        ctx.registry.entity().set(components::AnimationComponent{});
+    flecs::entity enemy_entity = ctx.registry.entity()
+                                     .set(components::AnimationComponent{})
+                                     .set<components::ControllerComponent>({ ._id = 1 });
     // physical body setup
     b2Vec2 shape_size{ (b2Vec2){ constants::ENEMY_COLLIDER_WIDTH,
                                  constants::ENEMY_COLLIDER_HEIGHT } };

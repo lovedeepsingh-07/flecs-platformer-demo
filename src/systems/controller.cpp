@@ -8,28 +8,57 @@ void ControllerSystem::update(GameContext::GameContext& ctx) {
         .each([](flecs::entity curr_entity, components::MovementComponent& movement,
                  components::AttackComponent& attack,
                  const components::ControllerComponent& controller) {
-            if (IsKeyPressed(KEY_SPACE)
-                && !curr_entity.has<components::JumpEventComponent>()
-                && movement.on_ground) {
-                if (curr_entity.has<components::AttackEventComponent>()
-                    && attack.attacking) {
-                    curr_entity.remove<components::AttackEventComponent>();
-                    attack.attacking = false;
+            if (controller._id == 0) {
+                if (IsKeyPressed(KEY_W)
+                    && !curr_entity.has<components::JumpEventComponent>()
+                    && movement.on_ground) {
+                    if (curr_entity.has<components::AttackEventComponent>()
+                        && attack.attacking) {
+                        curr_entity.remove<components::AttackEventComponent>();
+                        attack.attacking = false;
+                    }
+                    curr_entity.add<components::JumpEventComponent>();
                 }
-                curr_entity.add<components::JumpEventComponent>();
+                if (IsKeyPressed(KEY_E)
+                    && !curr_entity.has<components::AttackEventComponent>()
+                    && !attack.attacking) {
+                    curr_entity.add<components::AttackEventComponent>();
+                }
+                if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !attack.attacking) {
+                    movement.left_idle_right = -1;
+                }
+                if (!IsKeyDown(KEY_A) && IsKeyDown(KEY_D) && !attack.attacking) {
+                    movement.left_idle_right = 1;
+                }
+                if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+                    movement.left_idle_right = 0;
+                }
             }
-            if (IsKeyPressed(KEY_J) && !curr_entity.has<components::AttackEventComponent>()
-                && !attack.attacking) {
-                curr_entity.add<components::AttackEventComponent>();
-            }
-            if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !attack.attacking) {
-                movement.left_idle_right = -1;
-            }
-            if (!IsKeyDown(KEY_A) && IsKeyDown(KEY_D) && !attack.attacking) {
-                movement.left_idle_right = 1;
-            }
-            if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
-                movement.left_idle_right = 0;
+            if (controller._id == 1) {
+                if (IsKeyPressed(KEY_I)
+                    && !curr_entity.has<components::JumpEventComponent>()
+                    && movement.on_ground) {
+                    if (curr_entity.has<components::AttackEventComponent>()
+                        && attack.attacking) {
+                        curr_entity.remove<components::AttackEventComponent>();
+                        attack.attacking = false;
+                    }
+                    curr_entity.add<components::JumpEventComponent>();
+                }
+                if (IsKeyPressed(KEY_O)
+                    && !curr_entity.has<components::AttackEventComponent>()
+                    && !attack.attacking) {
+                    curr_entity.add<components::AttackEventComponent>();
+                }
+                if (IsKeyDown(KEY_J) && !IsKeyDown(KEY_L) && !attack.attacking) {
+                    movement.left_idle_right = -1;
+                }
+                if (!IsKeyDown(KEY_J) && IsKeyDown(KEY_L) && !attack.attacking) {
+                    movement.left_idle_right = 1;
+                }
+                if (!IsKeyDown(KEY_J) && !IsKeyDown(KEY_L)) {
+                    movement.left_idle_right = 0;
+                }
             }
         })
         .run();

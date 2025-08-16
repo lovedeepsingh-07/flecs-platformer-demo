@@ -80,8 +80,8 @@ StateEngine::StateEngine::load_state_registry(const std::string& registry_id, co
     return {};
 }
 
-tl::expected<StateEngine::StateRegistry, error::StateEngineError>
-StateEngine::StateEngine::get_state_registry(const std::string& registry_id) {
+tl::expected<std::reference_wrapper<const StateEngine::StateRegistry>, error::StateEngineError>
+StateEngine::StateEngine::get_state_registry(const std::string& registry_id) const {
     // check if a registry with this ID exists
     auto iter = this->m_state_registries.find(registry_id);
     if (iter == this->m_state_registries.end()) {
@@ -106,8 +106,8 @@ StateEngine::StateRegistry::load_state(const std::string& state_id, const State&
     return {};
 };
 
-tl::expected<StateEngine::State, error::StateEngineError>
-StateEngine::StateRegistry::get_state(const std::string& state_id) {
+tl::expected<std::reference_wrapper<const StateEngine::State>, error::StateEngineError>
+StateEngine::StateRegistry::get_state(const std::string& state_id) const {
     // check if a state with this ID exists
     auto iter = this->m_states.find(state_id);
     if (iter == this->m_states.end()) {
@@ -132,8 +132,8 @@ StateEngine::State::load_transition(const std::string& transition_id, const Stat
     return {};
 };
 
-tl::expected<StateEngine::State_can_transition_to, error::StateEngineError>
-StateEngine::State::get_transition(const std::string& transition_id) {
+tl::expected<std::reference_wrapper<const StateEngine::State_can_transition_to>, error::StateEngineError>
+StateEngine::State::get_transition(const std::string& transition_id) const {
     // check if a transition with this ID exists
     auto iter = this->m_transitions.find(transition_id);
     if (iter == this->m_transitions.end()) {
@@ -146,7 +146,7 @@ StateEngine::State::get_transition(const std::string& transition_id) {
 };
 
 tl::expected<bool, error::StateEngineError>
-StateEngine::State::can_transition_to(const std::string& transition_id) {
+StateEngine::State::can_transition_to(const std::string& transition_id) const {
     auto iter = this->m_transitions.find(transition_id);
     if (iter == this->m_transitions.end()) {
         return false;

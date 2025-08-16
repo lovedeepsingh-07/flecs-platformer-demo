@@ -27,21 +27,20 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
                   components::StateComponent& state, components::AttackComponent& attack
               ) {
             // get current state registry
-            StateEngine::StateRegistry curr_registry;
             auto state_registry_result =
                 ctx.state_engine.get_state_registry(state_registry.state_registry_id);
             if (!state_registry_result) {
                 throw std::runtime_error(state_registry_result.error().message);
             }
-            curr_registry = *state_registry_result;
+            const StateEngine::StateRegistry& curr_registry =
+                state_registry_result->get();
 
             // get current state
-            StateEngine::State curr_state;
             auto state_result = curr_registry.get_state(state.curr_state_id);
             if (!state_result) {
                 throw std::runtime_error(state_result.error().message);
             }
-            curr_state = *state_result;
+            const StateEngine::State& curr_state = state_result->get();
 
             if (!animation.playing || animation.finished) {
                 if (attack.attacking
@@ -54,7 +53,7 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
             }
 
             animation.time_accumulator += GetFrameTime();
-            const StateEngine::AnimationFrame curr_frame =
+            const StateEngine::AnimationFrame& curr_frame =
                 curr_state.animation_data.frames[animation.curr_frame_index];
 
             if (animation.time_accumulator >= constants::ANIMATION_FRAME_TIME) {

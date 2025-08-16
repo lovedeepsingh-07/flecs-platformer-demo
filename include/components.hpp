@@ -1,9 +1,6 @@
 #pragma once
 
 #include "utils.hpp"
-#include <box2d/box2d.h>
-#include <raylib.h>
-#include <string>
 #include <vector>
 
 namespace components {
@@ -49,7 +46,9 @@ struct PhysicsComponent {
     b2BodyId body_id;
 };
 
-struct ControllerComponent {};
+struct ControllerComponent {
+    int _id;
+};
 
 struct MovementComponent {
     int8_t left_idle_right{ 0 };

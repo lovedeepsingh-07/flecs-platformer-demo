@@ -12,21 +12,20 @@ void StateSystem::update(GameContext::GameContext& ctx) {
                   components::AttackComponent& attack, components::AnimationComponent& animation
               ) {
             // get current state registry
-            StateEngine::StateRegistry curr_registry;
             auto state_registry_result =
                 ctx.state_engine.get_state_registry(state_registry.state_registry_id);
             if (!state_registry_result) {
                 throw std::runtime_error(state_registry_result.error().message);
             }
-            curr_registry = *state_registry_result;
+            const StateEngine::StateRegistry& curr_registry =
+                state_registry_result->get();
 
             // get current state
-            StateEngine::State curr_state;
             auto state_result = curr_registry.get_state(state.curr_state_id);
             if (!state_result) {
                 throw std::runtime_error(state_result.error().message);
             }
-            curr_state = *state_result;
+            const StateEngine::State& curr_state = state_result->get();
 
             std::string next_state_id = state.curr_state_id;
 
@@ -55,19 +54,18 @@ void StateSystem::update(GameContext::GameContext& ctx) {
             }
 
             if (next_state_id != state.curr_state_id) {
-                StateEngine::State next_state;
                 auto next_state_result = curr_registry.get_state(next_state_id);
                 if (!next_state_result) {
                     throw std::runtime_error(next_state_result.error().message);
                 }
-                next_state = *next_state_result;
+                const StateEngine::State& next_state = next_state_result->get();
 
-                StateEngine::State_can_transition_to curr_transition;
                 auto state_transition_result = curr_state.get_transition(next_state_id);
                 if (!state_transition_result) {
                     throw std::runtime_error(state_transition_result.error().message);
                 }
-                curr_transition = *state_transition_result;
+                const StateEngine::State_can_transition_to& curr_transition =
+                    state_transition_result->get();
 
                 int next_state_frame = curr_transition.frame;
                 if (next_state_frame == -1) {

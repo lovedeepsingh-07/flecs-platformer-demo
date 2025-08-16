@@ -7,7 +7,7 @@
 void PlayerModule::setup(b2Vec2 pos, b2WorldId world_id, GameContext::GameContext& ctx) {
     // player ECS entity
     flecs::entity player_entity = ctx.registry.entity()
-                                      .add<components::ControllerComponent>()
+                                      .set<components::ControllerComponent>({ ._id = 0 })
                                       .add<components::CameraComponent>()
                                       .set(components::AnimationComponent{});
     // physical body setup

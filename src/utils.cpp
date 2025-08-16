@@ -1,8 +1,5 @@
 #include "utils.hpp"
-#include "box2d/box2d.h"
-#include <clay/clay.h>
 #include <iostream>
-#include <raylib.h>
 
 Clay_Color Utils::RaylibColorToClayColor(Color rayColor) {
     Clay_Color clayColor;
