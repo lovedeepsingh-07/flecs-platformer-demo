@@ -1,8 +1,8 @@
+#include "components.hpp"
 #include "interface.hpp"
 #include "utils.hpp"
-#include <raylib.h>
 
-void Interface::game_GUI(GameContext::GameContext& ctx) {
+void Interface::game_GUI(flecs::world& registry) {
     CLAY({ .id = CLAY_ID("game_MainContainer"),
            .layout = { .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                        .padding = CLAY_PADDING_ALL(16),
@@ -10,7 +10,7 @@ void Interface::game_GUI(GameContext::GameContext& ctx) {
         CLAY_TEXT(
             CLAY_STRING("Game"),
             CLAY_TEXT_CONFIG({
-                .textColor = Utils::RaylibColorToClayColor(RAYWHITE),
+                .textColor = game_utils::RaylibColorToClayColor(RAYWHITE),
                 .fontId = 0,
                 .fontSize = 25,
             })
@@ -21,16 +21,14 @@ void Interface::game_GUI(GameContext::GameContext& ctx) {
                     .sizing = {.width = {20}, .height = {20}},
                     .padding = CLAY_PADDING_ALL(2),
                 },
-            .backgroundColor = Clay_Hovered() ? Utils::RaylibColorToClayColor(RED) : Utils::RaylibColorToClayColor(WHITE)}) {
+            .backgroundColor = Clay_Hovered() ? game_utils::RaylibColorToClayColor(RED) : game_utils::RaylibColorToClayColor(WHITE)}) {
             if (Clay_Hovered() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                ctx.event_system.emit<EventEngine::EventType::SceneSwitchEvent>(
-                    EventEngine::SceneSwitchEvent{ .to = 0 }
-                );
+                registry.add<components::ActiveScene, components::MainMenu_Scene>();
             }
             CLAY_TEXT(
                 CLAY_STRING("Exit"),
                 CLAY_TEXT_CONFIG({
-                    .textColor = Utils::RaylibColorToClayColor(BLACK),
+                    .textColor = game_utils::RaylibColorToClayColor(BLACK),
                     .fontId = 0,
                     .fontSize = 25,
                 })

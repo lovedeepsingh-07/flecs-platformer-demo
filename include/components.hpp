@@ -1,89 +1,28 @@
 #pragma once
 
-#include "utils.hpp"
-#include <vector>
+#include <array>
+#include <box2d/box2d.h>
+#include <flecs.h>
+#include <raylib.h>
 
 namespace components {
 
-struct PositionComponent {
-    float x;
-    float y;
+struct Paused {};
+struct Freezed {
+    float freeze_time;
 };
 
-struct BaseColliderComponent {
-    float width;
-    float height;
+struct SceneRoot {};
+// this represents an exclusive relationship (there can be only 1 active scene)
+struct ActiveScene {};
+// these below are the "targets" of that relationship
+struct MainMenu_Scene {};
+struct Game_Scene {};
+
+struct GameFonts {
+    std::array<Font, 1> font_list;
 };
 
-struct RectangleComponent {
-    float width;
-    float height;
-    Color color;
-};
-
-struct TextureComponent {
-    Texture2D texture;
-    Rectangle source_rect;
-    bool flipped;
-};
-
-struct AnimationComponent {
-    int curr_frame_index = 0;
-    float time_accumulator = 0.0F;
-    bool playing = true;
-    bool finished = false;
-};
-
-struct StateRegistryComponent {
-    std::string state_registry_id;
-};
-
-struct StateComponent {
-    std::string curr_state_id;
-};
-
-struct PhysicsComponent {
-    b2BodyId body_id;
-};
-
-struct ControllerComponent {
-    int _id;
-};
-
-struct MovementComponent {
-    int8_t left_idle_right{ 0 };
-    bool on_ground;
-    bool jumping;
-    bool falling;
-};
-
-struct AttackComponent {
-    bool attacking;
-    bool hit_some_entity{ false };
-};
-
-struct PermanentRayCastComponent {
-    Utils::RayCastUserData user_data;
-    b2QueryFilter filter;
-    Vector2 start_offset;
-    Vector2 translation;
-};
-struct PermanentRayCastListComponent {
-    std::vector<PermanentRayCastComponent> items;
-};
-
-struct HealthComponent {
-    flecs::entity _owner;
-    float health;
-    float max_health;
-};
-
-struct JumpEventComponent {};
-struct AttackEventComponent {};
-struct AttackHitEventComponent {
-    int direction;
-};
-
-struct CameraComponent {};
+void setup(flecs::world& registry);
 
 }

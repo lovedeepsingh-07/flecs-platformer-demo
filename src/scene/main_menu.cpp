@@ -1,8 +1,12 @@
 #include "scene.hpp"
 
-void Scene::MainMenuScene::on_enter(GameContext::GameContext& ctx) {}
-void Scene::MainMenuScene::on_exit(GameContext::GameContext& ctx) {
-    ctx.registry.reset();
+void scene::main_menu(flecs::iter& iter, size_t, components::ActiveScene) {
+    flecs::world registry = iter.world();
+
+    // reset the scene
+    registry.defer_begin();
+    registry.delete_with(flecs::ChildOf, registry.entity<components::SceneRoot>());
+    registry.defer_end();
+
+    flecs::entity scene_root = registry.component<components::SceneRoot>();
 }
-void Scene::MainMenuScene::on_render(GameContext::GameContext& ctx) {}
-void Scene::MainMenuScene::on_update(GameContext::GameContext& ctx) {}
