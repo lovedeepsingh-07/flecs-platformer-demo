@@ -1,13 +1,21 @@
 #include "components.hpp"
 #include "constants.hpp"
 #include "interface.hpp"
+#include "raylib.h"
 #include "systems.hpp"
 
 void systems::render(flecs::world& registry) {
-    registry.system<>("Prepare Frame").kind(flecs::PreUpdate).each([]() {
+    registry.system("Prepare Frame").kind(flecs::PreUpdate).run([](flecs::iter& iteer) {
         BeginDrawing();
         ClearBackground(constants::BACKGROUND_COLOR);
     });
+
+    registry
+        .system<components::Rectangle, components::Position>("Render Rectangles")
+        .kind(flecs::PreStore)
+        .each([](const components::Rectangle& rect, const components::Position& pos) {
+            DrawRectangle((int)pos.x, (int)pos.y, (int)rect.width, (int)rect.height, rect.color);
+        });
 
     registry.system("Render GUI").kind(flecs::PreStore).run([](flecs::iter& iter) {
         flecs::world registry = iter.world();
@@ -28,7 +36,7 @@ void systems::render(flecs::world& registry) {
         Clay_Raylib_Render(render_commands, game_fonts.font_list.data());
     });
 
-    registry.system<>("Finish Frame").kind(flecs::OnStore).each([]() {
+    registry.system("Finish Frame").kind(flecs::OnStore).run([](flecs::iter& iter) {
         EndDrawing();
     });
 };

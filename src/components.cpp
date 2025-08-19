@@ -10,4 +10,10 @@ void components::setup(flecs::world& registry) {
     registry.component<Game_Scene>();
 
     registry.component<GameFonts>().add(flecs::Singleton);
+
+    registry.component<Controller>();
+
+    registry.component<Position>();
+
+    registry.component<Rectangle>();
 }
