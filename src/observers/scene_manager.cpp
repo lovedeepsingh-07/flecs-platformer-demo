@@ -3,12 +3,21 @@
 #include "scene.hpp"
 
 void observers::scene_manager(flecs::world& registry) {
-    registry.observer<components::ActiveScene>("OnChange to Main Menu scene")
+    registry.observer<components::ActiveScene>("MainMenu_Scene on_enter")
         .event(flecs::OnAdd)
         .second<components::MainMenu_Scene>()
-        .each(scene::main_menu);
-    registry.observer<components::ActiveScene>("OnChange to Game scene")
+        .each(scene::main_menu::on_enter);
+    registry.observer<components::ActiveScene>("MainMenu_Scene on_exit")
+        .event(flecs::OnRemove)
+        .second<components::MainMenu_Scene>()
+        .each(scene::main_menu::on_exit);
+
+    registry.observer<components::ActiveScene>("Game_Scene on_enter")
         .event(flecs::OnAdd)
         .second<components::Game_Scene>()
-        .each(scene::game);
+        .each(scene::game::on_enter);
+    registry.observer<components::ActiveScene>("Game_Scene on_exit")
+        .event(flecs::OnRemove)
+        .second<components::Game_Scene>()
+        .each(scene::game::on_exit);
 };

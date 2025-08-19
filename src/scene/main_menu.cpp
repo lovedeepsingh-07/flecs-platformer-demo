@@ -1,6 +1,6 @@
 #include "scene.hpp"
 
-void scene::main_menu(flecs::iter& iter, size_t, components::ActiveScene) {
+void scene::main_menu::on_enter(flecs::iter& iter, size_t, components::ActiveScene) {
     flecs::world registry = iter.world();
 
     // reset the scene
@@ -10,3 +10,5 @@ void scene::main_menu(flecs::iter& iter, size_t, components::ActiveScene) {
 
     flecs::entity scene_root = registry.component<components::SceneRoot>();
 }
+
+void scene::main_menu::on_exit(flecs::iter& iter, size_t, components::ActiveScene) {}

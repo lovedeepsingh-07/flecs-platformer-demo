@@ -1,19 +1,31 @@
 #include "components.hpp"
 
 void components::setup(flecs::world& registry) {
-    registry.component<Paused>().add(flecs::Singleton);
-    registry.component<Freezed>().add(flecs::Singleton);
+    registry.component<components::Paused>().add(flecs::Singleton);
+    registry.component<components::Freezed>().add(flecs::Singleton);
+    registry.component<components::DebugMode>().add(flecs::Singleton);
+    registry.component<components::PhysicalDebugDraw>().add(flecs::Singleton);
 
-    registry.component<SceneRoot>();
-    registry.component<ActiveScene>().add(flecs::Exclusive);
-    registry.component<MainMenu_Scene>();
-    registry.component<Game_Scene>();
+    registry.component<components::SceneRoot>();
+    registry.component<components::ActiveScene>().add(flecs::Exclusive);
+    registry.component<components::MainMenu_Scene>();
+    registry.component<components::Game_Scene>();
 
-    registry.component<GameFonts>().add(flecs::Singleton);
+    registry.component<components::Texture_Engine>().add(flecs::Singleton);
 
-    registry.component<Controller>();
+    registry.component<components::GameFonts>().add(flecs::Singleton);
 
-    registry.component<Position>();
+    registry.component<components::Controller>();
 
-    registry.component<Rectangle>();
+    registry.component<components::Position>();
+
+    registry.component<components::RectangleComponent>();
+
+    registry.component<components::TextureComponent>();
+
+    registry.component<components::PhysicalWorld>().add(flecs::Singleton);
+    registry.component<components::PhysicalBody>();
+    registry.component<components::BaseCollider>();
+
+    registry.component<components::Movement>();
 }

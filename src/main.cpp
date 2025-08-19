@@ -21,6 +21,9 @@ int main() {
     observers::setup(registry);
     systems::setup(registry);
 
+    // steup engines
+    registry.set<components::Texture_Engine>({});
+
     // clay UI setup
     uint64_t clay_required_memory = Clay_MinMemorySize();
     auto clay_memory = Clay_Arena{

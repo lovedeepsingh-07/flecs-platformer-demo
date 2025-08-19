@@ -11,12 +11,53 @@ void systems::render(flecs::world& registry) {
     });
 
     registry
-        .system<components::Rectangle, components::Position>("Render Rectangles")
+        .system<components::TextureComponent, components::Position>("Render "
+                                                                    "Textures")
         .kind(flecs::PreStore)
-        .each([](const components::Rectangle& rect, const components::Position& pos) {
+        .each([](const components::TextureComponent& texture, const components::Position& pos) {
+            float source_width = texture.flipped ? -texture.source_rect.width
+                                                 : texture.source_rect.width;
+            DrawTexturePro(
+                texture.texture,
+                (Rectangle){ texture.source_rect.x, texture.source_rect.y,
+                             source_width, texture.source_rect.height },
+                (Rectangle){ pos.x - (texture.source_rect.width / 2),
+                             pos.y - (texture.source_rect.height / 2),
+                             texture.source_rect.width, texture.source_rect.height },
+                (Vector2){ 0, 0 }, 0.0F, WHITE
+            );
+        });
+
+    registry
+        .system<components::RectangleComponent, components::Position>(
+            "Render Rectangles"
+        )
+        .kind(flecs::PreStore)
+        .each([](const components::RectangleComponent& rect, const components::Position& pos) {
             DrawRectangle((int)pos.x, (int)pos.y, (int)rect.width, (int)rect.height, rect.color);
         });
 
+    registry.system("Render Physical Hitboxes").kind(flecs::PreStore).run([](flecs::iter& iter) {
+        flecs::world registry = iter.world();
+        if (!registry.has<components::DebugMode>()
+            || !registry.has<components::PhysicalWorld>()
+            || !registry.has<components::ActiveScene, components::Game_Scene>()
+            || !registry.has<components::PhysicalDebugDraw>()) {
+            return;
+        }
+
+        auto physical_world = registry.get<components::PhysicalWorld>();
+        auto debug_draw = registry.get<components::PhysicalDebugDraw>();
+        b2World_Draw(physical_world.world_id, &debug_draw.debug_draw);
+    });
+
+    registry.system("Render Debug GUI").kind(flecs::PreStore).run([](flecs::iter& iter) {
+        flecs::world registry = iter.world();
+        if (registry.has<components::ActiveScene, components::Game_Scene>()
+            && registry.has<components::DebugMode>()) {
+            Interface::game_debug_GUI(registry);
+        }
+    });
     registry.system("Render GUI").kind(flecs::PreStore).run([](flecs::iter& iter) {
         flecs::world registry = iter.world();
         auto game_fonts = registry.get<components::GameFonts>();

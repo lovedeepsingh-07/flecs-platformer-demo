@@ -8,5 +8,6 @@ namespace Interface {
 
 void main_menu_GUI(flecs::world& registry);
 void game_GUI(flecs::world& registry);
+void game_debug_GUI(flecs::world& registry);
 
 };
