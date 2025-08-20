@@ -1,5 +1,6 @@
 #pragma once
 
+#include "state_engine.hpp"
 #include "texture_engine.hpp"
 #include <array>
 #include <box2d/box2d.h>
@@ -26,6 +27,9 @@ struct Game_Scene {};
 
 struct Texture_Engine {
     TextureEngine::TextureEngine engine;
+};
+struct State_Engine {
+    StateEngine::StateEngine engine;
 };
 
 

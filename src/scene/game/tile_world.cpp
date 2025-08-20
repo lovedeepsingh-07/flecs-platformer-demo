@@ -1,5 +1,6 @@
 #include "constants.hpp"
 #include "scene.hpp"
+#include "utils.hpp"
 #include <pugixml.hpp>
 #include <rapidcsv.h>
 #include <sstream>
@@ -102,13 +103,17 @@ void scene::game::setup_tile_world(flecs::world& registry, b2WorldId world_id) {
         body_def.fixedRotation = true;
         body_def.position = (b2Vec2){ object_x, object_y };
         b2BodyId body_id = b2CreateBody(world_id, &body_def);
+
+        flecs::entity chain_entity =
+            registry.entity().set(components::PhysicalBody{ body_id });
         b2ChainDef body_chain_def = b2DefaultChainDef();
         body_chain_def.points = vertices.data();
         body_chain_def.count = (int)vertices.size();
         body_chain_def.isLoop = true;
         body_chain_def.enableSensorEvents = true;
+        body_chain_def.filter.categoryBits = game_utils::EntityCategories::GROUND;
+        body_chain_def.userData =
+            new game_utils::ShapeUserData{ ._id = "ground_shape_chain", ._owner = chain_entity };
         b2CreateChain(body_id, &body_chain_def);
-
-        registry.entity().set(components::PhysicalBody{ body_id });
     }
 }

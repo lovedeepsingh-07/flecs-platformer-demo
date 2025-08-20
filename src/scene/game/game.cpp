@@ -43,6 +43,9 @@ void scene::game::on_exit(flecs::iter& iter, size_t, components::ActiveScene) {
     b2DestroyWorld(physical_world.world_id);
     registry.remove<components::PhysicalWorld>();
     registry.remove<components::PhysicalDebugDraw>();
+    if (registry.has<components::DebugMode>()) {
+        registry.remove<components::DebugMode>();
+    }
 
     rlImGuiShutdown();
 }

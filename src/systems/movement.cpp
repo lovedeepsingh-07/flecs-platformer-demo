@@ -5,6 +5,21 @@
 
 void systems::movement(flecs::world& registry) {
     registry
+        .system<components::TextureComponent, components::Movement>(
+            "Handle Texture Flipping"
+        )
+        .kind(flecs::PreUpdate)
+        .each([](flecs::entity curr_entity, components::TextureComponent& texture,
+                 const components::Movement& movement) {
+            if (movement.left_idle_right == -1) {
+                texture.flipped = true;
+            }
+            if (movement.left_idle_right == 1) {
+                texture.flipped = false;
+            }
+        });
+
+    registry
         .system<components::Movement, components::PhysicalBody>("Apply Movement")
         .kind(flecs::PreUpdate)
         .each([](flecs::entity curr_entity, const components::Movement& movement,

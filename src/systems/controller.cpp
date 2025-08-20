@@ -6,7 +6,8 @@ void systems::controller(flecs::world& registry) {
         .system<components::Controller, components::Movement>("Handle "
                                                               "Controller Input")
         .kind(flecs::PreUpdate)
-        .each([](const components::Controller& controller, components::Movement& movement) {
+        .each([](flecs::entity curr_entity, const components::Controller& controller,
+                 components::Movement& movement) {
             if (controller._id == 0) {
                 if (IsKeyDown(KEY_A)) {
                     movement.left_idle_right = -1;

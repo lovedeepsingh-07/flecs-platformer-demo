@@ -6,6 +6,7 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id) {
 
     // setup enemy entity
     registry.entity("enemy")
+        .set_alias("enemy")
         .set<components::Position>({ 400, 400 })
         .set<components::TextureComponent>({
             .texture = texture_engine.engine.get_texture("player_walk"),
