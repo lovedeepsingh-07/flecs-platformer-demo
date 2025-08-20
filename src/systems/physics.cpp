@@ -35,6 +35,11 @@ void systems::physics(flecs::world& registry) {
                 if (sensor_data != nullptr && sensor_data->_id.ends_with("sensor_ground")) {
                     auto& movement = sensor_data->_owner.get_mut<components::Movement>();
                     movement.on_ground = true;
+
+                    // if the entity was jumping then we remove the 'JumpEvent' component on landing
+                    if (sensor_data->_owner.has<components::JumpEvent>()) {
+                        sensor_data->_owner.remove<components::JumpEvent>();
+                    }
                 }
             }
         }

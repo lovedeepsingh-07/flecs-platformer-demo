@@ -44,7 +44,7 @@ void scene::game::on_enter(flecs::iter& iter, size_t, components::ActiveScene) {
     cam_source.zoom = 1.0F;
     registry.set<components::GlobalCamera>({ cam_source });
 
-    scene::game::setup_enemy(registry, world_id, {});
+    scene::game::setup_enemy(registry, world_id, { player_pos.x - 50, player_pos.y });
     scene::game::setup_tile_world(registry, world_id);
 }
 

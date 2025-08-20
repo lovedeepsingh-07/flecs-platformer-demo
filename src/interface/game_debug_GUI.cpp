@@ -3,8 +3,8 @@
 #include <imgui.h>
 #include <rlImGui.h>
 
-void player_debug(flecs::world& registry) {
-    flecs::entity player = registry.lookup("player");
+void entity_debug(flecs::world& registry, const std::string& entity_id) {
+    flecs::entity player = registry.lookup(entity_id.c_str());
     auto& pos = player.get_mut<components::Position>();
     auto movement = player.get<components::Movement>();
     auto body = player.get<components::PhysicalBody>();
@@ -13,10 +13,10 @@ void player_debug(flecs::world& registry) {
 
     ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
     ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
-    // ImGui::Text("Jumping: %s", movement.jumping ? "true" : "false");
-    // ImGui::Text("Falling: %s", movement.falling ? "true" : "false");
+    ImGui::Text("Jumping: %s", player.has<components::JumpEvent>() ? "true" : "false");
     ImGui::Text("Left_Idle_Right: %d", movement.left_idle_right);
-    ImGui::Text("Velocity_x: %f", vel.x);
+    ImGui::Text("Velocity_X: %f", vel.x);
+    ImGui::Text("Velocity_Y: %f", vel.y);
     // ImGui::Text("Curr State: %s", state.curr_state_id.c_str());
     // ImGui::Text("Curr Frame Index: %d", animation.curr_frame_index);
     // ImGui::Text(
@@ -31,7 +31,6 @@ void player_debug(flecs::world& registry) {
 
 void Interface::game_debug_GUI(flecs::world& registry) {
     rlImGuiBegin();
-    bool open = true;
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoNav
         | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoMove;
 
@@ -45,11 +44,21 @@ void Interface::game_debug_GUI(flecs::world& registry) {
     window_pos.y = work_pos.y + PAD;
     window_pos_pivot.x = 1.0F;
     window_pos_pivot.y = 0.0F;
-    ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
 
+    bool window_1_open = true;
+    ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
     ImGui::SetNextWindowBgAlpha(0.35F);
-    if (ImGui::Begin("Player Information", &open, window_flags)) {
-        player_debug(registry);
+    if (ImGui::Begin("Player Information", &window_1_open, window_flags)) {
+        entity_debug(registry, "player");
+    }
+    ImGui::End();
+
+    bool window_2_open = true;
+    ImVec2 new_window_pos = window_pos;
+    new_window_pos.x = PAD + 100;
+    ImGui::SetNextWindowPos(new_window_pos, ImGuiCond_Always, window_pos_pivot);
+    if (ImGui::Begin("Enemy Information", &window_2_open, window_flags)) {
+        entity_debug(registry, "enemy");
     }
     ImGui::End();
     rlImGuiEnd();

@@ -16,6 +16,9 @@ void systems::controller(flecs::world& registry) {
                 } else {
                     movement.left_idle_right = 0;
                 }
+                if (IsKeyPressed(KEY_W) && !curr_entity.has<components::JumpEvent>()) {
+                    curr_entity.add<components::JumpEvent>();
+                }
             }
             if (controller._id == 1) {
                 if (IsKeyDown(KEY_H)) {
@@ -24,6 +27,9 @@ void systems::controller(flecs::world& registry) {
                     movement.left_idle_right = 1;
                 } else {
                     movement.left_idle_right = 0;
+                }
+                if (IsKeyPressed(KEY_K) && !curr_entity.has<components::JumpEvent>()) {
+                    curr_entity.add<components::JumpEvent>();
                 }
             }
         });

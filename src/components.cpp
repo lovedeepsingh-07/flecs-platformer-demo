@@ -31,4 +31,5 @@ void components::setup(flecs::world& registry) {
     registry.component<components::BaseCollider>();
 
     registry.component<components::Movement>();
+    registry.component<components::JumpEvent>();
 }

@@ -77,6 +77,7 @@ struct Movement {
     int left_idle_right{ 0 };
     bool on_ground;
 };
+struct JumpEvent {};
 
 void setup(flecs::world& registry);
 
