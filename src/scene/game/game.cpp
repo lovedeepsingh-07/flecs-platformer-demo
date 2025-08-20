@@ -30,8 +30,21 @@ void scene::game::on_enter(flecs::iter& iter, size_t, components::ActiveScene) {
     debug_draw.DrawSegmentFcn = game_utils::draw_segment;
     registry.set<components::PhysicalDebugDraw>({ debug_draw });
 
-    scene::game::setup_player(registry, world_id);
-    scene::game::setup_enemy(registry, world_id);
+    // setup player
+    float screen_width{ (float)GetScreenWidth() };
+    float screen_height{ (float)GetScreenWidth() };
+    b2Vec2 player_pos{ (b2Vec2){ screen_width / 2.0F, 0 } };
+    scene::game::setup_player(registry, world_id, player_pos);
+
+    // setup camera source
+    auto cam_source = Camera2D{ 0 };
+    cam_source.target = Vector2{ .x = player_pos.x, .y = player_pos.y };
+    cam_source.offset = (Vector2){ screen_width / 2.0F, screen_height / 2.0F };
+    cam_source.rotation = 0.0F;
+    cam_source.zoom = 1.0F;
+    registry.set<components::GlobalCamera>({ cam_source });
+
+    scene::game::setup_enemy(registry, world_id, {});
     scene::game::setup_tile_world(registry, world_id);
 }
 

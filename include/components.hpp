@@ -32,10 +32,14 @@ struct State_Engine {
     StateEngine::StateEngine engine;
 };
 
-
 struct GameFonts {
     std::array<Font, 1> font_list;
 };
+
+struct GlobalCamera {
+    Camera2D camera;
+};
+struct Camera_Target {};
 
 struct Controller {
     uint8_t _id;

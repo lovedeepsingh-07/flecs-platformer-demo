@@ -1,13 +1,13 @@
 #include "scene.hpp"
 
-void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id) {
+void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2 pos) {
     flecs::entity scene_root = registry.component<components::SceneRoot>();
     auto& texture_engine = registry.get_mut<components::Texture_Engine>();
 
     // setup enemy entity
     registry.entity("enemy")
         .set_alias("enemy")
-        .set<components::Position>({ 400, 400 })
+        .set<components::Position>({ pos.x, pos.y })
         .set<components::TextureComponent>({
             .texture = texture_engine.engine.get_texture("player_walk"),
             .source_rect = { 0, 0, 128, 128 },

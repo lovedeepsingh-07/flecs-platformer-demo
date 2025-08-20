@@ -24,5 +24,6 @@ void systems::setup(flecs::world& registry) {
     systems::controller(registry);
     systems::movement(registry);
     systems::physics(registry);
+    systems::camera(registry);
     systems::render(registry);
 };

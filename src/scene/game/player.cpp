@@ -2,7 +2,7 @@
 #include "scene.hpp"
 #include "utils.hpp"
 
-void scene::game::setup_player(flecs::world& registry, b2WorldId world_id) {
+void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec2 pos) {
     flecs::entity scene_root = registry.component<components::SceneRoot>();
 
     auto& texture_engine = registry.get_mut<components::Texture_Engine>();
@@ -10,17 +10,15 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id) {
     flecs::entity player_entity = registry.entity("player")
                                       .set_alias("player")
                                       .set<components::Controller>({ 0 })
+                                      .add<components::Camera_Target>()
                                       .child_of(scene_root);
 
     // physical body setup
-    float screen_width{ (float)GetScreenWidth() };
-    float screen_height{ (float)GetScreenWidth() };
-    b2Vec2 player_pos{ (b2Vec2){ screen_width / 2.0F, 0 } };
     b2Vec2 shape_size{ (b2Vec2){ constants::PLAYER_COLLIDER_WIDTH,
                                  constants::PLAYER_COLLIDER_HEIGHT } };
     b2BodyDef body_def{ b2DefaultBodyDef() };
     body_def.type = b2_dynamicBody;
-    body_def.position = player_pos;
+    body_def.position = pos;
     body_def.fixedRotation = true;
     b2BodyId body_id = b2CreateBody(world_id, &body_def);
     b2Polygon body_polygon = b2MakeBox(shape_size.x / 2, shape_size.y / 2);
@@ -35,8 +33,10 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id) {
     b2CreatePolygonShape(body_id, &body_shape_def, &body_polygon);
 
     // ground sensor setup
-    b2Polygon ground_sensor_polygon =
-        b2MakeOffsetBox(6, 4, (b2Vec2){ 0, constants::PLAYER_HEIGHT / 2 }, b2MakeRot(0));
+    b2Polygon ground_sensor_polygon = b2MakeOffsetBox(
+        constants::PLAYER_WIDTH / 2, 4,
+        (b2Vec2){ 0, constants::PLAYER_HEIGHT / 2 }, b2MakeRot(0)
+    );
     b2ShapeDef ground_sensor_def = b2DefaultShapeDef();
     ground_sensor_def.isSensor = true;
     ground_sensor_def.enableSensorEvents = true;
@@ -47,8 +47,8 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id) {
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
     player_entity
-        .set(components::Position{ player_pos.x - (shape_size.x / 2),
-                                   player_pos.y - (shape_size.y / 2) })
+        .set(components::Position{ pos.x - (shape_size.x / 2),
+                                   pos.y - (shape_size.y / 2) })
         .set(components::PhysicalBody{ body_id })
         .set(components::BaseCollider{ shape_size.x, shape_size.y })
         .set(components::Movement{ .left_idle_right = 0, .on_ground = false });

@@ -5,9 +5,19 @@
 #include "systems.hpp"
 
 void systems::render(flecs::world& registry) {
-    registry.system("Prepare Frame").kind(flecs::PreUpdate).run([](flecs::iter& iteer) {
+    registry.system("Prepare Frame").kind(flecs::PostUpdate).run([](flecs::iter& iter) {
+        flecs::world registry = iter.world();
+
         BeginDrawing();
         ClearBackground(constants::BACKGROUND_COLOR);
+
+        // only for "Game_Scene" when registry has a "GlobalCamera"
+        if (!registry.has<components::ActiveScene, components::Game_Scene>()
+            || !registry.has<components::GlobalCamera>()) {
+            return;
+        }
+        auto global_camera = registry.get<components::GlobalCamera>();
+        BeginMode2D(global_camera.camera);
     });
 
     registry
@@ -53,12 +63,20 @@ void systems::render(flecs::world& registry) {
 
     registry.system("Render Debug GUI").kind(flecs::PreStore).run([](flecs::iter& iter) {
         flecs::world registry = iter.world();
+
+        // after this point, we don't need the camera because after this point it's just the UI that we will be rendering
+        if (registry.has<components::ActiveScene, components::Game_Scene>()
+            && registry.has<components::GlobalCamera>()) {
+            EndMode2D();
+        }
+
         if (registry.has<components::ActiveScene, components::Game_Scene>()
             && registry.has<components::DebugMode>()) {
             Interface::game_debug_GUI(registry);
         }
     });
-    registry.system("Render GUI").kind(flecs::PreStore).run([](flecs::iter& iter) {
+
+    registry.system("Render GUI").kind(flecs::OnStore).run([](flecs::iter& iter) {
         flecs::world registry = iter.world();
         auto game_fonts = registry.get<components::GameFonts>();
 

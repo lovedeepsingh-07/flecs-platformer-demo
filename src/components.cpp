@@ -16,6 +16,8 @@ void components::setup(flecs::world& registry) {
 
     registry.component<components::GameFonts>().add(flecs::Singleton);
 
+    registry.component<components::GlobalCamera>();
+    registry.component<components::Camera_Target>();
     registry.component<components::Controller>();
 
     registry.component<components::Position>();

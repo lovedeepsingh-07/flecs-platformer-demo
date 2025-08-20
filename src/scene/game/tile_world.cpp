@@ -105,7 +105,8 @@ void scene::game::setup_tile_world(flecs::world& registry, b2WorldId world_id) {
         b2BodyId body_id = b2CreateBody(world_id, &body_def);
 
         flecs::entity chain_entity =
-            registry.entity().set(components::PhysicalBody{ body_id });
+            registry.entity().set(components::PhysicalBody{ body_id }).child_of(scene_root);
+
         b2ChainDef body_chain_def = b2DefaultChainDef();
         body_chain_def.points = vertices.data();
         body_chain_def.count = (int)vertices.size();
