@@ -25,6 +25,8 @@ void components::setup(flecs::world& registry) {
     registry.component<components::RectangleComponent>();
 
     registry.component<components::TextureComponent>();
+    registry.component<components::State>();
+    registry.component<components::Animation>();
 
     registry.component<components::PhysicalWorld>().add(flecs::Singleton);
     registry.component<components::PhysicalBody>();

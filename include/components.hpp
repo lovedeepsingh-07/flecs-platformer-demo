@@ -61,6 +61,16 @@ struct TextureComponent {
     Rectangle source_rect;
     bool flipped;
 };
+struct State {
+    std::string curr_state_id;
+    std::string state_registry_id;
+};
+struct Animation {
+    int curr_frame_index = 0;
+    float time_accumulator = 0.0F;
+    bool playing = true;
+};
+
 
 struct PhysicalWorld {
     b2WorldId world_id;

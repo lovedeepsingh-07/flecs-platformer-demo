@@ -11,6 +11,7 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
                                       .set_alias("player")
                                       .set<components::Controller>({ 0 })
                                       .add<components::Camera_Target>()
+                                      .add<components::Animation>()
                                       .child_of(scene_root);
 
     // physical body setup
@@ -53,6 +54,25 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
         .set(components::BaseCollider{ shape_size.x, shape_size.y })
         .set(components::Movement{ .left_idle_right = 0, .on_ground = false });
 
+    // state setup
+    auto& state_engine = registry.get_mut<components::State_Engine>();
+    auto registry_load_result =
+        state_engine.engine.load_state_registry("player", "data/player.states.yaml"); // here we load the player state configuration file
+    if (!registry_load_result) {
+        throw std::runtime_error(registry_load_result.error().message);
+    }
+    auto state_registry_result = state_engine.engine.get_state_registry("player");
+    if (!state_registry_result) {
+        throw std::runtime_error(state_registry_result.error().message);
+    }
+    StateEngine::StateRegistry curr_registry = *state_registry_result;
+    auto state_result = curr_registry.get_state("idle");
+    if (!state_result) {
+        throw std::runtime_error(state_result.error().message);
+    }
+    StateEngine::State starting_state = *state_result;
+    player_entity.set<components::State>({ "walk", "player" });
+
     // load textures
     texture_engine.engine.load_texture("player_idle", "assets/player/idle.png");
     texture_engine.engine.load_texture("player_walk", "assets/player/walk.png");
@@ -61,7 +81,8 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
     texture_engine.engine.load_texture("player_attack_air", "assets/player/horizontal_air_slash.png");
 
     player_entity.set<components::TextureComponent>({
-        .texture = texture_engine.engine.get_texture("player_idle"),
+        .texture =
+            texture_engine.engine.get_texture(starting_state.animation_data.texture_id),
         .source_rect = { 0, 0, 128, 128 },
         .flipped = false,
     });

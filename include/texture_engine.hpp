@@ -10,7 +10,7 @@ class TextureEngine {
 
   public:
     void load_texture(const std::string& texture_id, const std::string& texture_input_file);
-    Texture2D get_texture(const std::string& texture_id);
+    Texture2D get_texture(const std::string& texture_id) const;
     void unload_textures();
 };
 
