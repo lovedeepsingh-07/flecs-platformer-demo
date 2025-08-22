@@ -4,6 +4,7 @@
 #include "observers.hpp"
 #include "systems.hpp"
 #include "utils.hpp"
+#include <iostream>
 
 int main() {
     // raylib + clay setup
@@ -21,9 +22,19 @@ int main() {
     observers::setup(registry);
     systems::setup(registry);
 
-    // steup engines
-    registry.set<components::Texture_Engine>({});
-    registry.set<components::State_Engine>({});
+    // setup texture_engine
+    auto texture_engine = TextureEngine::TextureEngine{};
+    texture_engine.setup();
+    registry.set<components::Texture_Engine>({ texture_engine });
+
+    // setup state_engine
+    auto state_engine = StateEngine::StateEngine{};
+    auto state_engine_setup_result = state_engine.setup();
+    if (!state_engine_setup_result) {
+        std::cerr << state_engine_setup_result.error().message << '\n';
+        return 0;
+    }
+    registry.set<components::State_Engine>({ state_engine });
 
     // clay UI setup
     uint64_t clay_required_memory = Clay_MinMemorySize();

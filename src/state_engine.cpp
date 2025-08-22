@@ -1,5 +1,20 @@
 #include "state_engine.hpp"
 
+tl::expected<void, error::StateEngineError> StateEngine::StateEngine::setup() {
+    auto registry_load_result =
+        this->load_state_registry("player", "data/player.states.yaml");
+    if (!registry_load_result) {
+        return tl::unexpected(registry_load_result.error());
+    }
+
+    registry_load_result = this->load_state_registry("enemy", "data/enemy.states.yaml");
+    if (!registry_load_result) {
+        return tl::unexpected(registry_load_result.error());
+    }
+
+    return {};
+}
+
 tl::expected<void, error::StateEngineError>
 StateEngine::StateEngine::load_state_registry(const std::string& registry_id, const std::string& registry_file_path) {
     // check if a registry with the same ID already exists

@@ -56,11 +56,6 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
 
     // state setup
     auto& state_engine = registry.get_mut<components::State_Engine>();
-    auto registry_load_result =
-        state_engine.engine.load_state_registry("player", "data/player.states.yaml"); // here we load the player state configuration file
-    if (!registry_load_result) {
-        throw std::runtime_error(registry_load_result.error().message);
-    }
     auto state_registry_result = state_engine.engine.get_state_registry("player");
     if (!state_registry_result) {
         throw std::runtime_error(state_registry_result.error().message);
@@ -71,14 +66,7 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
         throw std::runtime_error(state_result.error().message);
     }
     StateEngine::State starting_state = *state_result;
-    player_entity.set<components::State>({ "walk", "player" });
-
-    // load textures
-    texture_engine.engine.load_texture("player_idle", "assets/player/idle.png");
-    texture_engine.engine.load_texture("player_walk", "assets/player/walk.png");
-    texture_engine.engine.load_texture("player_jump", "assets/player/jump.png");
-    texture_engine.engine.load_texture("player_attack", "assets/player/sword_slash_vertical.png");
-    texture_engine.engine.load_texture("player_attack_air", "assets/player/horizontal_air_slash.png");
+    player_entity.set<components::State>({ "idle", "player" });
 
     player_entity.set<components::TextureComponent>({
         .texture =

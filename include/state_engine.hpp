@@ -56,6 +56,7 @@ class StateEngine {
     std::unordered_map<std::string, StateRegistry> m_state_registries;
 
   public:
+    tl::expected<void, error::StateEngineError> setup();
     tl::expected<void, error::StateEngineError>
     load_state_registry(const std::string& registry_id, const std::string& registry_file_path);
     tl::expected<std::reference_wrapper<const StateRegistry>, error::StateEngineError>

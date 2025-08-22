@@ -55,11 +55,6 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
 
     // state setup
     auto& state_engine = registry.get_mut<components::State_Engine>();
-    auto registry_load_result =
-        state_engine.engine.load_state_registry("enemy", "data/enemy.states.yaml"); // here we load the enemy state configuration file
-    if (!registry_load_result) {
-        throw std::runtime_error(registry_load_result.error().message);
-    }
     auto state_registry_result = state_engine.engine.get_state_registry("enemy");
     if (!state_registry_result) {
         throw std::runtime_error(state_registry_result.error().message);
@@ -70,7 +65,7 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
         throw std::runtime_error(state_result.error().message);
     }
     StateEngine::State starting_state = *state_result;
-    enemy_entity.set<components::State>({ "walk", "enemy" });
+    enemy_entity.set<components::State>({ "idle", "enemy" });
 
     enemy_entity.set<components::TextureComponent>({
         .texture =

@@ -37,8 +37,8 @@ void systems::state(flecs::world& registry) {
                     next_state_id = "idle";
                 }
             } else {
-                if (curr_state.can_transition_to("walk")) {
-                    next_state_id = "walk";
+                if (curr_state.can_transition_to("run")) {
+                    next_state_id = "run";
                 }
             }
 

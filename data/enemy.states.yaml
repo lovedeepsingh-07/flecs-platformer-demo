@@ -1,7 +1,7 @@
 states:
   - idle:
       can_transition_to:
-        - walk:
+        - run:
             frame: 0
         - jump:
             frame: 0
@@ -13,7 +13,7 @@ states:
         frames:
           - type: "active"
             source_rect: [0, 0, 128, 128]
-  - walk:
+  - run:
       can_transition_to:
         - idle:
             frame: 0
@@ -23,7 +23,7 @@ states:
             frame: 0
       animation_data:
         loop: true
-        texture_id: "player_walk"
+        texture_id: "player_run"
         frames:
           - type: "active"
             source_rect: [0, 0, 128, 128]
@@ -35,7 +35,7 @@ states:
       can_transition_to:
         - idle:
             frame: 0
-        - walk:
+        - run:
             frame: 0
         - attack_air:
             frame: 0
@@ -49,7 +49,7 @@ states:
       can_transition_to:
         - idle:
             frame: 0
-        - walk:
+        - run:
             frame: 0
         - jump:
             frame: 0
@@ -69,7 +69,7 @@ states:
       can_transition_to:
         - idle:
             frame: 0
-        - walk:
+        - run:
             frame: 0
         - jump:
             frame: -1

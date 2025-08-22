@@ -10,8 +10,6 @@ void scene::game::setup_tile_world(flecs::world& registry, b2WorldId world_id) {
 
     auto& texture_engine = registry.get_mut<components::Texture_Engine>();
 
-    texture_engine.engine.load_texture("tiles_debug", "assets/tiles-debug.png");
-
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file("assets/map.xml");
     if (!result) {
