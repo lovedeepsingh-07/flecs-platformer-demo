@@ -31,6 +31,8 @@ class State {
   public:
     std::string id;
     State_animation_data animation_data;
+    bool offensive;
+    Rectangle hurtbox;
 
     tl::expected<void, error::StateEngineError>
     load_transition(const std::string& transition_id, const State_can_transition_to& transition);

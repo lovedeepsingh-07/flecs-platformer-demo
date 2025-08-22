@@ -22,9 +22,10 @@ void systems::setup(flecs::world& registry) {
     });
 
     systems::controller(registry);
-    systems::state(registry);
     systems::movement(registry);
     systems::physics(registry);
+    systems::state(registry);
+    systems::attack(registry);
     systems::camera(registry);
     systems::animation(registry);
     systems::render(registry);

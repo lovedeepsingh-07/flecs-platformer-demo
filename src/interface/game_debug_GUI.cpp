@@ -43,7 +43,7 @@ void entity_debug(flecs::world& registry, const std::string& entity_id) {
     );
     ImGui::Text("Animation Playing: %s", animation.playing ? "true" : "false");
     ImGui::Text("Texture Flipped: %s", texture.flipped ? "true" : "false");
-    // ImGui::Text("Attacking: %s", attack.attacking ? "true" : "false");
+    ImGui::Text("Attacking: %s", curr_entity.has<components::AttackEvent>() ? "true" : "false");
 }
 
 void Interface::game_debug_GUI(flecs::world& registry) {

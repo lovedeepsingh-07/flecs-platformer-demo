@@ -28,6 +28,15 @@ void systems::animation(flecs::world& registry) {
             }
             const StateEngine::State& curr_state = state_result->get();
 
+            // if animation is not playing and curr_entity has AttackEvent then remove that component
+            // and then just return this system as we do not have to play any animation anymore
+            if (!animation.playing) {
+                if (curr_entity.has<components::AttackEvent>()) {
+                    curr_entity.remove<components::AttackEvent>();
+                }
+                return;
+            }
+
             animation.time_accumulator += GetFrameTime();
             const StateEngine::AnimationFrame& curr_frame =
                 curr_state.animation_data.frames[animation.curr_frame_index];

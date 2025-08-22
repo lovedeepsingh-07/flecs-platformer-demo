@@ -87,7 +87,14 @@ struct Movement {
     int left_idle_right{ 0 };
     bool on_ground;
 };
+
 struct JumpEvent {};
+struct AttackEvent {
+    bool hit_some_entity;
+};
+struct HitEvent {
+    int direction;
+};
 
 void setup(flecs::world& registry);
 

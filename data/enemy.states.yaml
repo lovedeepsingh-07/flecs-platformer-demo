@@ -46,6 +46,7 @@ states:
           - type: "active"
             source_rect: [0, 0, 128, 128]
   - attack:
+      hurtbox: [50, 0, 48, 32]
       can_transition_to:
         - idle:
             frame: 0
@@ -66,6 +67,7 @@ states:
           - type: "recovery"
             source_rect: [768, 0, 256, 256]
   - attack_air:
+      hurtbox: [50, 0, 48, 32]
       can_transition_to:
         - idle:
             frame: 0

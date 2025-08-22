@@ -44,6 +44,20 @@ StateEngine::StateEngine::load_state_registry(const std::string& registry_id, co
             // id
             curr_state.id = curr_state_yaml_iter->first.as<std::string>();
 
+            // hurtbox
+            YAML::Node hurtbox_yaml = curr_state_yaml_iter->second["hurtbox"];
+            if (!hurtbox_yaml) {
+                curr_state.offensive = false;
+            } else {
+                curr_state.offensive = true;
+                curr_state.hurtbox = Rectangle{
+                    hurtbox_yaml[0].as<float>(),
+                    hurtbox_yaml[1].as<float>(),
+                    hurtbox_yaml[2].as<float>(),
+                    hurtbox_yaml[3].as<float>(),
+                };
+            }
+
             // can_transition_to
             YAML::Node transition_yaml =
                 curr_state_yaml_iter->second["can_transition_to"];
