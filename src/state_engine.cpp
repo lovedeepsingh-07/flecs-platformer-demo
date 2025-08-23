@@ -44,17 +44,17 @@ StateEngine::StateEngine::load_state_registry(const std::string& registry_id, co
             // id
             curr_state.id = curr_state_yaml_iter->first.as<std::string>();
 
-            // hurtbox
-            YAML::Node hurtbox_yaml = curr_state_yaml_iter->second["hurtbox"];
-            if (!hurtbox_yaml) {
+            // hitbox
+            YAML::Node hitbox_yaml = curr_state_yaml_iter->second["hitbox"];
+            if (!hitbox_yaml) {
                 curr_state.offensive = false;
             } else {
                 curr_state.offensive = true;
-                curr_state.hurtbox = Rectangle{
-                    hurtbox_yaml[0].as<float>(),
-                    hurtbox_yaml[1].as<float>(),
-                    hurtbox_yaml[2].as<float>(),
-                    hurtbox_yaml[3].as<float>(),
+                curr_state.hitbox = Rectangle{
+                    hitbox_yaml[0].as<float>(),
+                    hitbox_yaml[1].as<float>(),
+                    hitbox_yaml[2].as<float>(),
+                    hitbox_yaml[3].as<float>(),
                 };
             }
 
@@ -174,11 +174,7 @@ StateEngine::State::get_transition(const std::string& transition_id) const {
     return iter->second;
 };
 
-tl::expected<bool, error::StateEngineError>
-StateEngine::State::can_transition_to(const std::string& transition_id) const {
+bool StateEngine::State::can_transition_to(const std::string& transition_id) const {
     auto iter = this->m_transitions.find(transition_id);
-    if (iter == this->m_transitions.end()) {
-        return false;
-    }
-    return true;
+    return iter != this->m_transitions.end();
 };

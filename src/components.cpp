@@ -23,6 +23,8 @@ void components::setup(flecs::world& registry) {
     registry.component<components::Position>();
 
     registry.component<components::RectangleComponent>();
+    registry.component<components::RectOpts_Lines>();
+    registry.component<components::RectOpts_Debug>();
 
     registry.component<components::TextureComponent>();
     registry.component<components::State>();

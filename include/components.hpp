@@ -55,6 +55,11 @@ struct RectangleComponent {
     float height;
     Color color;
 };
+// RectOpts -> settings for rectangles
+// Lines -> this is the lines version of a rectangle
+// Debug -> this version of a rectangle is supposed to be rendered only during debug mode
+struct RectOpts_Lines {};
+struct RectOpts_Debug {};
 
 struct TextureComponent {
     Texture2D texture;

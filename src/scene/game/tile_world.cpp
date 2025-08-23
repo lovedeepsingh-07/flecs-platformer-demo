@@ -6,7 +6,7 @@
 #include <sstream>
 
 void scene::game::setup_tile_world(flecs::world& registry, b2WorldId world_id) {
-    flecs::entity scene_root = registry.component<components::SceneRoot>();
+    flecs::entity scene_root = registry.lookup("scene_root");
 
     auto& texture_engine = registry.get_mut<components::Texture_Engine>();
 

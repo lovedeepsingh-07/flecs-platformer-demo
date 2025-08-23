@@ -14,6 +14,16 @@ void state(flecs::world& registry);
 void attack(flecs::world& registry);
 void camera(flecs::world& registry);
 void animation(flecs::world& registry);
-void render(flecs::world& registry);
+
+namespace render {
+
+void setup(flecs::world& registry);
+
+void texture(flecs::world& registry);
+void rectangle(flecs::world& registry);
+void physics(flecs::world& registry);
+void GUI(flecs::world& registry);
+
+}
 
 }

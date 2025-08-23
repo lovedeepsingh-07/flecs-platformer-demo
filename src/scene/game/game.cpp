@@ -13,7 +13,7 @@ void scene::game::on_enter(flecs::iter& iter, size_t, components::ActiveScene) {
 
     // reset the scene
     registry.defer_begin();
-    registry.delete_with(flecs::ChildOf, registry.entity<components::SceneRoot>());
+    registry.delete_with(flecs::ChildOf, registry.lookup("scene_root"));
     registry.defer_end();
 
     // setup physical world

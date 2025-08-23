@@ -3,7 +3,7 @@
 
 void systems::state(flecs::world& registry) {
     registry
-        .system<components::State, components::Movement, components::Animation>()
+        .system<components::State, components::Movement, components::Animation>("Handle State")
         .kind(flecs::PreUpdate)
         .each([](flecs::entity curr_entity, components::State& state,
                  const components::Movement& movement, components::Animation& animation) {

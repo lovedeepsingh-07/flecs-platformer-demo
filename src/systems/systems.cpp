@@ -28,5 +28,5 @@ void systems::setup(flecs::world& registry) {
     systems::attack(registry);
     systems::camera(registry);
     systems::animation(registry);
-    systems::render(registry);
+    systems::render::setup(registry);
 };

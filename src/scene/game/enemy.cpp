@@ -3,7 +3,7 @@
 #include "utils.hpp"
 
 void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2 pos) {
-    flecs::entity scene_root = registry.component<components::SceneRoot>();
+    flecs::entity scene_root = registry.lookup("scene_root");
 
     auto& texture_engine = registry.get_mut<components::Texture_Engine>();
 

@@ -18,6 +18,7 @@ int main() {
     // registry setup
     flecs::world registry;
     registry.set_target_fps(constants::TARGET_FPS);
+    registry.entity("scene_root").set_alias("scene_root").add<components::SceneRoot>(); // setup the SceneRoot entity, this will act as the parent of all the entities for a particular scene
     components::setup(registry);
     observers::setup(registry);
     systems::setup(registry);
