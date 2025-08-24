@@ -1,31 +1,70 @@
 #include "components.hpp"
+#include "constants.hpp"
 #include "systems.hpp"
-#include <box2d/box2d.h>
+#include "utils.hpp"
 
-void PhysicsSystem::update(GameContext::GameContext& ctx) {
-    ctx.registry
-        .system<components::PositionComponent, components::PhysicsComponent>()
-        .each([](components::PositionComponent& pos, const components::PhysicsComponent& phy) {
-            b2Vec2 body_pos = b2Body_GetPosition(phy.body_id);
+void systems::physics(flecs::world& registry) {
+    registry.system("Step Physical World").kind(flecs::PreUpdate).run([](flecs::iter& iter) {
+        flecs::world registry = iter.world();
+
+        if (!registry.has<components::PhysicalWorld>()
+            || !registry.has<components::ActiveScene, components::Game_Scene>()) {
+            return;
+        }
+        auto physical_world = registry.get<components::PhysicalWorld>();
+
+        b2World_Step(physical_world.world_id, constants::TIME_STEP, constants::SUB_STEP_COUNT);
+    });
+
+    registry.system("Handle Sensor Events").kind(flecs::PreUpdate).run([](flecs::iter& iter) {
+        flecs::world registry = iter.world();
+
+        if (!registry.has<components::ActiveScene, components::Game_Scene>()) {
+            return;
+        }
+
+        auto physical_world = registry.get<components::PhysicalWorld>();
+
+        b2SensorEvents sensorEvents = b2World_GetSensorEvents(physical_world.world_id);
+        for (int i = 0; i < sensorEvents.beginCount; ++i) {
+            b2SensorBeginTouchEvent* beginTouch = sensorEvents.beginEvents + i;
+            b2ShapeId sensor_id = beginTouch->sensorShapeId;
+            if (b2Shape_IsSensor(sensor_id)) {
+                auto* sensor_data =
+                    static_cast<game_utils::ShapeUserData*>(b2Shape_GetUserData(sensor_id));
+                if (sensor_data != nullptr && sensor_data->_id.ends_with("sensor_ground")) {
+                    auto& movement = sensor_data->_owner.get_mut<components::Movement>();
+                    movement.on_ground = true;
+
+                    // if the entity was jumping then we remove the 'JumpEvent' component on landing
+                    if (sensor_data->_owner.has<components::JumpEvent>()) {
+                        sensor_data->_owner.remove<components::JumpEvent>();
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < sensorEvents.endCount; ++i) {
+            b2SensorEndTouchEvent* endTouch = sensorEvents.endEvents + i;
+            b2ShapeId sensor_id = endTouch->sensorShapeId;
+            if (b2Shape_IsSensor(sensor_id)) {
+                auto* sensor_data =
+                    static_cast<game_utils::ShapeUserData*>(b2Shape_GetUserData(sensor_id));
+                if (sensor_data != nullptr && sensor_data->_id.ends_with("sensor_ground")) {
+                    auto& movement = sensor_data->_owner.get_mut<components::Movement>();
+                    movement.on_ground = false;
+                }
+            }
+        }
+    });
+
+    registry
+        .system<components::PhysicalBody, components::Position>(
+            "Apply Physical Calculations"
+        )
+        .kind(flecs::PreUpdate)
+        .each([](const components::PhysicalBody& body, components::Position& pos) {
+            b2Vec2 body_pos = b2Body_GetPosition(body.body_id);
             pos.x = body_pos.x;
             pos.y = body_pos.y;
-        })
-        .run();
-}
-
-void PhysicsSystem::draw_solid_polygon(
-    b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius, b2HexColor color, void* context
-) {
-    for (int i = 0; i < vertexCount; i++) {
-        b2Vec2 curr_vertex = b2TransformPoint(transform, vertices[i]);
-        b2Vec2 next_vertex = b2TransformPoint(transform, vertices[(i + 1) % vertexCount]);
-
-        Vector2 p0 = { curr_vertex.x, curr_vertex.y };
-        Vector2 p1 = { next_vertex.x, next_vertex.y };
-
-        DrawLineV(p0, p1, GREEN);
-    }
-}
-void PhysicsSystem::draw_segment(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void* context) {
-    DrawLineV((Vector2){ p1.x, p1.y }, (Vector2){ p2.x, p2.y }, GREEN);
+        });
 };

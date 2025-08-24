@@ -1,19 +1,18 @@
 #include "components.hpp"
 #include "systems.hpp"
 
-void StateSystem::update(GameContext::GameContext& ctx) {
-    ctx.registry
-        .system<
-            components::StateRegistryComponent, components::StateComponent, components::MovementComponent,
-            components::AttackComponent, components::AnimationComponent>()
-        .each([&ctx](
-                  flecs::entity curr_entity, components::StateRegistryComponent& state_registry,
-                  components::StateComponent& state, components::MovementComponent& movement,
-                  components::AttackComponent& attack, components::AnimationComponent& animation
-              ) {
+void systems::state(flecs::world& registry) {
+    registry
+        .system<components::State, components::Movement, components::Animation>("Handle State")
+        .kind(flecs::PreUpdate)
+        .each([](flecs::entity curr_entity, components::State& state,
+                 const components::Movement& movement, components::Animation& animation) {
+            flecs::world registry = curr_entity.world();
+            const auto& state_engine = registry.get<components::State_Engine>();
+
             // get current state registry
             auto state_registry_result =
-                ctx.state_engine.get_state_registry(state_registry.state_registry_id);
+                state_engine.engine.get_state_registry(state.state_registry_id);
             if (!state_registry_result) {
                 throw std::runtime_error(state_registry_result.error().message);
             }
@@ -29,8 +28,8 @@ void StateSystem::update(GameContext::GameContext& ctx) {
 
             std::string next_state_id = state.curr_state_id;
 
-            if (attack.attacking) {
-                if ((movement.jumping || movement.falling) && !movement.on_ground) {
+            if (curr_entity.has<components::AttackEvent>()) {
+                if (!movement.on_ground) {
                     if (curr_state.can_transition_to("attack_air")) {
                         next_state_id = "attack_air";
                     }
@@ -38,7 +37,7 @@ void StateSystem::update(GameContext::GameContext& ctx) {
                     next_state_id = "attack";
                 }
             } else {
-                if ((movement.jumping || movement.falling) && !movement.on_ground) {
+                if (!movement.on_ground) {
                     if (curr_state.can_transition_to("jump")) {
                         next_state_id = "jump";
                     }
@@ -47,8 +46,8 @@ void StateSystem::update(GameContext::GameContext& ctx) {
                         next_state_id = "idle";
                     }
                 } else {
-                    if (curr_state.can_transition_to("walk")) {
-                        next_state_id = "walk";
+                    if (curr_state.can_transition_to("run")) {
+                        next_state_id = "run";
                     }
                 }
             }
@@ -79,7 +78,6 @@ void StateSystem::update(GameContext::GameContext& ctx) {
                 animation.curr_frame_index = 0;
                 animation.time_accumulator = 0.0F;
                 animation.playing = true;
-                animation.finished = false;
             }
         })
         .run();

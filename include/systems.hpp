@@ -1,51 +1,29 @@
 #pragma once
 
-#include "context.hpp"
-#include <box2d/box2d.h>
-#include <raylib.h>
+#include <clay_raylib.hpp>
+#include <flecs.h>
 
-namespace CameraSystem {
-void update(GameContext::GameContext& ctx, Camera2D& camera);
-}
+namespace systems {
 
-namespace ControllerSystem {
-void update(GameContext::GameContext& ctx);
-}
+void setup(flecs::world& registry);
 
-namespace MovementSystem {
-void update(GameContext::GameContext& ctx);
-}
-namespace AttackSystem {
-void setup(GameContext::GameContext& ctx, b2WorldId world_id);
-void update(GameContext::GameContext& ctx, b2WorldId world_id);
-}
+void controller(flecs::world& registry);
+void movement(flecs::world& registry);
+void physics(flecs::world& registry);
+void state(flecs::world& registry);
+void attack(flecs::world& registry);
+void camera(flecs::world& registry);
+void animation(flecs::world& registry);
 
-namespace HealthSystem {
-void setup(GameContext::GameContext& ctx);
-}
-namespace KnockbackSystem {
-void setup(GameContext::GameContext& ctx);
-}
+namespace render {
 
-namespace PhysicsSystem {
-void update(GameContext::GameContext& ctx);
-void draw_solid_polygon(
-    b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius, b2HexColor color, void* context
-);
-void draw_segment(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void* context);
+void setup(flecs::world& registry);
+
+void texture(flecs::world& registry);
+void rectangle(flecs::world& registry);
+void physics(flecs::world& registry);
+void GUI(flecs::world& registry);
+
 }
 
-namespace PhysicsSensorSystem {
-void update(GameContext::GameContext& ctx, b2WorldId world_id);
-}
-
-namespace Render2DSystem {
-void render(GameContext::GameContext& ctx);
-void render_raycasts(GameContext::GameContext& ctx);
-}
-namespace StateSystem {
-void update(GameContext::GameContext& ctx);
-}
-namespace AnimationSystem {
-void update(GameContext::GameContext& ctx);
 }

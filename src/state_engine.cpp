@@ -1,5 +1,20 @@
 #include "state_engine.hpp"
 
+tl::expected<void, error::StateEngineError> StateEngine::StateEngine::setup() {
+    auto registry_load_result =
+        this->load_state_registry("player", "data/player.states.yaml");
+    if (!registry_load_result) {
+        return tl::unexpected(registry_load_result.error());
+    }
+
+    registry_load_result = this->load_state_registry("enemy", "data/enemy.states.yaml");
+    if (!registry_load_result) {
+        return tl::unexpected(registry_load_result.error());
+    }
+
+    return {};
+}
+
 tl::expected<void, error::StateEngineError>
 StateEngine::StateEngine::load_state_registry(const std::string& registry_id, const std::string& registry_file_path) {
     // check if a registry with the same ID already exists
@@ -28,6 +43,20 @@ StateEngine::StateEngine::load_state_registry(const std::string& registry_id, co
              curr_state_yaml_iter != curr_state_yaml.end(); ++curr_state_yaml_iter) {
             // id
             curr_state.id = curr_state_yaml_iter->first.as<std::string>();
+
+            // hitbox
+            YAML::Node hitbox_yaml = curr_state_yaml_iter->second["hitbox"];
+            if (!hitbox_yaml) {
+                curr_state.offensive = false;
+            } else {
+                curr_state.offensive = true;
+                curr_state.hitbox = Rectangle{
+                    hitbox_yaml[0].as<float>(),
+                    hitbox_yaml[1].as<float>(),
+                    hitbox_yaml[2].as<float>(),
+                    hitbox_yaml[3].as<float>(),
+                };
+            }
 
             // can_transition_to
             YAML::Node transition_yaml =
@@ -145,11 +174,7 @@ StateEngine::State::get_transition(const std::string& transition_id) const {
     return iter->second;
 };
 
-tl::expected<bool, error::StateEngineError>
-StateEngine::State::can_transition_to(const std::string& transition_id) const {
+bool StateEngine::State::can_transition_to(const std::string& transition_id) const {
     auto iter = this->m_transitions.find(transition_id);
-    if (iter == this->m_transitions.end()) {
-        return false;
-    }
-    return true;
+    return iter != this->m_transitions.end();
 };

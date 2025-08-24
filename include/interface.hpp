@@ -1,12 +1,13 @@
 #pragma once
 
-#include "context.hpp"
 #include <clay/clay.h>
+#include <flecs.h>
+#include <raylib.h>
 
 namespace Interface {
 
-void main_menu_GUI(GameContext::GameContext& ctx);
-void game_GUI(GameContext::GameContext& ctx);
-void game_debug_GUI(GameContext::GameContext& ctx);
+void main_menu_GUI(flecs::world& registry);
+void game_GUI(flecs::world& registry);
+void game_debug_GUI(flecs::world& registry);
 
-}
+};

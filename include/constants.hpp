@@ -4,7 +4,9 @@
 
 namespace constants {
 
-constexpr int FPS = 75;
+constexpr Color BACKGROUND_COLOR = BLACK;
+
+constexpr int TARGET_FPS = 75;
 constexpr int BASE_WINDOW_WIDTH = 1200;
 constexpr int BASE_WINDOW_HEIGHT = 600;
 

@@ -2,21 +2,31 @@
 #include "constants.hpp"
 #include "systems.hpp"
 #include <algorithm>
-#include <box2d/box2d.h>
 
-void MovementSystem::update(GameContext::GameContext& ctx) {
-    ctx.registry
-        .system<components::PhysicsComponent, components::MovementComponent, components::AttackComponent>()
-        .each([](flecs::entity curr_entity, components::PhysicsComponent& phy,
-                 components::MovementComponent& movement, components::AttackComponent& attack) {
-            b2Vec2 vel = b2Body_GetLinearVelocity(phy.body_id);
-
-            if (curr_entity.has<components::JumpEventComponent>() && movement.on_ground) {
-                vel.y = constants::PLAYER_JUMP_VEL;
-                curr_entity.remove<components::JumpEventComponent>();
+void systems::movement(flecs::world& registry) {
+    registry
+        .system<components::TextureComponent, components::Movement>(
+            "Handle Texture Flipping"
+        )
+        .kind(flecs::PreUpdate)
+        .each([](flecs::entity curr_entity, components::TextureComponent& texture,
+                 const components::Movement& movement) {
+            if (movement.left_idle_right == -1) {
+                texture.flipped = true;
             }
+            if (movement.left_idle_right == 1) {
+                texture.flipped = false;
+            }
+        });
 
-            if (attack.attacking && movement.on_ground) {
+    registry
+        .system<components::Movement, components::PhysicalBody>("Apply Movement")
+        .kind(flecs::PreUpdate)
+        .each([](flecs::entity curr_entity, const components::Movement& movement,
+                 const components::PhysicalBody& body) {
+            b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
+
+            if (curr_entity.has<components::AttackEvent>() && movement.on_ground) {
                 vel.x = 0.0F;
             } else {
                 float target_speed = 0.0F;
@@ -39,7 +49,7 @@ void MovementSystem::update(GameContext::GameContext& ctx) {
                 // calcuate the difference betwee the current velocity of the player and the target velocity
                 float vel_diff = target_speed - vel.x;
 
-				// calculate how much we have to change the velocity to smoothly transition between velocities
+                // calculate how much we have to change the velocity to smoothly transition between velocities
                 float vel_change = 0.0F;
                 if (target_speed != 0.0F) {
                     vel_change =
@@ -51,15 +61,6 @@ void MovementSystem::update(GameContext::GameContext& ctx) {
                 vel.x += vel_change;
             }
 
-            if (!movement.on_ground) {
-                movement.jumping = vel.y < 0;
-                movement.falling = vel.y > 0;
-            } else {
-                movement.jumping = false;
-                movement.falling = false;
-            }
-
-            b2Body_SetLinearVelocity(phy.body_id, vel);
-        })
-        .run();
-}
+            b2Body_SetLinearVelocity(body.body_id, vel);
+        });
+};

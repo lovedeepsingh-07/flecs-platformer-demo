@@ -2,33 +2,19 @@
 #include "constants.hpp"
 #include "systems.hpp"
 
-void AnimationSystem::update(GameContext::GameContext& ctx) {
-    ctx.registry
-        .system<components::TextureComponent, components::MovementComponent>()
-        .each([](flecs::entity curr_entity, components::TextureComponent& texture,
-                 components::MovementComponent& movement) {
-            if (movement.left_idle_right == -1) {
-                texture.flipped = true;
-            }
-            if (movement.left_idle_right == 1) {
-                texture.flipped = false;
-            }
-        })
-        .run();
+void systems::animation(flecs::world& registry) {
+    registry
+        .system<components::Animation, components::State, components::TextureComponent>("Play Animations")
+        .kind(flecs::PreUpdate)
+        .each([](flecs::entity curr_entity, components::Animation& animation,
+                 const components::State& state, components::TextureComponent& texture) {
+            flecs::world registry = curr_entity.world();
+            const auto& state_engine = registry.get<components::State_Engine>();
+            const auto& texture_engine = registry.get<components::Texture_Engine>();
 
-    ctx.registry
-        .system<
-            components::TextureComponent, components::AnimationComponent, components::StateRegistryComponent,
-            components::StateComponent, components::AttackComponent>()
-        .each([&ctx](
-                  flecs::entity curr_entity, components::TextureComponent& texture,
-                  components::AnimationComponent& animation,
-                  components::StateRegistryComponent& state_registry,
-                  components::StateComponent& state, components::AttackComponent& attack
-              ) {
             // get current state registry
             auto state_registry_result =
-                ctx.state_engine.get_state_registry(state_registry.state_registry_id);
+                state_engine.engine.get_state_registry(state.state_registry_id);
             if (!state_registry_result) {
                 throw std::runtime_error(state_registry_result.error().message);
             }
@@ -42,12 +28,11 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
             }
             const StateEngine::State& curr_state = state_result->get();
 
-            if (!animation.playing || animation.finished) {
-                if (attack.attacking
-                    && curr_entity.has<components::AttackEventComponent>()) {
-                    curr_entity.remove<components::AttackEventComponent>();
-                    attack.attacking = false;
-                    attack.hit_some_entity = false;
+            // if animation is not playing and curr_entity has AttackEvent then remove that component
+            // and then just return this system as we do not have to play any animation anymore
+            if (!animation.playing) {
+                if (curr_entity.has<components::AttackEvent>()) {
+                    curr_entity.remove<components::AttackEvent>();
                 }
                 return;
             }
@@ -67,7 +52,6 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
                     } else {
                         animation.curr_frame_index =
                             (int)curr_state.animation_data.frames.size() - 1;
-                        animation.finished = true;
                         animation.playing = false;
                     }
                 }
@@ -75,9 +59,8 @@ void AnimationSystem::update(GameContext::GameContext& ctx) {
 
             // Update texture rect
             texture.texture =
-                ctx.texture_engine.get_texture(curr_state.animation_data.texture_id);
+                texture_engine.engine.get_texture(curr_state.animation_data.texture_id);
             texture.source_rect =
                 curr_state.animation_data.frames[animation.curr_frame_index].source_rect;
-        })
-        .run();
+        });
 }

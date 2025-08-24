@@ -1,22 +1,20 @@
-#include "components.hpp"
 #include "constants.hpp"
-#include "modules.hpp"
-#include <box2d/box2d.h>
-#include <cmath>
-#include <iostream>
+#include "scene.hpp"
+#include "utils.hpp"
 #include <pugixml.hpp>
 #include <rapidcsv.h>
-#include <raylib.h>
 #include <sstream>
-#include <string>
 
-void TileWorldModule::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
+void scene::game::setup_tile_world(flecs::world& registry, b2WorldId world_id) {
+    flecs::entity scene_root = registry.lookup("scene_root");
+
+    auto& texture_engine = registry.get_mut<components::Texture_Engine>();
+
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file("assets/map.xml");
     if (!result) {
         throw std::runtime_error("Failed to load XML file");
     }
-
     pugi::xml_node tile_layer =
         doc.child("map").find_child_by_attribute("layer", "name", "DrawingLayer");
     if (tile_layer == nullptr) {
@@ -30,9 +28,9 @@ void TileWorldModule::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
                       .find_child_by_attribute("tileset", "source", "tiles-debug.xml")
                       .attribute("firstgid")
                       .value());
-    ctx.texture_engine.load_texture("tiles_debug", "assets/tiles-debug.png");
+
     Texture2D tileset_debug_texture =
-        ctx.texture_engine.get_texture("tiles_debug");
+        texture_engine.engine.get_texture("tiles_debug");
     int map_width = std::stoi(tile_layer.attribute("width").value());
     int map_height = std::stoi(tile_layer.attribute("height").value());
 
@@ -53,22 +51,25 @@ void TileWorldModule::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
                     std::floor(tile_index / ((float)tileset_debug_texture.width / tile_width))
                     * tile_height;
 
-                flecs::entity tile_entity{ ctx.registry.entity()
-                                               .set(components::PositionComponent{ tile_x, tile_y })
-                                               .set(components::TextureComponent{
-                                                   .texture = tileset_debug_texture,
-                                                   .source_rect =
-                                                       (Rectangle){
-                                                           .x = tile_rect_x,
-                                                           .y = tile_rect_y,
-                                                           .width = tile_width,
-                                                           .height = tile_height,
-                                                       },
-                                                   .flipped = false,
-                                               }) };
-            }
+                // tile entity
+                registry.entity()
+                    .set(components::Position{ tile_x, tile_y })
+                    .set(components::TextureComponent{
+                        .texture = tileset_debug_texture,
+                        .source_rect =
+                            (Rectangle){
+                                .x = tile_rect_x,
+                                .y = tile_rect_y,
+                                .width = tile_width,
+                                .height = tile_height,
+                            },
+                        .flipped = false,
+                    })
+                    .child_of(scene_root);
+            };
         }
     }
+
     pugi::xml_node object_layer =
         doc.child("map").find_child_by_attribute("objectgroup", "name", "GroundLayer");
     if (object_layer == nullptr) {
@@ -100,15 +101,18 @@ void TileWorldModule::setup(GameContext::GameContext& ctx, b2WorldId world_id) {
         body_def.fixedRotation = true;
         body_def.position = (b2Vec2){ object_x, object_y };
         b2BodyId body_id = b2CreateBody(world_id, &body_def);
+
+        flecs::entity chain_entity =
+            registry.entity().set(components::PhysicalBody{ body_id }).child_of(scene_root);
+
         b2ChainDef body_chain_def = b2DefaultChainDef();
         body_chain_def.points = vertices.data();
         body_chain_def.count = (int)vertices.size();
         body_chain_def.isLoop = true;
         body_chain_def.enableSensorEvents = true;
-        body_chain_def.filter.categoryBits = Utils::EntityCategories::GROUND;
+        body_chain_def.filter.categoryBits = game_utils::EntityCategories::GROUND;
+        body_chain_def.userData =
+            new game_utils::ShapeUserData{ ._id = "ground_shape_chain", ._owner = chain_entity };
         b2CreateChain(body_id, &body_chain_def);
-        flecs::entity object_collider_entity{
-            ctx.registry.entity().set(components::PhysicsComponent{ body_id })
-        };
     }
 }

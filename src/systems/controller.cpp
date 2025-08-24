@@ -1,65 +1,44 @@
 #include "components.hpp"
 #include "systems.hpp"
-#include <raylib.h>
 
-void ControllerSystem::update(GameContext::GameContext& ctx) {
-    ctx.registry
-        .system<components::MovementComponent, components::AttackComponent, components::ControllerComponent>()
-        .each([](flecs::entity curr_entity, components::MovementComponent& movement,
-                 components::AttackComponent& attack,
-                 const components::ControllerComponent& controller) {
+void systems::controller(flecs::world& registry) {
+    registry
+        .system<components::Controller, components::Movement>("Handle "
+                                                              "Controller Input")
+        .kind(flecs::PreUpdate)
+        .each([](flecs::entity curr_entity, const components::Controller& controller,
+                 components::Movement& movement) {
+            bool is_attacking = curr_entity.has<components::AttackEvent>();
+
             if (controller._id == 0) {
-                if (IsKeyPressed(KEY_W)
-                    && !curr_entity.has<components::JumpEventComponent>()
-                    && movement.on_ground) {
-                    if (curr_entity.has<components::AttackEventComponent>()
-                        && attack.attacking) {
-                        curr_entity.remove<components::AttackEventComponent>();
-                        attack.attacking = false;
-                    }
-                    curr_entity.add<components::JumpEventComponent>();
-                }
-                if (IsKeyPressed(KEY_E)
-                    && !curr_entity.has<components::AttackEventComponent>()
-                    && !attack.attacking) {
-                    curr_entity.add<components::AttackEventComponent>();
-                }
-                if (IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !attack.attacking) {
+                if (IsKeyDown(KEY_A) && !is_attacking) {
                     movement.left_idle_right = -1;
-                }
-                if (!IsKeyDown(KEY_A) && IsKeyDown(KEY_D) && !attack.attacking) {
+                } else if (IsKeyDown(KEY_D) && !is_attacking) {
                     movement.left_idle_right = 1;
-                }
-                if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+                } else {
                     movement.left_idle_right = 0;
+                }
+                if (IsKeyPressed(KEY_W) && !curr_entity.has<components::JumpEvent>()) {
+                    curr_entity.add<components::JumpEvent>();
+                }
+                if (IsKeyPressed(KEY_E) && !curr_entity.has<components::AttackEvent>()) {
+                    curr_entity.set<components::AttackEvent>({ .hit_some_entity = false });
                 }
             }
             if (controller._id == 1) {
-                if (IsKeyPressed(KEY_I)
-                    && !curr_entity.has<components::JumpEventComponent>()
-                    && movement.on_ground) {
-                    if (curr_entity.has<components::AttackEventComponent>()
-                        && attack.attacking) {
-                        curr_entity.remove<components::AttackEventComponent>();
-                        attack.attacking = false;
-                    }
-                    curr_entity.add<components::JumpEventComponent>();
-                }
-                if (IsKeyPressed(KEY_O)
-                    && !curr_entity.has<components::AttackEventComponent>()
-                    && !attack.attacking) {
-                    curr_entity.add<components::AttackEventComponent>();
-                }
-                if (IsKeyDown(KEY_J) && !IsKeyDown(KEY_L) && !attack.attacking) {
+                if (IsKeyDown(KEY_H) && !is_attacking) {
                     movement.left_idle_right = -1;
-                }
-                if (!IsKeyDown(KEY_J) && IsKeyDown(KEY_L) && !attack.attacking) {
+                } else if (IsKeyDown(KEY_L) && !is_attacking) {
                     movement.left_idle_right = 1;
-                }
-                if (!IsKeyDown(KEY_J) && !IsKeyDown(KEY_L)) {
+                } else {
                     movement.left_idle_right = 0;
                 }
+                if (IsKeyPressed(KEY_K) && !curr_entity.has<components::JumpEvent>()) {
+                    curr_entity.add<components::JumpEvent>();
+                }
+                if (IsKeyPressed(KEY_O) && !curr_entity.has<components::AttackEvent>()) {
+                    curr_entity.set<components::AttackEvent>({ .hit_some_entity = false });
+                }
             }
-        })
-        .run();
-}
+        });
+};

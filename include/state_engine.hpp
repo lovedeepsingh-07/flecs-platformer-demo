@@ -31,13 +31,14 @@ class State {
   public:
     std::string id;
     State_animation_data animation_data;
+    bool offensive;
+    Rectangle hitbox;
 
     tl::expected<void, error::StateEngineError>
     load_transition(const std::string& transition_id, const State_can_transition_to& transition);
     tl::expected<std::reference_wrapper<const State_can_transition_to>, error::StateEngineError>
     get_transition(const std::string& transition_id) const;
-    tl::expected<bool, error::StateEngineError>
-    can_transition_to(const std::string& transition_id) const;
+    bool can_transition_to(const std::string& transition_id) const;
 };
 
 class StateRegistry {
@@ -56,6 +57,7 @@ class StateEngine {
     std::unordered_map<std::string, StateRegistry> m_state_registries;
 
   public:
+    tl::expected<void, error::StateEngineError> setup();
     tl::expected<void, error::StateEngineError>
     load_state_registry(const std::string& registry_id, const std::string& registry_file_path);
     tl::expected<std::reference_wrapper<const StateRegistry>, error::StateEngineError>
