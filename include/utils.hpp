@@ -24,6 +24,13 @@ struct ShapeUserData {
     void* _data;
 };
 
+struct CastContext {
+    void* cast_user_data;
+    bool hit;
+    flecs::entity hit_entity;
+};
+
+float cast_result_fcn(b2ShapeId shape_id, b2Vec2 point, b2Vec2 normal, float fraction, void* context);
 Clay_Color RaylibColorToClayColor(Color rayColor);
 void HandleClayErrors(Clay_ErrorData errorData);
 void draw_solid_polygon(

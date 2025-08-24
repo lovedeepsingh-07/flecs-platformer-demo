@@ -32,9 +32,11 @@ void components::setup(flecs::world& registry) {
 
     registry.component<components::PhysicalWorld>().add(flecs::Singleton);
     registry.component<components::PhysicalBody>();
+    registry.component<components::CastQueryFilter>();
     registry.component<components::BaseCollider>();
 
     registry.component<components::Movement>();
+    registry.component<components::Health>();
 
     registry.component<components::JumpEvent>();
     registry.component<components::AttackEvent>();

@@ -1,6 +1,15 @@
 #include "utils.hpp"
 #include <iostream>
 
+float game_utils::cast_result_fcn(b2ShapeId shape_id, b2Vec2 point, b2Vec2 normal, float fraction, void* context) {
+    auto* cast_context = static_cast<game_utils::CastContext*>(context);
+    auto* entity_hit_shape_data =
+        static_cast<game_utils::ShapeUserData*>(b2Shape_GetUserData(shape_id));
+    cast_context->hit = true;
+    cast_context->hit_entity = entity_hit_shape_data->_owner;
+    return 1;
+}
+
 Clay_Color game_utils::RaylibColorToClayColor(Color rayColor) {
     Clay_Color clayColor;
     clayColor.r = rayColor.r;

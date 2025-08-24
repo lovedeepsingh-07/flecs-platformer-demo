@@ -83,6 +83,9 @@ struct PhysicalWorld {
 struct PhysicalBody {
     b2BodyId body_id;
 };
+struct CastQueryFilter {
+    b2QueryFilter filter;
+};
 struct BaseCollider {
     float width;
     float height;
@@ -91,6 +94,10 @@ struct BaseCollider {
 struct Movement {
     int left_idle_right{ 0 };
     bool on_ground;
+};
+struct Health {
+    float health;
+    float max_health;
 };
 
 struct JumpEvent {};

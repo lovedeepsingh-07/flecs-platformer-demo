@@ -1,3 +1,4 @@
+#include "box2d/types.h"
 #include "constants.hpp"
 #include "scene.hpp"
 #include "utils.hpp"
@@ -47,10 +48,15 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
         new game_utils::ShapeUserData{ ._id = "player_sensor_ground", ._owner = player_entity };
     b2CreatePolygonShape(body_id, &ground_sensor_def, &ground_sensor_polygon);
 
+    // setup cast query filter
+    b2QueryFilter cast_query_filter = b2DefaultQueryFilter();
+    cast_query_filter.maskBits = game_utils::EntityCategories::ENEMY;
+
     player_entity
         .set(components::Position{ pos.x - (shape_size.x / 2),
                                    pos.y - (shape_size.y / 2) })
         .set(components::PhysicalBody{ body_id })
+        .set(components::CastQueryFilter{ cast_query_filter })
         .set(components::BaseCollider{ shape_size.x, shape_size.y })
         .set(components::Movement{ .left_idle_right = 0, .on_ground = false });
 
@@ -73,5 +79,11 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
             texture_engine.engine.get_texture(starting_state.animation_data.texture_id),
         .source_rect = { 0, 0, 128, 128 },
         .flipped = false,
+    });
+
+    // setup health
+    player_entity.set(components::Health{
+        .health = constants::MAX_PLAYER_HEALTH,
+        .max_health = constants::MAX_PLAYER_HEALTH,
     });
 }

@@ -1,17 +1,20 @@
 #include "components.hpp"
 #include "raymath.h"
 #include "systems.hpp"
+#include "utils.hpp"
 
 void systems::attack(flecs::world& registry) {
     registry
-        .system<components::AttackEvent, components::State, components::Animation, components::Position, components::TextureComponent>(
-            "Handle Attacks"
-        )
+        .system<
+            components::AttackEvent, components::State, components::Animation,
+            components::Position, components::TextureComponent, components::CastQueryFilter>("Handle Attacks")
         .kind(flecs::PreUpdate)
-        .each([](flecs::entity curr_entity, components::AttackEvent& attack,
+        .each([](flecs::entity curr_entity, components::AttackEvent& attack_event,
                  const components::State& state, const components::Animation& animation,
-                 const components::Position& pos, const components::TextureComponent& texture) {
+                 const components::Position& pos, const components::TextureComponent& texture,
+                 const components::CastQueryFilter& cast_query_filter) {
             flecs::world registry = curr_entity.world();
+            const auto& physical_world = registry.get<components::PhysicalWorld>();
             const auto& state_engine = registry.get<components::State_Engine>();
 
             // get current state registry
@@ -36,8 +39,9 @@ void systems::attack(flecs::world& registry) {
             }
 
             flecs::entity hitbox_entity = curr_entity.lookup("hitbox");
-
             Rectangle hitbox_rect = curr_state.hitbox;
+
+            // calculate hitbox color and position based on current frame type and texture.flipped respectively
             Color hitbox_color =
                 ((curr_state.animation_data.frames[animation.curr_frame_index]._type == "active")
                      ? RED
@@ -48,6 +52,7 @@ void systems::attack(flecs::world& registry) {
                          hitbox_rect.y }
             );
 
+            // if hitbox is not valid, that means we have to create the hitbox entity
             if (!hitbox_entity.is_valid()) {
                 registry.entity("hitbox")
                     .set<components::RectangleComponent>({ hitbox_rect.width,
@@ -67,8 +72,30 @@ void systems::attack(flecs::world& registry) {
                 hitbox_pos_comp.y = hitbox_pos.y;
             }
 
-            // TODO: shape cast here
-            if (curr_state.animation_data.frames[animation.curr_frame_index]._type
-                == "active") {}
+            // shape cast must only be performed when the frame is "active"
+            if (curr_state.animation_data.frames[animation.curr_frame_index]._type == "active") {
+                game_utils::CastContext cast_context{};
+                b2Polygon hitbox_polygon =
+                    b2MakeBox(hitbox_rect.width / 2, hitbox_rect.height / 2);
+                b2ShapeProxy proxy = b2MakeOffsetProxy(
+                    hitbox_polygon.vertices, hitbox_polygon.count,
+                    hitbox_polygon.radius, b2Vec2{ hitbox_pos.x, hitbox_pos.y },
+                    b2MakeRot(0)
+                );
+                b2World_CastShape(
+                    physical_world.world_id, &proxy, (b2Vec2){ 0, 0 },
+                    cast_query_filter.filter, game_utils::cast_result_fcn, &cast_context
+                );
+
+                if (cast_context.hit) {
+                    // HitEvent must only be added if the current entity hasn't already hit an entity in this attack state
+                    if (!attack_event.hit_some_entity) {
+                        cast_context.hit_entity.set<components::HitEvent>(
+                            { .direction = (texture.flipped ? -1 : 1) }
+                        );
+                        attack_event.hit_some_entity = true;
+                    }
+                }
+            }
         });
 };

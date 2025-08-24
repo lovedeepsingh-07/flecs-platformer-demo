@@ -22,7 +22,7 @@ void systems::controller(flecs::world& registry) {
                     curr_entity.add<components::JumpEvent>();
                 }
                 if (IsKeyPressed(KEY_E) && !curr_entity.has<components::AttackEvent>()) {
-                    curr_entity.add<components::AttackEvent>();
+                    curr_entity.set<components::AttackEvent>({ .hit_some_entity = false });
                 }
             }
             if (controller._id == 1) {
@@ -37,7 +37,7 @@ void systems::controller(flecs::world& registry) {
                     curr_entity.add<components::JumpEvent>();
                 }
                 if (IsKeyPressed(KEY_O) && !curr_entity.has<components::AttackEvent>()) {
-                    curr_entity.add<components::AttackEvent>();
+                    curr_entity.set<components::AttackEvent>({ .hit_some_entity = false });
                 }
             }
         });
