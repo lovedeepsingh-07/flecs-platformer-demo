@@ -14,6 +14,7 @@ void state(flecs::world& registry);
 void attack(flecs::world& registry);
 void camera(flecs::world& registry);
 void animation(flecs::world& registry);
+void particles(flecs::world& registry);
 
 namespace render {
 

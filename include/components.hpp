@@ -1,5 +1,6 @@
 #pragma once
 
+#include "particle_engine.hpp"
 #include "state_engine.hpp"
 #include "texture_engine.hpp"
 #include <array>
@@ -31,6 +32,9 @@ struct Texture_Engine {
 struct State_Engine {
     StateEngine::StateEngine engine;
 };
+struct Particle_Emitter {
+    ParticleEngine::ParticleEngine engine;
+};
 
 struct GameFonts {
     std::array<Font, 1> font_list;
@@ -40,6 +44,7 @@ struct GlobalCamera {
     Camera2D camera;
 };
 struct Camera_Target {};
+
 
 struct Controller {
     uint8_t _id;

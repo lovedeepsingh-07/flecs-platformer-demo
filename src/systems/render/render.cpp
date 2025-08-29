@@ -23,6 +23,12 @@ void systems::render::setup(flecs::world& registry) {
     });
 
     systems::render::texture(registry);
+
+    registry.system<components::Particle_Emitter>("Render Particles")
+        .kind(flecs::PreStore)
+        .each([](flecs::entity curr_entity, components::Particle_Emitter& particle_emitter
+              ) { particle_emitter.engine.render(); });
+
     systems::render::rectangle(registry);
     systems::render::physics(registry);
 

@@ -50,9 +50,7 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
     b2QueryFilter cast_query_filter = b2DefaultQueryFilter();
     cast_query_filter.maskBits = game_utils::EntityCategories::PLAYER;
 
-    enemy_entity
-        .set(components::Position{ pos.x - (shape_size.x / 2),
-                                   pos.y - (shape_size.y / 2) })
+    enemy_entity.set(components::Position{ pos.x, pos.y })
         .set(components::PhysicalBody{ body_id })
         .set(components::CastQueryFilter{ cast_query_filter })
         .set(components::BaseCollider{ shape_size.x, shape_size.y })

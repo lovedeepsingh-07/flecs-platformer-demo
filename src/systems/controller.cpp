@@ -18,7 +18,8 @@ void systems::controller(flecs::world& registry) {
                 } else {
                     movement.left_idle_right = 0;
                 }
-                if (IsKeyPressed(KEY_W) && !curr_entity.has<components::JumpEvent>()) {
+                if (IsKeyPressed(KEY_W) && !curr_entity.has<components::JumpEvent>()
+                    && movement.on_ground) {
                     curr_entity.add<components::JumpEvent>();
                 }
                 if (IsKeyPressed(KEY_E) && !curr_entity.has<components::AttackEvent>()) {
@@ -33,7 +34,8 @@ void systems::controller(flecs::world& registry) {
                 } else {
                     movement.left_idle_right = 0;
                 }
-                if (IsKeyPressed(KEY_K) && !curr_entity.has<components::JumpEvent>()) {
+                if (IsKeyPressed(KEY_K) && !curr_entity.has<components::JumpEvent>()
+                    && movement.on_ground) {
                     curr_entity.add<components::JumpEvent>();
                 }
                 if (IsKeyPressed(KEY_O) && !curr_entity.has<components::AttackEvent>()) {
