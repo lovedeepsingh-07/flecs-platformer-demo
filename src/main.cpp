@@ -55,7 +55,7 @@ int main() {
     // setup fonts
     std::array<Font, 1> font_list{ GetFontDefault() };
     Clay_SetMeasureTextFunction(Raylib_MeasureText, font_list.data());
-    registry.set<components::GameFonts>({ font_list });
+    registry.set<components::global_options::GameFonts>({ font_list });
 
     // switch ActiveScene to MainMenu
     registry.add<components::ActiveScene, components::MainMenu_Scene>();

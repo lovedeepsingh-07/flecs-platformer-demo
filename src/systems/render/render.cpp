@@ -58,7 +58,7 @@ void systems::render::setup(flecs::world& registry) {
                  components::Position& pos, components::BaseCollider& base_collider) {
             flecs::world registry = curr_entity.world();
             if (!registry.has<components::ActiveScene, components::Game_Scene>()
-                || !registry.has<components::DebugMode>()) {
+                || !registry.has<components::global_options::DebugMode>()) {
                 return;
             }
             DrawText(

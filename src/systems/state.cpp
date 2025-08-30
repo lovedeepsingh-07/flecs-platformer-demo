@@ -28,7 +28,7 @@ void systems::state(flecs::world& registry) {
 
             std::string next_state_id = state.curr_state_id;
 
-            if (curr_entity.has<components::AttackEvent>()) {
+            if (curr_entity.has<components::events::AttackEvent>()) {
                 if (!movement.on_ground) {
                     if (curr_state.can_transition_to("attack_air")) {
                         next_state_id = "attack_air";

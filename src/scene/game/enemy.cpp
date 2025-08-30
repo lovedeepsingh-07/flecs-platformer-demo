@@ -82,4 +82,33 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
         .health = constants::MAX_PLAYER_HEALTH,
         .max_health = constants::MAX_PLAYER_HEALTH,
     });
+
+    // setup partile emitters
+    auto jumping_particle_engine = ParticleEngine::ParticleEngine{};
+    jumping_particle_engine.pool_size = 360; // arbitrary number
+    jumping_particle_engine.emitting = false;
+    jumping_particle_engine.config = ParticleEngine::EngineConfig{
+        .local_coords = false,
+        .one_shot = true,
+        .amount = 4,
+        .speed_scale = 2.5F,
+        .lifetime = 0.25F,
+        .velocity_scale = 100.0F,
+        .explosiveness = 0.0F,
+        .direction_bias = -std::numbers::pi / 2,
+        .spread = 10.0F * DEG2RAD,
+        .separation = 155 * DEG2RAD,
+        .square_particles = true,
+        .start_size = 4.6F,
+        .end_size = 3.5F,
+        .start_color = Vector4{ 1.0F, 1.0F, 1.0F, 1.0F },
+        .end_color = Vector4{ 1.0F, 1.0F, 1.0F, 0.0F },
+    };
+    jumping_particle_engine.setup();
+    flecs::entity jump_emitter_entity =
+        registry.entity()
+            .set<components::Particle_Emitter>({ jumping_particle_engine })
+            .set<components::Position>({ pos.x, pos.y + (constants::PLAYER_COLLIDER_HEIGHT / 2) })
+            .child_of(enemy_entity);
+    enemy_entity.add<components::emitter_types::JumpEmitter>(jump_emitter_entity);
 }

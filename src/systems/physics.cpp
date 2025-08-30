@@ -37,8 +37,8 @@ void systems::physics(flecs::world& registry) {
                     movement.on_ground = true;
 
                     // if the entity was jumping then we remove the 'JumpEvent' component on landing
-                    if (sensor_data->_owner.has<components::JumpEvent>()) {
-                        sensor_data->_owner.remove<components::JumpEvent>();
+                    if (sensor_data->_owner.has<components::events::JumpEvent>()) {
+                        sensor_data->_owner.remove<components::events::JumpEvent>();
                     }
                 }
             }

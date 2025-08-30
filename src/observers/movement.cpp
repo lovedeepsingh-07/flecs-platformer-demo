@@ -4,12 +4,12 @@
 
 void observers::movement(flecs::world& registry) {
     registry
-        .observer<components::JumpEvent, components::PhysicalBody, components::Position, components::BaseCollider>(
+        .observer<components::events::JumpEvent, components::PhysicalBody, components::Position, components::BaseCollider>(
             "JumpEvent "
             "on_add"
         )
         .event(flecs::OnAdd)
-        .each([](flecs::entity curr_entity, const components::JumpEvent& jump_event,
+        .each([](flecs::entity curr_entity, const components::events::JumpEvent& jump_event,
 
                  const components::PhysicalBody& body, const components::Position& pos,
                  const components::BaseCollider& base_collider) {
@@ -18,7 +18,7 @@ void observers::movement(flecs::world& registry) {
             b2Body_SetLinearVelocity(body.body_id, vel);
 
             flecs::entity jumping_particle_emitter =
-                curr_entity.lookup("jumping_particle_emitter");
+                curr_entity.target<components::emitter_types::JumpEmitter>();
 
             if (!jumping_particle_emitter.is_valid()) {
                 return;

@@ -31,7 +31,7 @@ void entity_debug(flecs::world& registry, const std::string& entity_id) {
 
     ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
     ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
-    ImGui::Text("Jumping: %s", curr_entity.has<components::JumpEvent>() ? "true" : "false");
+    ImGui::Text("Jumping: %s", curr_entity.has<components::events::JumpEvent>() ? "true" : "false");
     ImGui::Text("Left_Idle_Right: %d", movement.left_idle_right);
     ImGui::Text("Velocity_X: %f", vel.x);
     ImGui::Text("Velocity_Y: %f", vel.y);
@@ -43,7 +43,7 @@ void entity_debug(flecs::world& registry, const std::string& entity_id) {
     );
     ImGui::Text("Animation Playing: %s", animation.playing ? "true" : "false");
     ImGui::Text("Texture Flipped: %s", texture.flipped ? "true" : "false");
-    ImGui::Text("Attacking: %s", curr_entity.has<components::AttackEvent>() ? "true" : "false");
+    ImGui::Text("Attacking: %s", curr_entity.has<components::events::AttackEvent>() ? "true" : "false");
 }
 
 void Interface::game_debug_GUI(flecs::world& registry) {

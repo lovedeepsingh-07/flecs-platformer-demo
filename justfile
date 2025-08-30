@@ -20,4 +20,4 @@ run: build
 	./{{build_dir}}/{{binary_name}}.exe
 
 fmt:
-    find {{src_dir}} {{include_dir}} -regex '.*\.\(cpp\|h\)' | xargs clang-format -i
+    find {{src_dir}} {{include_dir}} -regex '.*\.\(cpp\|hpp\)' | xargs clang-format -i

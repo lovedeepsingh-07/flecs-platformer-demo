@@ -1,15 +1,14 @@
 #include "components.hpp"
-#include "raymath.h"
 #include "systems.hpp"
 #include "utils.hpp"
 
 void systems::attack(flecs::world& registry) {
     registry
         .system<
-            components::AttackEvent, components::State, components::Animation,
+            components::events::AttackEvent, components::State, components::Animation,
             components::Position, components::TextureComponent, components::CastQueryFilter>("Handle Attacks")
         .kind(flecs::PreUpdate)
-        .each([](flecs::entity curr_entity, components::AttackEvent& attack_event,
+        .each([](flecs::entity curr_entity, components::events::AttackEvent& attack_event,
                  const components::State& state, const components::Animation& animation,
                  const components::Position& pos, const components::TextureComponent& texture,
                  const components::CastQueryFilter& cast_query_filter) {
@@ -38,7 +37,7 @@ void systems::attack(flecs::world& registry) {
                 return;
             }
 
-            flecs::entity hitbox_entity = curr_entity.lookup("hitbox");
+            flecs::entity hitbox_entity = curr_entity.target<components::Hitbox>();
             Rectangle hitbox_rect = curr_state.hitbox;
 
             // calculate hitbox color and position based on current frame type and texture.flipped respectively
@@ -54,13 +53,16 @@ void systems::attack(flecs::world& registry) {
 
             // if hitbox is not valid, that means we have to create the hitbox entity
             if (!hitbox_entity.is_valid()) {
-                registry.entity("hitbox")
-                    .set<components::RectangleComponent>({ hitbox_rect.width,
-                                                           hitbox_rect.height, hitbox_color })
-                    .add<components::RectOpts_Debug>()
-                    .add<components::RectOpts_Lines>()
-                    .set<components::Position>({ hitbox_pos.x, hitbox_pos.y })
-                    .child_of(curr_entity);
+                hitbox_entity =
+                    registry.entity()
+                        .set<components::RectangleComponent>(
+                            { hitbox_rect.width, hitbox_rect.height, hitbox_color }
+                        )
+                        .add<components::rectangle_options::RectOpts_Debug>()
+                        .add<components::rectangle_options::RectOpts_Lines>()
+                        .set<components::Position>({ hitbox_pos.x, hitbox_pos.y })
+                        .child_of(curr_entity);
+                curr_entity.add<components::Hitbox>(hitbox_entity);
             } else {
                 auto& hitbox_rect_comp =
                     hitbox_entity.get_mut<components::RectangleComponent>();
@@ -90,7 +92,7 @@ void systems::attack(flecs::world& registry) {
                 if (cast_context.hit) {
                     // HitEvent must only be added if the current entity hasn't already hit an entity in this attack state
                     if (!attack_event.hit_some_entity) {
-                        cast_context.hit_entity.set<components::HitEvent>(
+                        cast_context.hit_entity.set<components::events::HitEvent>(
                             { .direction = (texture.flipped ? -1 : 1) }
                         );
                         attack_event.hit_some_entity = true;

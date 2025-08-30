@@ -3,21 +3,21 @@
 #include "observers.hpp"
 
 void observers::attack(flecs::world& registry) {
-    registry.observer<components::AttackEvent>("AttackEvent on_remove")
+    registry.observer<components::events::AttackEvent>("AttackEvent on_remove")
         .event(flecs::OnRemove)
-        .each([](flecs::entity curr_entity, const components::AttackEvent& attack_event) {
+        .each([](flecs::entity curr_entity, const components::events::AttackEvent& attack_event) {
             flecs::world registry = curr_entity.world();
-            flecs::entity hitbox_entity = curr_entity.lookup("hitbox");
+            flecs::entity hitbox_entity = curr_entity.target<components::Hitbox>();
 
             if (hitbox_entity.is_valid()) {
                 hitbox_entity.destruct();
             }
         });
     registry
-        .observer<components::HitEvent, components::Health, components::PhysicalBody>("HitEvent "
-                                                                                      "on_set")
+        .observer<components::events::HitEvent, components::Health, components::PhysicalBody>("HitEvent "
+                                                                                              "on_set")
         .event(flecs::OnSet)
-        .each([](flecs::entity curr_entity, const components::HitEvent& hit_event,
+        .each([](flecs::entity curr_entity, const components::events::HitEvent& hit_event,
                  components::Health& health, const components::PhysicalBody& body) {
             // apply damage
             if (!(health.health <= 0)) {
@@ -30,6 +30,6 @@ void observers::attack(flecs::world& registry) {
             vel.x = 2 * constants::MAX_PLAYER_RUN_VEL * (float)hit_event.direction;
             b2Body_SetLinearVelocity(body.body_id, vel);
 
-            curr_entity.remove<components::HitEvent>();
+            curr_entity.remove<components::events::HitEvent>();
         });
 };

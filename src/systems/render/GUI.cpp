@@ -13,14 +13,14 @@ void systems::render::GUI(flecs::world& registry) {
         }
 
         if (registry.has<components::ActiveScene, components::Game_Scene>()
-            && registry.has<components::DebugMode>()) {
+            && registry.has<components::global_options::DebugMode>()) {
             Interface::game_debug_GUI(registry);
         }
     });
 
     registry.system("Render GUI").kind(flecs::OnStore).run([](flecs::iter& iter) {
         flecs::world registry = iter.world();
-        auto game_fonts = registry.get<components::GameFonts>();
+        auto game_fonts = registry.get<components::global_options::GameFonts>();
 
         Clay_SetLayoutDimensions((Clay_Dimensions
         ){ .width = (float)GetScreenWidth(), .height = (float)GetScreenHeight() });

@@ -108,8 +108,10 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
         .end_color = Vector4{ 1.0F, 1.0F, 1.0F, 0.0F },
     };
     jumping_particle_engine.setup();
-    registry.entity("jumping_particle_emitter")
-        .set<components::Particle_Emitter>({ jumping_particle_engine })
-        .set<components::Position>({ pos.x, pos.y + (constants::PLAYER_COLLIDER_HEIGHT / 2) })
-        .child_of(player_entity);
+    flecs::entity jump_emitter_entity =
+        registry.entity()
+            .set<components::Particle_Emitter>({ jumping_particle_engine })
+            .set<components::Position>({ pos.x, pos.y + (constants::PLAYER_COLLIDER_HEIGHT / 2) })
+            .child_of(player_entity);
+    player_entity.add<components::emitter_types::JumpEmitter>(jump_emitter_entity);
 }

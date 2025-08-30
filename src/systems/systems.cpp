@@ -13,10 +13,10 @@ void systems::setup(flecs::world& registry) {
         // handle toggeling debug mode (only in game_scene)
         if (IsKeyPressed(constants::DEBUG_KEY)
             && registry.has<components::ActiveScene, components::Game_Scene>()) {
-            if (!registry.has<components::DebugMode>()) {
-                registry.add<components::DebugMode>();
+            if (!registry.has<components::global_options::DebugMode>()) {
+                registry.add<components::global_options::DebugMode>();
             } else {
-                registry.remove<components::DebugMode>();
+                registry.remove<components::global_options::DebugMode>();
             }
         }
     });

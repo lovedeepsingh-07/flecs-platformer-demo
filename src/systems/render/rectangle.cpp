@@ -18,34 +18,34 @@ void systems::render::rectangle(flecs::world& registry) {
                 rect.height,
             };
 
-            if (curr_entity.has<components::RectOpts_Lines>()
-                && !curr_entity.has<components::RectOpts_Debug>()) {
+            if (curr_entity.has<components::rectangle_options::RectOpts_Lines>()
+                && !curr_entity.has<components::rectangle_options::RectOpts_Debug>()) {
                 DrawRectangleLines(
                     (int)render_rect.x, (int)render_rect.y,
                     (int)render_rect.width, (int)render_rect.height, rect.color
                 );
             }
 
-            if (!curr_entity.has<components::RectOpts_Lines>()
-                && curr_entity.has<components::RectOpts_Debug>()
-                && registry.has<components::DebugMode>()) {
+            if (!curr_entity.has<components::rectangle_options::RectOpts_Lines>()
+                && curr_entity.has<components::rectangle_options::RectOpts_Debug>()
+                && registry.has<components::global_options::DebugMode>()) {
                 DrawRectangle(
                     (int)render_rect.x, (int)render_rect.y,
                     (int)render_rect.width, (int)render_rect.height, rect.color
                 );
             }
 
-            if (curr_entity.has<components::RectOpts_Lines>()
-                && curr_entity.has<components::RectOpts_Debug>()
-                && registry.has<components::DebugMode>()) {
+            if (curr_entity.has<components::rectangle_options::RectOpts_Lines>()
+                && curr_entity.has<components::rectangle_options::RectOpts_Debug>()
+                && registry.has<components::global_options::DebugMode>()) {
                 DrawRectangleLines(
                     (int)render_rect.x, (int)render_rect.y,
                     (int)render_rect.width, (int)render_rect.height, rect.color
                 );
             }
 
-            if (!curr_entity.has<components::RectOpts_Lines>()
-                && !curr_entity.has<components::RectOpts_Debug>()) {
+            if (!curr_entity.has<components::rectangle_options::RectOpts_Lines>()
+                && !curr_entity.has<components::rectangle_options::RectOpts_Debug>()) {
                 DrawRectangle(
                     (int)render_rect.x, (int)render_rect.y,
                     (int)render_rect.width, (int)render_rect.height, rect.color
