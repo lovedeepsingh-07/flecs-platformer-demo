@@ -19,11 +19,13 @@ void systems::controller(flecs::world& registry) {
                     movement.left_idle_right = 0;
                 }
                 if (IsKeyPressed(KEY_W) && !curr_entity.has<components::events::JumpEvent>()
-                    && movement.on_ground) {
+                    && movement.on_ground
+                    && !curr_entity.has<components::events::HitEvent>()) {
                     curr_entity.add<components::events::JumpEvent>();
                 }
                 if (IsKeyPressed(KEY_E)
-                    && !curr_entity.has<components::events::AttackEvent>()) {
+                    && !curr_entity.has<components::events::AttackEvent>()
+                    && !curr_entity.has<components::events::HitEvent>()) {
                     curr_entity.set<components::events::AttackEvent>({ .hit_some_entity = false });
                 }
             }
@@ -36,11 +38,13 @@ void systems::controller(flecs::world& registry) {
                     movement.left_idle_right = 0;
                 }
                 if (IsKeyPressed(KEY_K) && !curr_entity.has<components::events::JumpEvent>()
-                    && movement.on_ground) {
+                    && movement.on_ground
+                    && !curr_entity.has<components::events::HitEvent>()) {
                     curr_entity.add<components::events::JumpEvent>();
                 }
                 if (IsKeyPressed(KEY_O)
-                    && !curr_entity.has<components::events::AttackEvent>()) {
+                    && !curr_entity.has<components::events::AttackEvent>()
+                    && !curr_entity.has<components::events::HitEvent>()) {
                     curr_entity.set<components::events::AttackEvent>({ .hit_some_entity = false });
                 }
             }

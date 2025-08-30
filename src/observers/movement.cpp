@@ -29,5 +29,9 @@ void observers::movement(flecs::world& registry) {
             emitter_pos.x = pos.x;
             emitter_pos.y = pos.y + base_collider.height / 2;
             particle_emitter.engine.emitting = true;
+
+            if (curr_entity.has<components::events::AttackEvent>()) {
+                curr_entity.remove<components::events::AttackEvent>();
+            }
         });
 };

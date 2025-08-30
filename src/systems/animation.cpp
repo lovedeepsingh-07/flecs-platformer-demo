@@ -28,11 +28,14 @@ void systems::animation(flecs::world& registry) {
             }
             const StateEngine::State& curr_state = state_result->get();
 
-            // if animation is not playing and curr_entity has AttackEvent then remove that component
+            // if animation is not playing and curr_entity has any animation dependant component then remove that component
             // and then just return this system as we do not have to play any animation anymore
             if (!animation.playing) {
                 if (curr_entity.has<components::events::AttackEvent>()) {
                     curr_entity.remove<components::events::AttackEvent>();
+                }
+                if (curr_entity.has<components::events::HitEvent>()) {
+                    curr_entity.remove<components::events::HitEvent>();
                 }
                 return;
             }

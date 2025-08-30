@@ -28,26 +28,32 @@ void systems::state(flecs::world& registry) {
 
             std::string next_state_id = state.curr_state_id;
 
-            if (curr_entity.has<components::events::AttackEvent>()) {
-                if (!movement.on_ground) {
-                    if (curr_state.can_transition_to("attack_air")) {
-                        next_state_id = "attack_air";
-                    }
-                } else if (curr_state.can_transition_to("attack")) {
-                    next_state_id = "attack";
+            if (curr_entity.has<components::events::HitEvent>()) {
+                if (curr_state.can_transition_to("hurt")) {
+                    next_state_id = "hurt";
                 }
             } else {
-                if (!movement.on_ground) {
-                    if (curr_state.can_transition_to("jump")) {
-                        next_state_id = "jump";
-                    }
-                } else if (movement.left_idle_right == 0) {
-                    if (curr_state.can_transition_to("idle")) {
-                        next_state_id = "idle";
+                if (curr_entity.has<components::events::AttackEvent>()) {
+                    if (!movement.on_ground) {
+                        if (curr_state.can_transition_to("attack_air")) {
+                            next_state_id = "attack_air";
+                        }
+                    } else if (curr_state.can_transition_to("attack")) {
+                        next_state_id = "attack";
                     }
                 } else {
-                    if (curr_state.can_transition_to("run")) {
-                        next_state_id = "run";
+                    if (!movement.on_ground) {
+                        if (curr_state.can_transition_to("jump")) {
+                            next_state_id = "jump";
+                        }
+                    } else if (movement.left_idle_right == 0) {
+                        if (curr_state.can_transition_to("idle")) {
+                            next_state_id = "idle";
+                        }
+                    } else {
+                        if (curr_state.can_transition_to("run")) {
+                            next_state_id = "run";
+                        }
                     }
                 }
             }

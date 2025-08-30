@@ -7,12 +7,34 @@ states:
             frame: 0
         - attack:
             frame: 0
+        - hurt:
+            frame: 0
       animation_data:
         loop: true
         texture_id: "player_idle"
         frames:
           - type: "active"
             source_rect: [0, 0, 128, 128]
+  - hurt:
+      can_transition_to:
+        - idle:
+            frame: 0
+        - run:
+            frame: 0
+        - jump:
+            frame: 0
+      animation_data:
+        loop: false
+        texture_id: "player_hurt"
+        frames:
+          - type: "windup"
+            source_rect: [0, 0, 128, 128]
+          - type: "windup"
+            source_rect: [128, 0, 128, 128]
+          - type: "active"
+            source_rect: [256, 0, 128, 128]
+          - type: "recovery"
+            source_rect: [384, 0, 128, 128]
   - run:
       can_transition_to:
         - idle:
@@ -20,6 +42,8 @@ states:
         - jump:
             frame: 0
         - attack:
+            frame: 0
+        - hurt:
             frame: 0
       animation_data:
         loop: true
@@ -39,6 +63,8 @@ states:
             frame: 0
         - attack_air:
             frame: 0
+        - hurt:
+            frame: 0
       animation_data:
         loop: false
         texture_id: "player_jump"
@@ -53,6 +79,8 @@ states:
         - run:
             frame: 0
         - jump:
+            frame: 0
+        - hurt:
             frame: 0
       animation_data:
         loop: false
@@ -75,6 +103,8 @@ states:
             frame: 0
         - jump:
             frame: -1
+        - hurt:
+            frame: 0
       animation_data:
         loop: false
         texture_id: "player_attack_air"

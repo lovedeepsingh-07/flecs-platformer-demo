@@ -92,7 +92,6 @@ namespace components {
         bool playing = true;
     };
 
-
     struct PhysicalWorld {
         b2WorldId world_id;
     };

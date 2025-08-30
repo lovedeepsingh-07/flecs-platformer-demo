@@ -89,14 +89,12 @@ void systems::attack(flecs::world& registry) {
                     cast_query_filter.filter, game_utils::cast_result_fcn, &cast_context
                 );
 
-                if (cast_context.hit) {
-                    // HitEvent must only be added if the current entity hasn't already hit an entity in this attack state
-                    if (!attack_event.hit_some_entity) {
-                        cast_context.hit_entity.set<components::events::HitEvent>(
-                            { .direction = (texture.flipped ? -1 : 1) }
-                        );
-                        attack_event.hit_some_entity = true;
-                    }
+                if (cast_context.hit && !attack_event.hit_some_entity
+                    && !cast_context.hit_entity.has<components::events::HitEvent>()) {
+                    cast_context.hit_entity.set<components::events::HitEvent>(
+                        { .direction = (texture.flipped ? -1 : 1) }
+                    );
+                    attack_event.hit_some_entity = true;
                 }
             }
         });
