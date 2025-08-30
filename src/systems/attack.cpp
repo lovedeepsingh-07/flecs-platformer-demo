@@ -95,6 +95,10 @@ void systems::attack(flecs::world& registry) {
                         { .direction = (texture.flipped ? -1 : 1) }
                     );
                     attack_event.hit_some_entity = true;
+                    if (!registry.has<components::global_options::Freezed>()) {
+                        // TODO: implement a beter system to convert "FramesToSeconds" and "SecondsToFrames"
+                        registry.set<components::global_options::Freezed>({ (1.0F / 75) * 10 });
+                    }
                 }
             }
         })

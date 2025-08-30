@@ -8,6 +8,7 @@ void components::setup(flecs::world& registry) {
 
     registry.component<components::system_types::Global>();
     registry.component<components::system_types::Update>();
+    registry.component<components::system_types::Update_FreezeFrame>();
     registry.component<components::system_types::Render>();
 
     registry.component<components::SceneRoot>();

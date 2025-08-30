@@ -23,6 +23,7 @@ namespace components {
     namespace system_types {
         struct Global {};
         struct Update {};
+        struct Update_FreezeFrame {}; // this is only for FreezeFrame system
         struct Render {};
     };
 
