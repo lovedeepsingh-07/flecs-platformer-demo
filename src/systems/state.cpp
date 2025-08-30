@@ -86,5 +86,5 @@ void systems::state(flecs::world& registry) {
                 animation.playing = true;
             }
         })
-        .run();
+        .add<components::system_types::Update>();
 }

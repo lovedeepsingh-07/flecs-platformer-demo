@@ -48,5 +48,6 @@ void systems::controller(flecs::world& registry) {
                     curr_entity.set<components::events::AttackEvent>({ .hit_some_entity = false });
                 }
             }
-        });
+        })
+        .add<components::system_types::Update>();
 };

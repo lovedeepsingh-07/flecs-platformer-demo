@@ -18,5 +18,6 @@ void systems::render::texture(flecs::world& registry) {
                              texture.source_rect.width, texture.source_rect.height },
                 (Vector2){ 0, 0 }, 0.0F, WHITE
             );
-        });
+        })
+        .add<components::system_types::Render>();
 }

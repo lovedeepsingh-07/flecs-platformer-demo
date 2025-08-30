@@ -51,5 +51,6 @@ void systems::render::rectangle(flecs::world& registry) {
                     (int)render_rect.width, (int)render_rect.height, rect.color
                 );
             }
-        });
+        })
+        .add<components::system_types::Render>();
 }

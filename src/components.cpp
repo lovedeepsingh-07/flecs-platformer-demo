@@ -6,6 +6,10 @@ void components::setup(flecs::world& registry) {
     registry.component<components::global_options::DebugMode>().add(flecs::Singleton);
     registry.component<components::global_options::GameFonts>().add(flecs::Singleton);
 
+    registry.component<components::system_types::Global>();
+    registry.component<components::system_types::Update>();
+    registry.component<components::system_types::Render>();
+
     registry.component<components::SceneRoot>();
     registry.component<components::ActiveScene>().add(flecs::Relationship).add(flecs::Exclusive);
     registry.component<components::MainMenu_Scene>();
@@ -16,7 +20,6 @@ void components::setup(flecs::world& registry) {
 
     registry.component<components::emitter_types::JumpEmitter>().add(flecs::Exclusive);
     registry.component<components::Particle_Emitter>();
-
 
     registry.component<components::GlobalCamera>();
     registry.component<components::Camera_Target>();

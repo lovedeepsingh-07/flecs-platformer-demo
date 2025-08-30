@@ -65,5 +65,6 @@ void systems::animation(flecs::world& registry) {
                 texture_engine.engine.get_texture(curr_state.animation_data.texture_id);
             texture.source_rect =
                 curr_state.animation_data.frames[animation.curr_frame_index].source_rect;
-        });
+        })
+        .add<components::system_types::Update>();
 }

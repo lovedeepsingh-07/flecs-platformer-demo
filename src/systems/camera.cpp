@@ -30,5 +30,6 @@ void systems::camera(flecs::world& registry) {
                     Vector2Scale(diff, speed * GetFrameTime() / length)
                 );
             }
-        });
+        })
+        .add<components::system_types::Update>();
 };

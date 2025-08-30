@@ -17,7 +17,8 @@ void systems::movement(flecs::world& registry) {
             if (movement.left_idle_right == 1) {
                 texture.flipped = false;
             }
-        });
+        })
+        .add<components::system_types::Update>();
 
     registry
         .system<components::Movement, components::PhysicalBody>("Apply Movement")
@@ -62,5 +63,6 @@ void systems::movement(flecs::world& registry) {
             }
 
             b2Body_SetLinearVelocity(body.body_id, vel);
-        });
+        })
+        .add<components::system_types::Update>();
 };

@@ -7,27 +7,31 @@
 // so while rendering we have to convert my game's center point position to raylib's
 // top-left point position by using the width and height of the entity
 void systems::render::setup(flecs::world& registry) {
-    registry.system("Prepare Frame").kind(flecs::PostUpdate).run([](flecs::iter& iter) {
-        flecs::world registry = iter.world();
+    registry.system("Prepare Frame")
+        .kind(flecs::PostUpdate)
+        .run([](flecs::iter& iter) {
+            flecs::world registry = iter.world();
 
-        BeginDrawing();
-        ClearBackground(constants::BACKGROUND_COLOR);
+            BeginDrawing();
+            ClearBackground(constants::BACKGROUND_COLOR);
 
-        // only for "Game_Scene" when registry has a "GlobalCamera"
-        if (!registry.has<components::ActiveScene, components::Game_Scene>()
-            || !registry.has<components::GlobalCamera>()) {
-            return;
-        }
-        auto global_camera = registry.get<components::GlobalCamera>();
-        BeginMode2D(global_camera.camera);
-    });
+            // only for "Game_Scene" when registry has a "GlobalCamera"
+            if (!registry.has<components::ActiveScene, components::Game_Scene>()
+                || !registry.has<components::GlobalCamera>()) {
+                return;
+            }
+            auto global_camera = registry.get<components::GlobalCamera>();
+            BeginMode2D(global_camera.camera);
+        })
+        .add<components::system_types::Render>();
 
     systems::render::texture(registry);
 
     registry.system<components::Particle_Emitter>("Render Particles")
         .kind(flecs::PreStore)
         .each([](flecs::entity curr_entity, components::Particle_Emitter& particle_emitter
-              ) { particle_emitter.engine.render(); });
+              ) { particle_emitter.engine.render(); })
+        .add<components::system_types::Render>();
 
     systems::render::rectangle(registry);
     systems::render::physics(registry);
@@ -49,7 +53,7 @@ void systems::render::setup(flecs::world& registry) {
                 constants::HEALTHBAR_WIDTH, constants::HEALTHBAR_HEIGHT, WHITE
             );
         })
-        .run();
+        .add<components::system_types::Render>();
 
     registry
         .system<components::State, components::Position, components::BaseCollider>("Render State")
@@ -66,11 +70,12 @@ void systems::render::setup(flecs::world& registry) {
                 (int)(pos.y - (base_collider.height / 2) - 12), 12, WHITE
             ); // here we do - 12 because that is the font-size so font-height too, and we want the text to be anchored at bottom right of this pos
         })
-        .run();
+        .add<components::system_types::Render>();
 
     systems::render::GUI(registry);
 
-    registry.system("Finish Frame").kind(flecs::OnStore).run([](flecs::iter& iter) {
-        EndDrawing();
-    });
+    registry.system("Finish Frame")
+        .kind(flecs::OnStore)
+        .run([](flecs::iter& iter) { EndDrawing(); })
+        .add<components::system_types::Render>();
 };

@@ -97,5 +97,6 @@ void systems::attack(flecs::world& registry) {
                     attack_event.hit_some_entity = true;
                 }
             }
-        });
+        })
+        .add<components::system_types::Update>();
 };

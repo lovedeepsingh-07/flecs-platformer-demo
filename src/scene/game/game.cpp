@@ -59,6 +59,9 @@ void scene::game::on_exit(flecs::iter& iter, size_t, components::ActiveScene) {
     if (registry.has<components::global_options::DebugMode>()) {
         registry.remove<components::global_options::DebugMode>();
     }
+    if (registry.has<components::global_options::Paused>()) {
+        registry.remove<components::global_options::Paused>();
+    }
 
     rlImGuiShutdown();
 }

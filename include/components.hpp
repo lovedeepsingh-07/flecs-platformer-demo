@@ -20,6 +20,12 @@ namespace components {
         };
     }
 
+    namespace system_types {
+        struct Global {};
+        struct Update {};
+        struct Render {};
+    };
+
     struct SceneRoot {};
     // this represents an exclusive relationship (there can be only 1 active scene)
     struct ActiveScene {};

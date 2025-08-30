@@ -13,5 +13,6 @@ void systems::particles(flecs::world& registry) {
 
             particle_emitter.engine.emit(Vector2{ pos.x, pos.y }, registry.delta_time());
             particle_emitter.engine.update(registry.delta_time());
-        });
+        })
+        .add<components::system_types::Update>();
 }

@@ -1,5 +1,6 @@
 #include "components.hpp"
 #include "interface.hpp"
+#include "raylib.h"
 #include <imgui.h>
 #include <rlImGui.h>
 
@@ -78,5 +79,15 @@ void Interface::game_debug_GUI(flecs::world& registry) {
         entity_debug(registry, "enemy");
     }
     ImGui::End();
+
+    bool window_3_open = true;
+    window_pos = { PAD, PAD };
+    window_pos_pivot = { 0.0F, 0.0F };
+    ImGui::SetNextWindowPos(window_pos, ImGuiCond_Once, window_pos_pivot);
+    if (ImGui::Begin("Global Information", &window_3_open, window_flags)) {
+        ImGui::Text("FPS: %d", GetFPS());
+    }
+    ImGui::End();
+
     rlImGuiEnd();
 }
