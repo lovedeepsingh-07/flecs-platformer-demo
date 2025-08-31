@@ -32,4 +32,32 @@ void observers::movement(flecs::world& registry) {
                 owner_entity.remove<components::events::AttackEvent>();
             }
         });
+
+    registry.observer<components::events::DashEvent>("DashEvent on_add")
+        .event(flecs::OnAdd)
+        .each([](flecs::entity curr_entity, const components::events::DashEvent&) {
+            flecs::entity owner_entity = curr_entity.parent();
+
+            const auto& body = owner_entity.get<components::PhysicalBody>();
+            const auto& texture = owner_entity.get<components::TextureComponent>();
+
+            b2Body_SetGravityScale(body.body_id, 0.0F);
+
+            b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
+            vel.y = 0;
+            vel.x = vel.y + constants::PLAYER_DASH_VEL * (float)(texture.flipped ? -1 : 1);
+            b2Body_SetLinearVelocity(body.body_id, vel);
+
+            if (owner_entity.has<components::events::AttackEvent>()) {
+                owner_entity.remove<components::events::AttackEvent>();
+            }
+        });
+
+    registry.observer<components::events::DashEvent>("DashEvent on_remove")
+        .event(flecs::OnRemove)
+        .each([](flecs::entity curr_entity, const components::events::DashEvent&) {
+            flecs::entity owner_entity = curr_entity.parent();
+            const auto& body = owner_entity.get<components::PhysicalBody>();
+            b2Body_SetGravityScale(body.body_id, 1.0F);
+        });
 };

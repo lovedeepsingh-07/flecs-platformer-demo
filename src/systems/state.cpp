@@ -42,17 +42,23 @@ void systems::state(flecs::world& registry) {
                         next_state_id = "attack";
                     }
                 } else {
-                    if (!movement.on_ground) {
-                        if (curr_state.can_transition_to("jump")) {
-                            next_state_id = "jump";
-                        }
-                    } else if (movement.left_idle_right == 0) {
-                        if (curr_state.can_transition_to("idle")) {
-                            next_state_id = "idle";
+                    if (curr_entity.target<components::Dash_Entity>().is_valid()) {
+                        if (curr_state.can_transition_to("dash")) {
+                            next_state_id = "dash";
                         }
                     } else {
-                        if (curr_state.can_transition_to("run")) {
-                            next_state_id = "run";
+                        if (!movement.on_ground) {
+                            if (curr_state.can_transition_to("jump")) {
+                                next_state_id = "jump";
+                            }
+                        } else if (movement.left_idle_right == 0) {
+                            if (curr_state.can_transition_to("idle")) {
+                                next_state_id = "idle";
+                            }
+                        } else {
+                            if (curr_state.can_transition_to("run")) {
+                                next_state_id = "run";
+                            }
                         }
                     }
                 }

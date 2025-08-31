@@ -22,6 +22,7 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
     body_def.type = b2_dynamicBody;
     body_def.position = pos;
     body_def.fixedRotation = true;
+    body_def.gravityScale = 1.0F;
     b2BodyId body_id = b2CreateBody(world_id, &body_def);
     b2Polygon body_polygon = b2MakeBox(shape_size.x / 2, shape_size.y / 2);
     b2ShapeDef body_shape_def = b2DefaultShapeDef();

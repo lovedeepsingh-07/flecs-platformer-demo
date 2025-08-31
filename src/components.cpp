@@ -48,10 +48,13 @@ void components::setup(flecs::world& registry) {
     registry.component<components::Health>();
 
     registry.component<components::Jump_Entity>().add(flecs::Relationship);
+    registry.component<components::Dash_Entity>().add(flecs::Relationship);
 
     registry.component<components::events::JumpEvent>().add(flecs::Relationship).add(flecs::Exclusive);
     registry.component<components::events::JumpEvent_One>().add(flecs::Target);
     registry.component<components::events::JumpEvent_Two>().add(flecs::Target);
+    registry.component<components::events::BufferedDashEvent>();
+    registry.component<components::events::DashEvent>();
     registry.component<components::events::AttackEvent>();
     registry.component<components::events::HitEvent>();
 

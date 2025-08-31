@@ -15,6 +15,11 @@ void systems::controller(flecs::world& registry) {
             bool is_hit = curr_entity.has<components::events::HitEvent>();
             bool is_buffered_to_jump =
                 curr_entity.has<components::events::BufferedJumpEvent>();
+            bool is_buffered_to_dash =
+                curr_entity.has<components::events::BufferedDashEvent>();
+
+            // TODO: this 'static' here is extremely unsafe as it persists across frames, and you should consider using the iter logic here
+            static auto curr_key_pressed = (KeyboardKey)GetKeyPressed();
 
             if (controller._id == 0) {
                 if (IsKeyDown(KEY_A) && !is_attacking) {
@@ -24,6 +29,43 @@ void systems::controller(flecs::world& registry) {
                 } else {
                     movement.left_idle_right = 0;
                 }
+
+                if ((IsKeyPressed(KEY_A) || IsKeyPressed(KEY_D))
+                    && !curr_entity.target<components::Dash_Entity>().is_valid()) {
+                    if (is_buffered_to_dash) {
+                        if (curr_key_pressed
+                            == curr_entity
+                                   .get<components::events::BufferedDashEvent>()
+                                   .buffer_key) {
+                            // if we have already buffered the the dash, and it
+                            // was in the same direction as the current keypress, then we add <DashEvent> and remove <BufferedDashEvent>
+                            flecs::entity dash_entity =
+                                registry.entity()
+                                    .set<components::events::DashEvent>(
+                                        { .dash_time = 20 * constants::FRAMES_TO_SEC }
+                                    )
+                                    .child_of(curr_entity);
+                            curr_entity.add<components::Dash_Entity>(dash_entity);
+                            curr_entity.remove<components::events::BufferedDashEvent>();
+                        } else {
+                            // if we have already buffered the the dash, and it
+                            // was in the opposite direction as the current keypress,
+                            // then we remove previous <BufferedDashEvent> and add a new <BufferedDashEvent> in this direction
+                            curr_entity.remove<components::events::BufferedDashEvent>();
+                            curr_entity.set<components::events::BufferedDashEvent>(
+                                { .buffer_key = curr_key_pressed,
+                                  .buffer_time = 20 * constants::FRAMES_TO_SEC }
+                            );
+                        }
+                    } else {
+                        // if we have not buffered the dash, then we just buffer it
+                        curr_entity.set<components::events::BufferedDashEvent>(
+                            { .buffer_key = curr_key_pressed,
+                              .buffer_time = 20 * constants::FRAMES_TO_SEC }
+                        );
+                    }
+                }
+
                 if (IsKeyPressed(KEY_W) && !is_buffered_to_jump && !is_hit) {
                     if (movement.on_ground) {
                         // if we are on the ground then we just add <JumpEvent,JumpEvent_One>
@@ -74,6 +116,43 @@ void systems::controller(flecs::world& registry) {
                 } else {
                     movement.left_idle_right = 0;
                 }
+
+                if ((IsKeyPressed(KEY_H) || IsKeyPressed(KEY_L))
+                    && !curr_entity.target<components::Dash_Entity>().is_valid()) {
+                    if (is_buffered_to_dash) {
+                        if (curr_key_pressed
+                            == curr_entity
+                                   .get<components::events::BufferedDashEvent>()
+                                   .buffer_key) {
+                            // if we have already buffered the the dash, and it
+                            // was in the same direction as the current keypress, then we add <DashEvent> and remove <BufferedDashEvent>
+                            flecs::entity dash_entity =
+                                registry.entity()
+                                    .set<components::events::DashEvent>(
+                                        { .dash_time = 20 * constants::FRAMES_TO_SEC }
+                                    )
+                                    .child_of(curr_entity);
+                            curr_entity.add<components::Dash_Entity>(dash_entity);
+                            curr_entity.remove<components::events::BufferedDashEvent>();
+                        } else {
+                            // if we have already buffered the the dash, and it
+                            // was in the opposite direction as the current keypress,
+                            // then we remove previous <BufferedDashEvent> and add a new <BufferedDashEvent> in this direction
+                            curr_entity.remove<components::events::BufferedDashEvent>();
+                            curr_entity.set<components::events::BufferedDashEvent>(
+                                { .buffer_key = curr_key_pressed,
+                                  .buffer_time = 20 * constants::FRAMES_TO_SEC }
+                            );
+                        }
+                    } else {
+                        // if we have not buffered the dash, then we just buffer it
+                        curr_entity.set<components::events::BufferedDashEvent>(
+                            { .buffer_key = curr_key_pressed,
+                              .buffer_time = 20 * constants::FRAMES_TO_SEC }
+                        );
+                    }
+                }
+
                 if (IsKeyPressed(KEY_K) && !is_buffered_to_jump && !is_hit) {
                     if (movement.on_ground) {
                         // if we are on the ground then we just add <JumpEvent,JumpEvent_One>

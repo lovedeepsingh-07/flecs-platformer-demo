@@ -118,6 +118,7 @@ namespace components {
 
     // the "target" of this relationship will be the jump_entity itself
     struct Jump_Entity {};
+    struct Dash_Entity {};
 
     namespace events {
         struct JumpEvent {};
@@ -125,6 +126,13 @@ namespace components {
         struct JumpEvent_Two {};
         struct BufferedJumpEvent {
             float buffer_time;
+        };
+        struct BufferedDashEvent {
+            KeyboardKey buffer_key;
+            float buffer_time;
+        };
+        struct DashEvent {
+            float dash_time;
         };
         struct AttackEvent {
             bool hit_some_entity;
