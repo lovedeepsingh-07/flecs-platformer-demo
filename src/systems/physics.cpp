@@ -42,14 +42,18 @@ void systems::physics(flecs::world& registry) {
                             sensor_data->_owner.get_mut<components::Movement>();
                         movement.on_ground = true;
 
-                        // if the entity was jumping then we remove the 'JumpEvent' component on landing
-                        if (sensor_data->_owner.has<components::events::JumpEvent>()) {
-                            sensor_data->_owner.remove<components::events::JumpEvent>();
+                        flecs::entity jump_entity =
+                            sensor_data->_owner.target<components::Jump_Entity>();
+                        if (jump_entity.is_valid()) {
+                            jump_entity.destruct();
                         }
 
                         // if the jump has been buffered, then we just convert the BufferedJumpEvent into JumpEvent
                         if (sensor_data->_owner.has<components::events::BufferedJumpEvent>()) {
-                            sensor_data->_owner.add<components::events::JumpEvent>();
+                            flecs::entity jump_entity =
+                                registry.entity()
+                                    .add<components::events::JumpEvent, components::events::JumpEvent_One>()
+                                    .child_of(sensor_data->_owner);
                             sensor_data->_owner.remove<components::events::BufferedJumpEvent>();
                         }
                     }

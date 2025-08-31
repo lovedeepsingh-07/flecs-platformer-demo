@@ -116,8 +116,13 @@ namespace components {
         float height;
     };
 
+    // the "target" of this relationship will be the jump_entity itself
+    struct Jump_Entity {};
+
     namespace events {
         struct JumpEvent {};
+        struct JumpEvent_One {};
+        struct JumpEvent_Two {};
         struct BufferedJumpEvent {
             float buffer_time;
         };

@@ -13,13 +13,15 @@ void components::setup(flecs::world& registry) {
 
     registry.component<components::SceneRoot>();
     registry.component<components::ActiveScene>().add(flecs::Relationship).add(flecs::Exclusive);
-    registry.component<components::MainMenu_Scene>();
-    registry.component<components::Game_Scene>();
+    registry.component<components::MainMenu_Scene>().add(flecs::Target);
+    registry.component<components::Game_Scene>().add(flecs::Target);
 
     registry.component<components::Texture_Engine>().add(flecs::Singleton);
     registry.component<components::State_Engine>().add(flecs::Singleton);
 
-    registry.component<components::emitter_types::JumpEmitter>().add(flecs::Exclusive);
+    registry.component<components::emitter_types::JumpEmitter>()
+        .add(flecs::Relationship)
+        .add(flecs::Exclusive);
     registry.component<components::Particle_Emitter>();
 
     registry.component<components::GlobalCamera>();
@@ -45,7 +47,11 @@ void components::setup(flecs::world& registry) {
     registry.component<components::Movement>();
     registry.component<components::Health>();
 
-    registry.component<components::events::JumpEvent>();
+    registry.component<components::Jump_Entity>().add(flecs::Relationship);
+
+    registry.component<components::events::JumpEvent>().add(flecs::Relationship).add(flecs::Exclusive);
+    registry.component<components::events::JumpEvent_One>().add(flecs::Target);
+    registry.component<components::events::JumpEvent_Two>().add(flecs::Target);
     registry.component<components::events::AttackEvent>();
     registry.component<components::events::HitEvent>();
 

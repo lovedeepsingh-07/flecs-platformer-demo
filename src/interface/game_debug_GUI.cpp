@@ -32,7 +32,7 @@ void entity_debug(flecs::world& registry, const std::string& entity_id) {
 
     ImGui::Text("Position: (%.f, %.f)", pos.x, pos.y);
     ImGui::Text("OnGround: %s", movement.on_ground ? "true" : "false");
-    ImGui::Text("Jumping: %s", curr_entity.has<components::events::JumpEvent>() ? "true" : "false");
+    ImGui::Text("Jumping: %s", curr_entity.target<components::Jump_Entity>().is_valid() ? "true" : "false");
     ImGui::Text("Left_Idle_Right: %d", movement.left_idle_right);
     ImGui::Text("Velocity_X: %f", vel.x);
     ImGui::Text("Velocity_Y: %f", vel.y);

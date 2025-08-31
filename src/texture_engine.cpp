@@ -22,7 +22,7 @@ void TextureEngine::TextureEngine::load_texture(const std::string& texture_id, c
 Texture2D TextureEngine::TextureEngine::get_texture(const std::string& texture_id) const {
     return m_textures.at(texture_id);
 }
-void TextureEngine::TextureEngine::unload_textures() {
+void TextureEngine::TextureEngine::unload_textures() const {
     for (const auto& [key, value] : m_textures) {
         UnloadTexture(value);
     }
