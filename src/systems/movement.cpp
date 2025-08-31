@@ -5,6 +5,17 @@
 
 void systems::movement(flecs::world& registry) {
     registry
+        .system<components::events::BufferedJumpEvent>("Jump Buffering System")
+        .kind(flecs::PreUpdate)
+        .each([](flecs::entity curr_entity, components::events::BufferedJumpEvent& buffered_jump_event) {
+            buffered_jump_event.buffer_time -= curr_entity.world().delta_time();
+            if (buffered_jump_event.buffer_time <= 0) {
+                curr_entity.remove<components::events::BufferedJumpEvent>();
+            }
+        })
+        .add<components::system_types::Update>();
+
+    registry
         .system<components::TextureComponent, components::Movement>(
             "Handle Texture Flipping"
         )

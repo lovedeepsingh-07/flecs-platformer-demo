@@ -1,4 +1,5 @@
 #include "components.hpp"
+#include "constants.hpp"
 #include "systems.hpp"
 
 void systems::controller(flecs::world& registry) {
@@ -18,15 +19,25 @@ void systems::controller(flecs::world& registry) {
                 } else {
                     movement.left_idle_right = 0;
                 }
-                if (IsKeyPressed(KEY_W) && !curr_entity.has<components::events::JumpEvent>()
-                    && movement.on_ground
+                if (IsKeyPressed(KEY_W)
+                    && !curr_entity.has<components::events::BufferedJumpEvent>()
                     && !curr_entity.has<components::events::HitEvent>()) {
-                    curr_entity.add<components::events::JumpEvent>();
+                    if (movement.on_ground) {
+                        curr_entity.add<components::events::JumpEvent>();
+                    } else {
+                        curr_entity.set<components::events::BufferedJumpEvent>(
+                            { 20 * constants::FRAMES_TO_SEC }
+                        );
+                    }
                 }
                 if (IsKeyPressed(KEY_E)
                     && !curr_entity.has<components::events::AttackEvent>()
                     && !curr_entity.has<components::events::HitEvent>()) {
                     curr_entity.set<components::events::AttackEvent>({ .hit_some_entity = false });
+                    // when we press the attack button, if a jump has been buffered, then that buffered jump will be cancelled
+                    if (curr_entity.has<components::events::BufferedJumpEvent>()) {
+                        curr_entity.remove<components::events::BufferedJumpEvent>();
+                    }
                 }
             }
             if (controller._id == 1) {
@@ -37,10 +48,16 @@ void systems::controller(flecs::world& registry) {
                 } else {
                     movement.left_idle_right = 0;
                 }
-                if (IsKeyPressed(KEY_K) && !curr_entity.has<components::events::JumpEvent>()
-                    && movement.on_ground
+                if (IsKeyPressed(KEY_K)
+                    && !curr_entity.has<components::events::BufferedJumpEvent>()
                     && !curr_entity.has<components::events::HitEvent>()) {
-                    curr_entity.add<components::events::JumpEvent>();
+                    if (movement.on_ground) {
+                        curr_entity.add<components::events::JumpEvent>();
+                    } else {
+                        curr_entity.set<components::events::BufferedJumpEvent>(
+                            { 20 * constants::FRAMES_TO_SEC }
+                        );
+                    }
                 }
                 if (IsKeyPressed(KEY_O)
                     && !curr_entity.has<components::events::AttackEvent>()

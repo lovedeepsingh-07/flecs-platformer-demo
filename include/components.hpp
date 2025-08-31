@@ -118,6 +118,9 @@ namespace components {
 
     namespace events {
         struct JumpEvent {};
+        struct BufferedJumpEvent {
+            float buffer_time;
+        };
         struct AttackEvent {
             bool hit_some_entity;
         };

@@ -46,6 +46,12 @@ void systems::physics(flecs::world& registry) {
                         if (sensor_data->_owner.has<components::events::JumpEvent>()) {
                             sensor_data->_owner.remove<components::events::JumpEvent>();
                         }
+
+                        // if the jump has been buffered, then we just convert the BufferedJumpEvent into JumpEvent
+                        if (sensor_data->_owner.has<components::events::BufferedJumpEvent>()) {
+                            sensor_data->_owner.add<components::events::JumpEvent>();
+                            sensor_data->_owner.remove<components::events::BufferedJumpEvent>();
+                        }
                     }
                 }
             }

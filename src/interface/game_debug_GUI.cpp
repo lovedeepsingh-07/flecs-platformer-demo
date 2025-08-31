@@ -45,6 +45,7 @@ void entity_debug(flecs::world& registry, const std::string& entity_id) {
     ImGui::Text("Animation Playing: %s", animation.playing ? "true" : "false");
     ImGui::Text("Texture Flipped: %s", texture.flipped ? "true" : "false");
     ImGui::Text("Attacking: %s", curr_entity.has<components::events::AttackEvent>() ? "true" : "false");
+    ImGui::Text("Buffered Jump: %s", curr_entity.has<components::events::BufferedJumpEvent>() ? "true" : "false");
 }
 
 void Interface::game_debug_GUI(flecs::world& registry) {

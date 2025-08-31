@@ -6,6 +6,9 @@ namespace constants {
     constexpr Color BACKGROUND_COLOR = BLACK;
 
     constexpr int TARGET_FPS = 75;
+    constexpr float FRAMES_TO_SEC = 1.0F / TARGET_FPS;
+    constexpr float SEC_TO_FRAMES = TARGET_FPS;
+
     constexpr int BASE_WINDOW_WIDTH = 1200;
     constexpr int BASE_WINDOW_HEIGHT = 600;
 

@@ -8,6 +8,7 @@ void TextureEngine::TextureEngine::setup() {
     this->load_texture("player_attack_air", "assets/player/horizontal_air_slash.png");
     this->load_texture("player_hurt", "assets/player/hurt.png");
     this->load_texture("tiles_debug", "assets/tiles-debug.png");
+    this->load_texture("button_rectangle_border", "assets/ui/button_rectangle_border.png");
 }
 
 void TextureEngine::TextureEngine::load_texture(const std::string& texture_id, const std::string& texture_input_file) {
