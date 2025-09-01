@@ -1,8 +1,7 @@
-#include "systems.hpp"
-#include "components.hpp"
 #include "constants.hpp"
+#include "systems.hpp"
 
-void systems::setup(flecs::world& registry) {
+void systems::global_events(flecs::world& registry) {
     registry.system("Global Events")
         .kind(flecs::PostLoad)
         .run([](flecs::iter& iter) {
@@ -10,7 +9,7 @@ void systems::setup(flecs::world& registry) {
 
             // handle quit events
             if (WindowShouldClose()) {
-                registry.quit();
+                registry.add<components::events::GameQuitEvent>();
             }
 
             // handle toggeling debug mode (only in game_scene)
@@ -33,28 +32,4 @@ void systems::setup(flecs::world& registry) {
             }
         })
         .add<components::system_types::Global>();
-
-    registry.system("Freeze Frame System")
-        .kind(flecs::PreUpdate)
-        .run([](flecs::iter& iter) {
-            flecs::world registry = iter.world();
-            if (registry.has<components::global_options::Freezed>()) {
-                auto& freezed = registry.get_mut<components::global_options::Freezed>();
-                freezed.freeze_time -= registry.delta_time();
-                if (freezed.freeze_time <= 0) {
-                    registry.remove<components::global_options::Freezed>();
-                }
-            }
-        })
-        .add<components::system_types::Update_FreezeFrame>();
-
-    systems::controller(registry);
-    systems::movement(registry);
-    systems::physics(registry);
-    systems::state(registry);
-    systems::attack(registry);
-    systems::camera(registry);
-    systems::animation(registry);
-    systems::particles(registry);
-    systems::render::setup(registry);
-};
+}

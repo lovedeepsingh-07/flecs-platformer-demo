@@ -1,4 +1,3 @@
-#include "components.hpp"
 #include "systems.hpp"
 
 void systems::render::physics(flecs::world& registry) {

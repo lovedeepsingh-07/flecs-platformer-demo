@@ -5,7 +5,10 @@
 namespace observers {
     void setup(flecs::world& registry);
 
+    void game_quit(flecs::world& registry);
     void scene_manager(flecs::world& registry);
+    void pause(flecs::world& registry);
+    void freeze_frame(flecs::world& registry);
     void movement(flecs::world& registry);
     void attack(flecs::world& registry);
 }

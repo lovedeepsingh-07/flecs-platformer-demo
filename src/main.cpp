@@ -37,6 +37,12 @@ int main() {
     }
     registry.set<components::State_Engine>({ state_engine });
 
+    // setup controller_engine
+    auto controller_engine = ControllerEngine::ControllerEngine{};
+    controller_engine.setup();
+    registry.set<components::Controller_Engine>({ controller_engine });
+
+
     // clay UI setup
     uint64_t clay_required_memory = Clay_MinMemorySize();
     auto clay_memory = Clay_Arena{

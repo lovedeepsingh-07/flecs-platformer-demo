@@ -1,4 +1,3 @@
-#include "components.hpp"
 #include "constants.hpp"
 #include "systems.hpp"
 #include "utils.hpp"
@@ -38,7 +37,8 @@ void systems::attack(flecs::world& registry) {
                 return;
             }
 
-            flecs::entity hitbox_entity = curr_entity.target<components::Hitbox>();
+            flecs::entity hitbox_entity =
+                curr_entity.target<components::Hitbox_Entity>();
             Rectangle hitbox_rect = curr_state.hitbox;
 
             // calculate hitbox color and position based on current frame type and texture.flipped respectively
@@ -63,7 +63,7 @@ void systems::attack(flecs::world& registry) {
                         .add<components::rectangle_options::RectOpts_Lines>()
                         .set<components::Position>({ hitbox_pos.x, hitbox_pos.y })
                         .child_of(curr_entity);
-                curr_entity.add<components::Hitbox>(hitbox_entity);
+                curr_entity.add<components::Hitbox_Entity>(hitbox_entity);
             } else {
                 auto& hitbox_rect_comp =
                     hitbox_entity.get_mut<components::RectangleComponent>();

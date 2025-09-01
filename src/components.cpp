@@ -18,6 +18,7 @@ void components::setup(flecs::world& registry) {
 
     registry.component<components::Texture_Engine>().add(flecs::Singleton);
     registry.component<components::State_Engine>().add(flecs::Singleton);
+    registry.component<components::Controller_Engine>().add(flecs::Singleton);
 
     registry.component<components::emitter_types::JumpEmitter>()
         .add(flecs::Relationship)
@@ -49,7 +50,9 @@ void components::setup(flecs::world& registry) {
 
     registry.component<components::Jump_Entity>().add(flecs::Relationship);
     registry.component<components::Dash_Entity>().add(flecs::Relationship);
+    registry.component<components::Hitbox_Entity>().add(flecs::Relationship);
 
+    registry.component<components::events::GameQuitEvent>().add(flecs::Singleton);
     registry.component<components::events::JumpEvent>().add(flecs::Relationship).add(flecs::Exclusive);
     registry.component<components::events::JumpEvent_One>().add(flecs::Target);
     registry.component<components::events::JumpEvent_Two>().add(flecs::Target);
@@ -57,6 +60,4 @@ void components::setup(flecs::world& registry) {
     registry.component<components::events::DashEvent>();
     registry.component<components::events::AttackEvent>();
     registry.component<components::events::HitEvent>();
-
-    registry.component<components::Hitbox>();
 }

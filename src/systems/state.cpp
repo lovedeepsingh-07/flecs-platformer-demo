@@ -1,4 +1,3 @@
-#include "components.hpp"
 #include "systems.hpp"
 
 void systems::state(flecs::world& registry) {

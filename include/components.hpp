@@ -1,5 +1,6 @@
 #pragma once
 
+#include "controller_engine.hpp"
 #include "particle_engine.hpp"
 #include "state_engine.hpp"
 #include "texture_engine.hpp"
@@ -39,6 +40,9 @@ namespace components {
     };
     struct State_Engine {
         StateEngine::StateEngine engine;
+    };
+    struct Controller_Engine {
+        ControllerEngine::ControllerEngine engine;
     };
 
     struct Particle_Emitter {
@@ -117,10 +121,13 @@ namespace components {
     };
 
     // the "target" of this relationship will be the jump_entity itself
+    struct Attack_Entity {};
     struct Jump_Entity {};
     struct Dash_Entity {};
+    struct Hitbox_Entity {};
 
     namespace events {
+        struct GameQuitEvent {};
         struct JumpEvent {};
         struct JumpEvent_One {};
         struct JumpEvent_Two {};
@@ -141,9 +148,6 @@ namespace components {
             int direction;
         };
     }
-
-    // the "target" of this relationship will be the hitbox_entity itself
-    struct Hitbox {};
 
     void setup(flecs::world& registry);
 }

@@ -44,8 +44,7 @@ void observers::movement(flecs::world& registry) {
             b2Body_SetGravityScale(body.body_id, 0.0F);
 
             b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
-            vel.y = 0;
-            vel.x = vel.y + constants::PLAYER_DASH_VEL * (float)(texture.flipped ? -1 : 1);
+            vel.x = constants::PLAYER_DASH_VEL * (float)(texture.flipped ? -1 : 1);
             b2Body_SetLinearVelocity(body.body_id, vel);
 
             if (owner_entity.has<components::events::AttackEvent>()) {

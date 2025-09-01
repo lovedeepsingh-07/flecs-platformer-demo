@@ -1,4 +1,3 @@
-#include "components.hpp"
 #include "systems.hpp"
 
 void systems::particles(flecs::world& registry) {

@@ -7,7 +7,8 @@ void observers::attack(flecs::world& registry) {
         .event(flecs::OnRemove)
         .each([](flecs::entity curr_entity, const components::events::AttackEvent& attack_event) {
             flecs::world registry = curr_entity.world();
-            flecs::entity hitbox_entity = curr_entity.target<components::Hitbox>();
+            flecs::entity hitbox_entity =
+                curr_entity.target<components::Hitbox_Entity>();
 
             if (hitbox_entity.is_valid()) {
                 hitbox_entity.destruct();
