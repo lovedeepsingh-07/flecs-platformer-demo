@@ -7,16 +7,16 @@ void observers::movement(flecs::world& registry) {
         .event(flecs::OnAdd)
         .second(flecs::Wildcard)
         .each([](flecs::entity curr_entity, const components::events::JumpEvent&) {
-            flecs::entity owner_entity = curr_entity.parent();
-            const auto& body = owner_entity.get<components::PhysicalBody>();
-            const auto& pos = owner_entity.get<components::Position>();
-            const auto& base_collider = owner_entity.get<components::BaseCollider>();
+            flecs::entity parent_entity = curr_entity.parent();
+            const auto& body = parent_entity.get<components::PhysicalBody>();
+            const auto& pos = parent_entity.get<components::Position>();
+            const auto& base_collider = parent_entity.get<components::BaseCollider>();
             b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
             vel.y = constants::PLAYER_JUMP_VEL;
             b2Body_SetLinearVelocity(body.body_id, vel);
 
             flecs::entity jumping_particle_emitter =
-                owner_entity.target<components::emitter_types::JumpEmitter>();
+                parent_entity.target<components::emitter_types::JumpEmitter>();
 
             if (!jumping_particle_emitter.is_valid()) {
                 return;
@@ -28,18 +28,18 @@ void observers::movement(flecs::world& registry) {
             emitter_pos.y = pos.y + base_collider.height / 2;
             particle_emitter.engine.emitting = true;
 
-            if (owner_entity.has<components::events::AttackEvent>()) {
-                owner_entity.remove<components::events::AttackEvent>();
+            if (parent_entity.has<components::events::AttackEvent>()) {
+                parent_entity.remove<components::events::AttackEvent>();
             }
         });
 
     registry.observer<components::events::DashEvent>("DashEvent on_add")
         .event(flecs::OnAdd)
         .each([](flecs::entity curr_entity, const components::events::DashEvent&) {
-            flecs::entity owner_entity = curr_entity.parent();
+            flecs::entity parent_entity = curr_entity.parent();
 
-            const auto& body = owner_entity.get<components::PhysicalBody>();
-            const auto& texture = owner_entity.get<components::TextureComponent>();
+            const auto& body = parent_entity.get<components::PhysicalBody>();
+            const auto& texture = parent_entity.get<components::TextureComponent>();
 
             b2Body_SetGravityScale(body.body_id, 0.0F);
 
@@ -47,16 +47,16 @@ void observers::movement(flecs::world& registry) {
             vel.x = constants::PLAYER_DASH_VEL * (float)(texture.flipped ? -1 : 1);
             b2Body_SetLinearVelocity(body.body_id, vel);
 
-            if (owner_entity.has<components::events::AttackEvent>()) {
-                owner_entity.remove<components::events::AttackEvent>();
+            if (parent_entity.has<components::events::AttackEvent>()) {
+                parent_entity.remove<components::events::AttackEvent>();
             }
         });
 
     registry.observer<components::events::DashEvent>("DashEvent on_remove")
         .event(flecs::OnRemove)
         .each([](flecs::entity curr_entity, const components::events::DashEvent&) {
-            flecs::entity owner_entity = curr_entity.parent();
-            const auto& body = owner_entity.get<components::PhysicalBody>();
+            flecs::entity parent_entity = curr_entity.parent();
+            const auto& body = parent_entity.get<components::PhysicalBody>();
             b2Body_SetGravityScale(body.body_id, 1.0F);
         });
 };

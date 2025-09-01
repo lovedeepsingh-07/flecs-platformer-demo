@@ -32,7 +32,7 @@ void systems::state(flecs::world& registry) {
                     next_state_id = "hurt";
                 }
             } else {
-                if (curr_entity.has<components::events::AttackEvent>()) {
+                if (curr_entity.target<components::Attack_Entity>().is_valid()) {
                     if (!movement.on_ground) {
                         if (curr_state.can_transition_to("attack_air")) {
                             next_state_id = "attack_air";

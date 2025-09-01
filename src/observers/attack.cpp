@@ -5,10 +5,9 @@
 void observers::attack(flecs::world& registry) {
     registry.observer<components::events::AttackEvent>("AttackEvent on_remove")
         .event(flecs::OnRemove)
-        .each([](flecs::entity curr_entity, const components::events::AttackEvent& attack_event) {
-            flecs::world registry = curr_entity.world();
+        .each([](flecs::entity attack_entity, const components::events::AttackEvent& attack_event) {
             flecs::entity hitbox_entity =
-                curr_entity.target<components::Hitbox_Entity>();
+                attack_entity.target<components::Hitbox_Entity>();
 
             if (hitbox_entity.is_valid()) {
                 hitbox_entity.destruct();
@@ -36,8 +35,10 @@ void observers::attack(flecs::world& registry) {
 
             texture.flipped = (hit_event.direction != -1);
 
-            if (curr_entity.has<components::events::AttackEvent>()) {
-                curr_entity.remove<components::events::AttackEvent>();
+            flecs::entity attack_entity =
+                curr_entity.target<components::Attack_Entity>();
+            if (attack_entity.is_valid()) {
+                attack_entity.destruct();
             }
         });
 };

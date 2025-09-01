@@ -30,8 +30,10 @@ void systems::animation(flecs::world& registry) {
             // if animation is not playing and curr_entity has any animation dependant component then remove that component
             // and then just return this system as we do not have to play any animation anymore
             if (!animation.playing) {
-                if (curr_entity.has<components::events::AttackEvent>()) {
-                    curr_entity.remove<components::events::AttackEvent>();
+                flecs::entity attack_entity =
+                    curr_entity.target<components::Attack_Entity>();
+                if (attack_entity.is_valid()) {
+                    attack_entity.destruct();
                 }
                 if (curr_entity.has<components::events::HitEvent>()) {
                     curr_entity.remove<components::events::HitEvent>();

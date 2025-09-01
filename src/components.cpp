@@ -48,6 +48,7 @@ void components::setup(flecs::world& registry) {
     registry.component<components::Movement>();
     registry.component<components::Health>();
 
+    registry.component<components::Attack_Entity>().add(flecs::Relationship);
     registry.component<components::Jump_Entity>().add(flecs::Relationship);
     registry.component<components::Dash_Entity>().add(flecs::Relationship);
     registry.component<components::Hitbox_Entity>().add(flecs::Relationship);

@@ -45,7 +45,7 @@ void entity_debug(flecs::world& registry, const std::string& entity_id) {
     );
     ImGui::Text("Animation Playing: %s", animation.playing ? "true" : "false");
     ImGui::Text("Texture Flipped: %s", texture.flipped ? "true" : "false");
-    ImGui::Text("Attacking: %s", curr_entity.has<components::events::AttackEvent>() ? "true" : "false");
+    ImGui::Text("Attacking: %s", curr_entity.target<components::Attack_Entity>().is_valid() ? "true" : "false");
     ImGui::Text("Buffered Jump: %s", curr_entity.has<components::events::BufferedJumpEvent>() ? "true" : "false");
     ImGui::Text("Buffered Dash: %s", curr_entity.has<components::events::BufferedDashEvent>() ? "true" : "false");
 }
