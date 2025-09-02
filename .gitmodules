@@ -22,9 +22,12 @@
 [submodule "external/rapidcsv"]
 	path = external/rapidcsv
 	url = https://github.com/d99kris/rapidcsv
-[submodule "external/yaml-cpp"]
-	path = external/yaml-cpp
-	url = https://github.com/jbeder/yaml-cpp
 [submodule "external/expected"]
 	path = external/expected
 	url = https://github.com/TartanLlama/expected
+[submodule "external/lua"]
+	path = external/lua
+	url = https://github.com/lua/lua
+[submodule "external/sol2"]
+	path = external/sol2
+	url = https://github.com/ThePhD/sol2

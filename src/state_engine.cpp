@@ -1,13 +1,18 @@
 #include "state_engine.hpp"
 
 tl::expected<void, error::StateEngineError> StateEngine::StateEngine::setup() {
+    sol::state lua_state;
+    lua_state.open_libraries(sol::lib::base);
+    lua_state.script_file("data/script.lua");
+
     auto registry_load_result =
-        this->load_state_registry("player", "data/player.states.yaml");
+        this->load_state_registry("player", "data/player.states.lua", lua_state);
     if (!registry_load_result) {
         return tl::unexpected(registry_load_result.error());
     }
 
-    registry_load_result = this->load_state_registry("enemy", "data/enemy.states.yaml");
+    registry_load_result =
+        this->load_state_registry("enemy", "data/enemy.states.lua", lua_state);
     if (!registry_load_result) {
         return tl::unexpected(registry_load_result.error());
     }
@@ -15,8 +20,9 @@ tl::expected<void, error::StateEngineError> StateEngine::StateEngine::setup() {
     return {};
 }
 
-tl::expected<void, error::StateEngineError>
-StateEngine::StateEngine::load_state_registry(const std::string& registry_id, const std::string& registry_file_path) {
+tl::expected<void, error::StateEngineError> StateEngine::StateEngine::load_state_registry(
+    const std::string& registry_id, const std::string& registry_file_path, sol::state& lua_state
+) {
     // check if a registry with the same ID already exists
     const auto query_result = this->get_state_registry(registry_id);
     if (query_result) {
@@ -25,78 +31,98 @@ StateEngine::StateEngine::load_state_registry(const std::string& registry_id, co
             "registry with this ID already exists" });
     }
 
-    YAML::Node states_yaml_root = YAML::LoadFile(registry_file_path);
-    const YAML::Node& states_yaml = states_yaml_root["states"];
 
-    if (!states_yaml || !states_yaml.IsSequence()) {
+    lua_state.script_file(registry_file_path);
+    sol::object STATES_object = lua_state["STATES"];
+    if (!STATES_object.valid() || STATES_object.get_type() != sol::type::table) {
         return tl::unexpected(error::StateEngineError{
             error::StateEngineError::Type::StateRegistry_LoadError,
-            "unable to find 'states' node in YAML" });
+            "unable to find 'STATES' table" });
     }
+    sol::table STATES_table = STATES_object.as<sol::table>();
 
     StateRegistry state_registry;
 
-    for (const YAML::Node& curr_state_yaml : states_yaml) {
+    for (auto&& curr_state_kv : STATES_table) {
         State curr_state;
 
-        for (YAML::const_iterator curr_state_yaml_iter = curr_state_yaml.begin();
-             curr_state_yaml_iter != curr_state_yaml.end(); ++curr_state_yaml_iter) {
-            // id
-            curr_state.id = curr_state_yaml_iter->first.as<std::string>();
+        // id
+        curr_state.id = curr_state_kv.first.as<std::string>();
 
-            // hitbox
-            YAML::Node hitbox_yaml = curr_state_yaml_iter->second["hitbox"];
-            if (!hitbox_yaml) {
-                curr_state.offensive = false;
-            } else {
-                curr_state.offensive = true;
-                curr_state.hitbox = Rectangle{
-                    hitbox_yaml[0].as<float>(),
-                    hitbox_yaml[1].as<float>(),
-                    hitbox_yaml[2].as<float>(),
-                    hitbox_yaml[3].as<float>(),
-                };
-            }
+        sol::object curr_state_object = curr_state_kv.second;
+        if (!curr_state_object.valid() || curr_state_object.get_type() != sol::type::table) {
+            return tl::unexpected(error::StateEngineError{
+                error::StateEngineError::Type::StateRegistry_LoadError,
+                "failed to read state object" });
+        }
+        sol::table curr_state_table = curr_state_object.as<sol::table>();
 
-            // can_transition_to
-            YAML::Node transition_yaml =
-                curr_state_yaml_iter->second["can_transition_to"];
-            for (const YAML::Node& curr_transition_yaml : transition_yaml) {
-                State_can_transition_to curr_transition;
-                curr_transition.id =
-                    curr_transition_yaml.begin()->first.as<std::string>();
-                curr_transition.frame =
-                    curr_transition_yaml.begin()->second["frame"].as<int>();
-                const auto transition_load_result =
-                    curr_state.load_transition(curr_transition.id, curr_transition);
-                if (!transition_load_result) {
-                    return tl::unexpected(error::StateEngineError{
-                        error::StateEngineError::Type::StateRegistry_LoadError,
-                        transition_load_result.error().message });
-                }
-            }
-
-            // animation_data
-            YAML::Node animation_data_yaml =
-                curr_state_yaml_iter->second["animation_data"];
-            State_animation_data animation_data;
-            animation_data.texture_id =
-                animation_data_yaml["texture_id"].as<std::string>();
-            animation_data.loop = animation_data_yaml["loop"].as<bool>();
-            YAML::Node frames_yaml = animation_data_yaml["frames"];
-            for (const YAML::Node& curr_frame_yaml : frames_yaml) {
-                animation_data.frames.emplace_back(AnimationFrame{
-                    ._type = curr_frame_yaml["type"].as<std::string>(),
-                    .source_rect = Rectangle{
-                        curr_frame_yaml["source_rect"][0].as<float>(),
-                        curr_frame_yaml["source_rect"][1].as<float>(),
-                        curr_frame_yaml["source_rect"][2].as<float>(),
-                        curr_frame_yaml["source_rect"][3].as<float>(),
-                    } });
-            }
-            curr_state.animation_data = animation_data;
+        // hitbox
+        sol::object hitbox_object = curr_state_table["hitbox"];
+        if (hitbox_object.valid() && hitbox_object.get_type() == sol::type::table) {
+            sol::table hitbox_table = hitbox_object.as<sol::table>();
+            curr_state.offensive = true;
+            curr_state.hitbox = Rectangle{
+                hitbox_table[1],
+                hitbox_table[2],
+                hitbox_table[3],
+                hitbox_table[4],
+            };
+        } else {
+            curr_state.offensive = false;
         }
 
+        // can_transition_to
+        sol::object transition_object = curr_state_table["can_transition_to"];
+        if (!transition_object.valid() || transition_object.get_type() != sol::type::table) {
+            return tl::unexpected(error::StateEngineError{
+                error::StateEngineError::Type::StateRegistry_LoadError,
+                "failed to read 'can_transition_to' object" });
+        }
+        sol::table transition_table = transition_object.as<sol::table>();
+        for (auto&& curr_transition_kv : transition_table) {
+            State_can_transition_to curr_transition;
+            curr_transition.id = curr_transition_kv.first.as<std::string>();
+            curr_transition.frame = curr_transition_kv.second.as<int>();
+            const auto transition_load_result =
+                curr_state.load_transition(curr_transition.id, curr_transition);
+            if (!transition_load_result) {
+                return tl::unexpected(error::StateEngineError{
+                    error::StateEngineError::Type::StateRegistry_LoadError,
+                    transition_load_result.error().message });
+            }
+        }
+
+        // animation_data
+        sol::object animation_object = curr_state_table["animation_data"];
+        if (!animation_object.valid() || animation_object.get_type() != sol::type::table) {
+            return tl::unexpected(error::StateEngineError{
+                error::StateEngineError::Type::StateRegistry_LoadError,
+                "failed to read 'animation_data' object" });
+        }
+        sol::table animation_table = animation_object.as<sol::table>();
+        State_animation_data animation_data;
+        animation_data.texture_id = animation_table["texture_id"];
+        animation_data.loop = animation_table["loop"];
+        sol::object frames_object = animation_table["frames"];
+        if (!frames_object.valid() || frames_object.get_type() != sol::type::table) {
+            return tl::unexpected(error::StateEngineError{
+                error::StateEngineError::Type::StateRegistry_LoadError,
+                "failed to read 'frames' object" });
+        }
+        sol::table frames_table = frames_object.as<sol::table>();
+        for (auto&& curr_frame_kv : frames_table) {
+            sol::table curr_frame_table = curr_frame_kv.second.as<sol::table>();
+            animation_data.frames.emplace_back(AnimationFrame{
+                ._type = curr_frame_table[1],
+                .source_rect = Rectangle{
+                    curr_frame_table[2][1],
+                    curr_frame_table[2][2],
+                    curr_frame_table[2][3],
+                    curr_frame_table[2][4],
+                } });
+        }
+        curr_state.animation_data = animation_data;
         const auto state_load_result = state_registry.load_state(curr_state.id, curr_state);
         if (!state_load_result) {
             return tl::unexpected(error::StateEngineError{

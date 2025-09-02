@@ -12,8 +12,8 @@ add_subdirectory(${EXTERNAL_DIR}/flecs)
 add_subdirectory(${EXTERNAL_DIR}/box2d)
 add_subdirectory(${EXTERNAL_DIR}/pugixml)
 add_subdirectory(${EXTERNAL_DIR}/rapidcsv)
-add_subdirectory(${EXTERNAL_DIR}/yaml-cpp)
 add_subdirectory(${EXTERNAL_DIR}/expected)
+include(${CMAKE_CURRENT_LIST_DIR}/lua.cmake)
 
 set(IMGUI_SOURCES
     ${EXTERNAL_DIR}/imgui/imgui.cpp
@@ -46,7 +46,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	box2d
 	pugixml
 	rapidcsv
-	yaml-cpp::yaml-cpp
+	lua
 	expected
 )
 

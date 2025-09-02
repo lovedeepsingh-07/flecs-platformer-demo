@@ -3,8 +3,8 @@
 #include "error.hpp"
 #include <functional>
 #include <raylib.h>
+#include <sol/sol.hpp>
 #include <tl/expected.hpp>
-#include <yaml-cpp/yaml.h>
 
 namespace StateEngine {
     struct AnimationFrame {
@@ -57,8 +57,9 @@ namespace StateEngine {
 
       public:
         tl::expected<void, error::StateEngineError> setup();
-        tl::expected<void, error::StateEngineError>
-        load_state_registry(const std::string& registry_id, const std::string& registry_file_path);
+        tl::expected<void, error::StateEngineError> load_state_registry(
+            const std::string& registry_id, const std::string& registry_file_path, sol::state& lua_state
+        );
         tl::expected<std::reference_wrapper<const StateRegistry>, error::StateEngineError>
         get_state_registry(const std::string& registry_id) const;
     };
