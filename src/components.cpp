@@ -15,16 +15,20 @@ void components::setup(flecs::world& registry) {
     registry.component<components::ActiveScene>().add(flecs::Relationship).add(flecs::Exclusive);
     registry.component<components::scenes::MainMenu>().add(flecs::Target);
     registry.component<components::scenes::Setting>().add(flecs::Target);
+    registry.component<components::scenes::GameSetup>().add(flecs::Target);
     registry.component<components::scenes::Game>().add(flecs::Target);
 
     registry.component<components::Texture_Engine>().add(flecs::Singleton);
     registry.component<components::State_Engine>().add(flecs::Singleton);
     registry.component<components::Controller_Engine>().add(flecs::Singleton);
 
-    registry.component<components::emitter_types::JumpEmitter>()
+    registry.component<components::Particle_Emitter>();
+    registry.component<components::emitter_types::Jump>()
         .add(flecs::Relationship)
         .add(flecs::Exclusive);
-    registry.component<components::Particle_Emitter>();
+    registry.component<components::emitter_types::Dash>()
+        .add(flecs::Relationship)
+        .add(flecs::Exclusive);
 
     registry.component<components::GlobalCamera>();
     registry.component<components::Camera_Target>();

@@ -35,6 +35,7 @@ namespace components {
     namespace scenes {
         struct MainMenu {};
         struct Setting {};
+        struct GameSetup {};
         struct Game {};
     };
 
@@ -53,7 +54,8 @@ namespace components {
     };
     // these are relationships and the "target" of these relationships will be the emitter
     namespace emitter_types {
-        struct JumpEmitter {};
+        struct Jump {};
+        struct Dash {};
     }
 
     struct GlobalCamera {

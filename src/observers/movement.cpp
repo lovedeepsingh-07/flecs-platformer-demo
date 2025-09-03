@@ -16,7 +16,7 @@ void observers::movement(flecs::world& registry) {
             b2Body_SetLinearVelocity(body.body_id, vel);
 
             flecs::entity jumping_particle_emitter =
-                parent_entity.target<components::emitter_types::JumpEmitter>();
+                parent_entity.target<components::emitter_types::Jump>();
 
             if (!jumping_particle_emitter.is_valid()) {
                 return;
@@ -40,12 +40,27 @@ void observers::movement(flecs::world& registry) {
 
             const auto& body = parent_entity.get<components::PhysicalBody>();
             const auto& texture = parent_entity.get<components::TextureComponent>();
+            const auto& pos = parent_entity.get<components::Position>();
+            const auto& base_collider = parent_entity.get<components::BaseCollider>();
 
             b2Body_SetGravityScale(body.body_id, 0.0F);
 
             b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
             vel.x = constants::PLAYER_DASH_VEL * (float)(texture.flipped ? -1 : 1);
             b2Body_SetLinearVelocity(body.body_id, vel);
+
+            flecs::entity dash_particle_emitter =
+                parent_entity.target<components::emitter_types::Dash>();
+
+            if (!dash_particle_emitter.is_valid()) {
+                return;
+            }
+            auto& particle_emitter =
+                dash_particle_emitter.get_mut<components::Particle_Emitter>();
+            auto& emitter_pos = dash_particle_emitter.get_mut<components::Position>();
+            emitter_pos.x = pos.x;
+            emitter_pos.y = pos.y + base_collider.height / 2;
+            particle_emitter.engine.emitting = true;
 
             if (parent_entity.has<components::events::AttackEvent>()) {
                 parent_entity.remove<components::events::AttackEvent>();

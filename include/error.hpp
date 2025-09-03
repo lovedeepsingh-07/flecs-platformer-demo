@@ -17,4 +17,10 @@ namespace error {
         StateEngineError(Type t, std::string msg)
         : type(t), message(std::move(msg)) {}
     };
+    struct ControllerEngineError {
+        enum class Type : std::uint8_t { LoadError } type;
+        std::string message;
+        ControllerEngineError(Type t, std::string msg)
+        : type(t), message(std::move(msg)) {}
+    };
 }

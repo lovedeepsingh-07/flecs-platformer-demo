@@ -9,11 +9,11 @@
     ],
     "fileStates": {
         "map.xml": {
-            "scale": 0.125,
-            "selectedLayer": 0,
+            "scale": 1,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 2352,
-                "y": 1040
+                "x": 1977,
+                "y": 635
             }
         },
         "tiles-debug.xml": {

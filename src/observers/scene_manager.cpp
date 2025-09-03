@@ -21,6 +21,15 @@ void observers::scene_manager(flecs::world& registry) {
         .second<components::scenes::Setting>()
         .each(scene::setting::on_exit);
 
+    registry.observer<components::ActiveScene>("GameSetup_Scene on_enter")
+        .event(flecs::OnAdd)
+        .second<components::scenes::GameSetup>()
+        .each(scene::setting::on_enter);
+    registry.observer<components::ActiveScene>("GameSetup_Scene on_exit")
+        .event(flecs::OnRemove)
+        .second<components::scenes::GameSetup>()
+        .each(scene::setting::on_exit);
+
     registry.observer<components::ActiveScene>("Game_Scene on_enter")
         .event(flecs::OnAdd)
         .second<components::scenes::Game>()

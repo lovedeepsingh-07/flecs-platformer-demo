@@ -6,13 +6,7 @@ tl::expected<void, error::StateEngineError> StateEngine::StateEngine::setup() {
     lua_state.script_file("data/script.lua");
 
     auto registry_load_result =
-        this->load_state_registry("player", "data/player.states.lua", lua_state);
-    if (!registry_load_result) {
-        return tl::unexpected(registry_load_result.error());
-    }
-
-    registry_load_result =
-        this->load_state_registry("enemy", "data/enemy.states.lua", lua_state);
+        this->load_state_registry("cowboy", "data/cowboy.states.lua", lua_state);
     if (!registry_load_result) {
         return tl::unexpected(registry_load_result.error());
     }
@@ -37,7 +31,7 @@ tl::expected<void, error::StateEngineError> StateEngine::StateEngine::load_state
     if (!STATES_object.valid() || STATES_object.get_type() != sol::type::table) {
         return tl::unexpected(error::StateEngineError{
             error::StateEngineError::Type::StateRegistry_LoadError,
-            "unable to find 'STATES' table" });
+            "unable to read 'STATES' table" });
     }
     sol::table STATES_table = STATES_object.as<sol::table>();
 

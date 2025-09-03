@@ -1,3 +1,6 @@
+#include "error.hpp"
+#include <sol/sol.hpp>
+#include <tl/expected.hpp>
 #include <unordered_map>
 
 namespace ControllerEngine {
@@ -14,7 +17,7 @@ namespace ControllerEngine {
         ControllerEngine() = default;
         ~ControllerEngine() = default;
 
-        void setup();
+        tl::expected<void, error::ControllerEngineError> setup();
         const ControllerKeymap& get_keymap(int keymap_id) const;
     };
 };

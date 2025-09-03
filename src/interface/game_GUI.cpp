@@ -45,7 +45,7 @@ void Interface::game_GUI(flecs::world& registry) {
                     registry.add<components::ActiveScene, components::scenes::MainMenu>();
                 }
                 CLAY_TEXT(
-                    CLAY_STRING("Resume"),
+                    CLAY_STRING("Quit"),
                     CLAY_TEXT_CONFIG({
                         .textColor = hovering ? game_utils::RaylibColorToClayColor(WHITE)
                                               : game_utils::RaylibColorToClayColor(BLACK),

@@ -59,7 +59,7 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
 
     // state setup
     auto& state_engine = registry.get_mut<components::State_Engine>();
-    auto state_registry_result = state_engine.engine.get_state_registry("enemy");
+    auto state_registry_result = state_engine.engine.get_state_registry("cowboy");
     if (!state_registry_result) {
         throw std::runtime_error(state_registry_result.error().message);
     }
@@ -69,7 +69,7 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
         throw std::runtime_error(state_result.error().message);
     }
     StateEngine::State starting_state = *state_result;
-    enemy_entity.set<components::State>({ "idle", "enemy" });
+    enemy_entity.set<components::State>({ "idle", "cowboy" });
 
     enemy_entity.set<components::TextureComponent>({
         .texture =
@@ -111,5 +111,33 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
             .set<components::Particle_Emitter>({ jumping_particle_engine })
             .set<components::Position>({ pos.x, pos.y + (constants::PLAYER_COLLIDER_HEIGHT / 2) })
             .child_of(enemy_entity);
-    enemy_entity.add<components::emitter_types::JumpEmitter>(jump_emitter_entity);
+    enemy_entity.add<components::emitter_types::Jump>(jump_emitter_entity);
+
+    auto dash_particle_engine = ParticleEngine::ParticleEngine{};
+    dash_particle_engine.pool_size = 360; // somewhat arbitrary number
+    dash_particle_engine.emitting = false;
+    dash_particle_engine.config = ParticleEngine::EngineConfig{
+        .local_coords = false,
+        .one_shot = true,
+        .amount = 4,
+        .speed_scale = 2.5F,
+        .lifetime = 0.25F,
+        .velocity_scale = 100.0F,
+        .explosiveness = 0.0F,
+        .direction_bias = -std::numbers::pi / 2,
+        .spread = 10.0F * DEG2RAD,
+        .separation = 155 * DEG2RAD,
+        .square_particles = true,
+        .start_size = 4.6F,
+        .end_size = 3.5F,
+        .start_color = Vector4{ 1.0F, 1.0F, 1.0F, 1.0F },
+        .end_color = Vector4{ 1.0F, 1.0F, 1.0F, 0.0F },
+    };
+    dash_particle_engine.setup();
+    flecs::entity dash_emitter_entity =
+        registry.entity()
+            .set<components::Particle_Emitter>({ dash_particle_engine })
+            .set<components::Position>({ pos.x, pos.y + (constants::PLAYER_COLLIDER_HEIGHT / 2) })
+            .child_of(enemy_entity);
+    enemy_entity.add<components::emitter_types::Dash>(dash_emitter_entity);
 }

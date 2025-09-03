@@ -39,7 +39,11 @@ int main() {
 
     // setup controller_engine
     auto controller_engine = ControllerEngine::ControllerEngine{};
-    controller_engine.setup();
+    auto controller_engine_setup_result = controller_engine.setup();
+    if (!controller_engine_setup_result) {
+        std::cerr << controller_engine_setup_result.error().message << '\n';
+        return 0;
+    }
     registry.set<components::Controller_Engine>({ controller_engine });
 
 

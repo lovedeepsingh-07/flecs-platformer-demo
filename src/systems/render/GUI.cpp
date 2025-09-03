@@ -37,6 +37,9 @@ void systems::render::GUI(flecs::world& registry) {
             if (registry.has<components::ActiveScene, components::scenes::Setting>()) {
                 Interface::setting_GUI(registry);
             }
+            if (registry.has<components::ActiveScene, components::scenes::GameSetup>()) {
+                Interface::game_setup_GUI(registry);
+            }
             if (registry.has<components::ActiveScene, components::scenes::Game>()) {
                 Interface::game_GUI(registry);
             }
