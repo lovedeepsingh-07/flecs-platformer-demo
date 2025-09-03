@@ -11,6 +11,12 @@ tl::expected<void, error::StateEngineError> StateEngine::StateEngine::setup() {
         return tl::unexpected(registry_load_result.error());
     }
 
+    registry_load_result =
+        this->load_state_registry("decidueye", "data/decidueye.states.lua", lua_state);
+    if (!registry_load_result) {
+        return tl::unexpected(registry_load_result.error());
+    }
+
     return {};
 }
 

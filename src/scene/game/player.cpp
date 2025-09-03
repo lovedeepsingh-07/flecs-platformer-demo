@@ -61,7 +61,8 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
 
     // state setup
     auto& state_engine = registry.get_mut<components::State_Engine>();
-    auto state_registry_result = state_engine.engine.get_state_registry("cowboy");
+    auto state_registry_result =
+        state_engine.engine.get_state_registry("decidueye");
     if (!state_registry_result) {
         throw std::runtime_error(state_registry_result.error().message);
     }
@@ -71,7 +72,7 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
         throw std::runtime_error(state_result.error().message);
     }
     StateEngine::State starting_state = *state_result;
-    player_entity.set<components::State>({ "idle", "cowboy" });
+    player_entity.set<components::State>({ "idle", "decidueye" });
 
     player_entity.set<components::TextureComponent>({
         .texture =
@@ -127,9 +128,9 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
         .lifetime = 0.25F,
         .velocity_scale = 100.0F,
         .explosiveness = 0.0F,
-        .direction_bias = -std::numbers::pi / 2,
-        .spread = 10.0F * DEG2RAD,
-        .separation = 155 * DEG2RAD,
+        .direction_bias = std::numbers::pi,
+        .spread = 45.0F * DEG2RAD,
+        .separation = 0,
         .square_particles = true,
         .start_size = 4.6F,
         .end_size = 3.5F,

@@ -8,6 +8,15 @@ void TextureEngine::TextureEngine::setup() {
     this->load_texture("cowboy_attack_air", "assets/cowboy/horizontal_air_slash.png");
     this->load_texture("cowboy_hurt", "assets/cowboy/hurt.png");
     this->load_texture("cowboy_dash", "assets/cowboy/dash.png");
+
+    this->load_texture("decidueye_idle", "assets/decidueye/idle.png");
+    this->load_texture("decidueye_run", "assets/decidueye/run.png");
+    this->load_texture("decidueye_jump", "assets/decidueye/jump.png");
+    this->load_texture("decidueye_attack", "assets/decidueye/attack.png");
+    this->load_texture("decidueye_attack_air", "assets/decidueye/attack_air.png");
+    this->load_texture("decidueye_hurt", "assets/decidueye/hurt.png");
+    this->load_texture("decidueye_dash", "assets/decidueye/dash.png");
+
     this->load_texture("tiles_debug", "assets/tiles-debug.png");
 }
 

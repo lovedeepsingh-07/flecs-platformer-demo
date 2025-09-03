@@ -58,8 +58,11 @@ void observers::movement(flecs::world& registry) {
             auto& particle_emitter =
                 dash_particle_emitter.get_mut<components::Particle_Emitter>();
             auto& emitter_pos = dash_particle_emitter.get_mut<components::Position>();
-            emitter_pos.x = pos.x;
-            emitter_pos.y = pos.y + base_collider.height / 2;
+            emitter_pos.x = pos.x
+                + (texture.flipped ? base_collider.width / 2 : -base_collider.width / 2);
+            emitter_pos.y = pos.y;
+            particle_emitter.engine.config.direction_bias =
+                (float)(texture.flipped ? std::numbers::pi : 0);
             particle_emitter.engine.emitting = true;
 
             if (parent_entity.has<components::events::AttackEvent>()) {

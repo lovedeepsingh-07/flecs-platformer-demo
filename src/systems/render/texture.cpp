@@ -17,6 +17,19 @@ void systems::render::texture(flecs::world& registry) {
                              texture.source_rect.width, texture.source_rect.height },
                 (Vector2){ 0, 0 }, 0.0F, WHITE
             );
+            // float source_width = texture.flipped ? -texture.source_rect.width
+            //                                      : texture.source_rect.width;
+            // float render_width = texture.source_rect.width * 0.55F;
+            // float render_height = texture.source_rect.height * 0.4F;
+            //
+            // DrawTexturePro(
+            //     texture.texture,
+            //     (Rectangle){ texture.source_rect.x, texture.source_rect.y,
+            //                  source_width, texture.source_rect.height },
+            //     (Rectangle){ pos.x - (render_width / 2), pos.y - (render_height / 2),
+            //                  render_width, render_height },
+            //     (Vector2){ 0, 0 }, 0.0F, WHITE
+            // );
         })
         .add<components::system_types::Render>();
 }
