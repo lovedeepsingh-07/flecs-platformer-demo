@@ -15,7 +15,7 @@ void systems::render::setup(flecs::world& registry) {
             ClearBackground(constants::BACKGROUND_COLOR);
 
             // only for "Game_Scene" when registry has a "GlobalCamera"
-            if (!registry.has<components::ActiveScene, components::Game_Scene>()
+            if (!registry.has<components::ActiveScene, components::scenes::Game>()
                 || !registry.has<components::GlobalCamera>()) {
                 return;
             }
@@ -60,7 +60,7 @@ void systems::render::setup(flecs::world& registry) {
         .each([](flecs::entity curr_entity, components::State& state,
                  components::Position& pos, components::BaseCollider& base_collider) {
             flecs::world registry = curr_entity.world();
-            if (!registry.has<components::ActiveScene, components::Game_Scene>()
+            if (!registry.has<components::ActiveScene, components::scenes::Game>()
                 || !registry.has<components::global_options::DebugMode>()) {
                 return;
             }

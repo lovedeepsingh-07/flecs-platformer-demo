@@ -8,7 +8,7 @@ void systems::camera(flecs::world& registry) {
         .each([](flecs::entity curr_entity, const components::Camera_Target& camera_target,
                  const components::Position& pos) {
             flecs::world registry = curr_entity.world();
-            if (!registry.has<components::ActiveScene, components::Game_Scene>()
+            if (!registry.has<components::ActiveScene, components::scenes::Game>()
                 || !registry.has<components::GlobalCamera>()) {
                 return;
             }

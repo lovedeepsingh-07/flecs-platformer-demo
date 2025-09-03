@@ -64,7 +64,7 @@ int main() {
     registry.set<components::global_options::GameFonts>({ font_list });
 
     // switch ActiveScene to MainMenu
-    registry.add<components::ActiveScene, components::MainMenu_Scene>();
+    registry.add<components::ActiveScene, components::scenes::MainMenu>();
 
     // run the main loop
     registry.app().enable_stats().enable_rest().run();

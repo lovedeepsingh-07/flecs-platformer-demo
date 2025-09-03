@@ -14,7 +14,7 @@ void systems::global_events(flecs::world& registry) {
 
             // handle toggeling debug mode (only in game_scene)
             if (IsKeyPressed(constants::DEBUG_KEY)
-                && registry.has<components::ActiveScene, components::Game_Scene>()) {
+                && registry.has<components::ActiveScene, components::scenes::Game>()) {
                 if (!registry.has<components::global_options::DebugMode>()) {
                     registry.add<components::global_options::DebugMode>();
                 } else {
@@ -23,7 +23,7 @@ void systems::global_events(flecs::world& registry) {
             }
 
             if (IsKeyPressed(KEY_ESCAPE)
-                && registry.has<components::ActiveScene, components::Game_Scene>()) {
+                && registry.has<components::ActiveScene, components::scenes::Game>()) {
                 if (registry.has<components::global_options::Paused>()) {
                     registry.remove<components::global_options::Paused>();
                 } else {

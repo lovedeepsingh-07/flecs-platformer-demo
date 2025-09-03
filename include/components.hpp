@@ -32,8 +32,11 @@ namespace components {
     // this represents an exclusive relationship (there can be only 1 active scene)
     struct ActiveScene {};
     // these below are the "targets" of that relationship
-    struct MainMenu_Scene {};
-    struct Game_Scene {};
+    namespace scenes {
+        struct MainMenu {};
+        struct Setting {};
+        struct Game {};
+    };
 
     struct Texture_Engine {
         TextureEngine::TextureEngine engine;

@@ -9,7 +9,7 @@ void systems::physics(flecs::world& registry) {
             flecs::world registry = iter.world();
 
             if (!registry.has<components::PhysicalWorld>()
-                || !registry.has<components::ActiveScene, components::Game_Scene>()) {
+                || !registry.has<components::ActiveScene, components::scenes::Game>()) {
                 return;
             }
             auto physical_world = registry.get<components::PhysicalWorld>();
@@ -23,7 +23,7 @@ void systems::physics(flecs::world& registry) {
         .run([](flecs::iter& iter) {
             flecs::world registry = iter.world();
 
-            if (!registry.has<components::ActiveScene, components::Game_Scene>()) {
+            if (!registry.has<components::ActiveScene, components::scenes::Game>()) {
                 return;
             }
 

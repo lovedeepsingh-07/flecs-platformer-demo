@@ -7,7 +7,7 @@ void systems::render::physics(flecs::world& registry) {
             flecs::world registry = iter.world();
             if (!registry.has<components::global_options::DebugMode>()
                 || !registry.has<components::PhysicalWorld>()
-                || !registry.has<components::ActiveScene, components::Game_Scene>()
+                || !registry.has<components::ActiveScene, components::scenes::Game>()
                 || !registry.has<components::PhysicalDebugDraw>()) {
                 return;
             }
