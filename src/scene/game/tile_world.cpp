@@ -29,7 +29,7 @@ void scene::game::setup_tile_world(flecs::world& registry, b2WorldId world_id) {
                       .attribute("firstgid")
                       .value());
 
-    Texture2D tileset_debug_texture =
+    TextureEngine::GameTexture tileset_debug_texture =
         texture_engine.engine.get_texture("tiles_debug");
     int map_width = std::stoi(tile_layer.attribute("width").value());
     int map_height = std::stoi(tile_layer.attribute("height").value());
@@ -45,17 +45,20 @@ void scene::game::setup_tile_world(flecs::world& registry, b2WorldId world_id) {
 
                 float tile_index = gid_value - debug_tileset_first_gid;
                 float tile_rect_x =
-                    (float)((int)tile_index % (int)((float)tileset_debug_texture.width / tile_width))
+                    (float)((int)tile_index
+                            % (int)((float)tileset_debug_texture.texture.width / tile_width))
                     * tile_width;
                 float tile_rect_y =
-                    std::floor(tile_index / ((float)tileset_debug_texture.width / tile_width))
+                    std::floor(
+                        tile_index / ((float)tileset_debug_texture.texture.width / tile_width)
+                    )
                     * tile_height;
 
                 // tile entity
                 registry.entity()
                     .set(components::Position{ tile_x, tile_y })
                     .set(components::TextureComponent{
-                        .texture = tileset_debug_texture,
+                        .texture = tileset_debug_texture.texture,
                         .source_rect =
                             (Rectangle){
                                 .x = tile_rect_x,
@@ -63,6 +66,7 @@ void scene::game::setup_tile_world(flecs::world& registry, b2WorldId world_id) {
                                 .width = tile_width,
                                 .height = tile_height,
                             },
+                        .render_scale = tileset_debug_texture.render_scale,
                         .flipped = false,
                     })
                     .child_of(scene_root);

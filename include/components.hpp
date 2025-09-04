@@ -96,6 +96,7 @@ namespace components {
     struct TextureComponent {
         Texture2D texture;
         Rectangle source_rect;
+        Vector2 render_scale;
         bool flipped;
     };
     struct State {

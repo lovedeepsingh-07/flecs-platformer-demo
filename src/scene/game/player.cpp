@@ -74,10 +74,12 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
     StateEngine::State starting_state = *state_result;
     player_entity.set<components::State>({ "idle", "decidueye" });
 
+    TextureEngine::GameTexture player_texture =
+        texture_engine.engine.get_texture(starting_state.animation_data.texture_id);
     player_entity.set<components::TextureComponent>({
-        .texture =
-            texture_engine.engine.get_texture(starting_state.animation_data.texture_id),
-        .source_rect = { 0, 0, 128, 128 },
+        .texture = player_texture.texture,
+        .source_rect = starting_state.animation_data.frames[0].source_rect,
+        .render_scale = player_texture.render_scale,
         .flipped = false,
     });
 

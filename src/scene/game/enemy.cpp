@@ -71,10 +71,12 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
     StateEngine::State starting_state = *state_result;
     enemy_entity.set<components::State>({ "idle", "cowboy" });
 
+    TextureEngine::GameTexture enemy_texture =
+        texture_engine.engine.get_texture(starting_state.animation_data.texture_id);
     enemy_entity.set<components::TextureComponent>({
-        .texture =
-            texture_engine.engine.get_texture(starting_state.animation_data.texture_id),
-        .source_rect = { 0, 0, 128, 128 },
+        .texture = enemy_texture.texture,
+        .source_rect = starting_state.animation_data.frames[0].source_rect,
+        .render_scale = enemy_texture.render_scale,
         .flipped = false,
     });
 
