@@ -7,8 +7,10 @@ namespace ControllerEngine {
     struct ControllerKeymap {
         int left;
         int right;
+        int down;
         int jump;
-        int attack;
+        int light_attack;
+        int heavy_attack;
     };
     class ControllerEngine {
       public:

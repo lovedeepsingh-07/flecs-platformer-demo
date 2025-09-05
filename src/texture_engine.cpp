@@ -2,8 +2,9 @@
 
 void TextureEngine::TextureEngine::setup() {
     auto cowboy_render_scale = Vector2{ 1.0F, 1.0F };
-    this->load_texture("cowboy_air_dash", "assets/cowboy/air_dash.png", cowboy_render_scale);
     this->load_texture("cowboy_burst", "assets/cowboy/burst.png", cowboy_render_scale);
+    this->load_texture("cowboy_dash", "assets/cowboy/dash.png", cowboy_render_scale);
+    this->load_texture("cowboy_dash_air", "assets/cowboy/dash_air.png", cowboy_render_scale);
     this->load_texture("cowboy_getup", "assets/cowboy/getup.png", cowboy_render_scale);
     this->load_texture("cowboy_horizontal_air_slash", "assets/cowboy/horizontal_air_slash.png", cowboy_render_scale);
     this->load_texture("cowboy_hurt", "assets/cowboy/hurt.png", cowboy_render_scale);
@@ -22,7 +23,6 @@ void TextureEngine::TextureEngine::setup() {
     this->load_texture("cowboy_triple_ass_smacker_2", "assets/cowboy/triple_ass_smacker_2.png", cowboy_render_scale);
     this->load_texture("cowboy_triple_ass_smacker_3", "assets/cowboy/triple_ass_smacker_3.png", cowboy_render_scale);
     this->load_texture("cowboy_vertical_air_slash", "assets/cowboy/vertical_air_slash.png", cowboy_render_scale);
-    this->load_texture("cowboy_dash", "assets/cowboy/dash.png", cowboy_render_scale);
 
     this->load_texture("tiles_debug", "assets/tiles-debug.png", Vector2{ 1.0F, 1.0F });
 }

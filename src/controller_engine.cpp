@@ -33,8 +33,10 @@ tl::expected<void, error::ControllerEngineError> ControllerEngine::ControllerEng
         ControllerKeymap curr_keymap{
             .left = KEYS_table[keymap_table["left"]],
             .right = KEYS_table[keymap_table["right"]],
+            .down = KEYS_table[keymap_table["down"]],
             .jump = KEYS_table[keymap_table["jump"]],
-            .attack = KEYS_table[keymap_table["attack"]],
+            .light_attack = KEYS_table[keymap_table["light_attack"]],
+            .heavy_attack = KEYS_table[keymap_table["heavy_attack"]],
         };
 
         int keymap_id = 0;

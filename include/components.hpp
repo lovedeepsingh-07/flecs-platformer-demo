@@ -132,6 +132,16 @@ namespace components {
     struct Dash_Entity {};
     struct Hitbox_Entity {};
 
+    // this represents a relationship pair, e.g "Light" will be the relationship and "Down" will be the target, so attack would be light-down
+    namespace attack_types {
+        struct Light {};
+        struct Heavy {};
+        namespace direction {
+            struct Forward {};
+            struct Down {};
+        };
+    };
+
     namespace events {
         struct GameQuitEvent {};
         struct JumpEvent {};

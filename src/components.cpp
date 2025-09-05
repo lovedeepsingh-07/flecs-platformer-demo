@@ -58,6 +58,11 @@ void components::setup(flecs::world& registry) {
     registry.component<components::Dash_Entity>().add(flecs::Relationship);
     registry.component<components::Hitbox_Entity>().add(flecs::Relationship);
 
+    registry.component<components::attack_types::Light>().add(flecs::Relationship);
+    registry.component<components::attack_types::Heavy>().add(flecs::Relationship);
+    registry.component<components::attack_types::direction::Forward>().add(flecs::Target);
+    registry.component<components::attack_types::direction::Down>().add(flecs::Target);
+
     registry.component<components::events::GameQuitEvent>().add(flecs::Singleton);
     registry.component<components::events::JumpEvent>().add(flecs::Relationship).add(flecs::Exclusive);
     registry.component<components::events::JumpEvent_One>().add(flecs::Target);

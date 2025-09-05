@@ -7,13 +7,25 @@ void systems::controller::handle_attack(
     const auto& controller_engine = registry.get<components::Controller_Engine>();
     const auto& curr_keymap = controller_engine.engine.get_keymap(controller._id);
 
-    if (IsKeyPressed(curr_keymap.attack)
+    if ((IsKeyPressed(curr_keymap.light_attack) || IsKeyPressed(curr_keymap.heavy_attack))
         && !curr_entity.target<components::Attack_Entity>().is_valid()
         && !curr_entity.has<components::events::HitEvent>()) {
-        flecs::entity attack_entity =
-            registry.entity()
-                .set<components::events::AttackEvent>({ .hit_some_entity = false })
-                .child_of(curr_entity);
+        flecs::entity attack_entity = registry.entity().child_of(curr_entity);
+        if (IsKeyDown(curr_keymap.light_attack)) {
+            if (IsKeyDown(curr_keymap.down)) {
+                attack_entity.add<components::attack_types::Light, components::attack_types::direction::Down>();
+            } else {
+                attack_entity.add<components::attack_types::Light, components::attack_types::direction::Forward>();
+            }
+        }
+        if (IsKeyDown(curr_keymap.heavy_attack)) {
+            if (IsKeyDown(curr_keymap.down)) {
+                attack_entity.add<components::attack_types::Heavy, components::attack_types::direction::Down>();
+            } else {
+                attack_entity.add<components::attack_types::Heavy, components::attack_types::direction::Forward>();
+            }
+        }
+        attack_entity.set<components::events::AttackEvent>({ .hit_some_entity = false });
         curr_entity.add<components::Attack_Entity>(attack_entity);
 
         // when we press the attack button, if a jump has been buffered, then that buffered jump will be cancelled
