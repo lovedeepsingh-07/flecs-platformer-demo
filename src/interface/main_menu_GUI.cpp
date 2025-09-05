@@ -28,7 +28,7 @@ void Interface::main_menu_GUI(flecs::world& registry) {
                    : game_utils::RaylibColorToClayColor(WHITE) }) {
             bool hovering = Clay_Hovered();
             if (hovering && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                registry.add<components::ActiveScene, components::scenes::GameSetup>();
+                registry.add<components::ActiveScene, components::scenes::Game>();
             }
             CLAY_TEXT(
                 CLAY_STRING("Play"),

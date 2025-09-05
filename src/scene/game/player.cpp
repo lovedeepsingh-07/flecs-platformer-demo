@@ -61,8 +61,7 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
 
     // state setup
     auto& state_engine = registry.get_mut<components::State_Engine>();
-    auto state_registry_result =
-        state_engine.engine.get_state_registry("decidueye");
+    auto state_registry_result = state_engine.engine.get_state_registry("cowboy");
     if (!state_registry_result) {
         throw std::runtime_error(state_registry_result.error().message);
     }
@@ -72,7 +71,7 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
         throw std::runtime_error(state_result.error().message);
     }
     StateEngine::State starting_state = *state_result;
-    player_entity.set<components::State>({ "idle", "decidueye" });
+    player_entity.set<components::State>({ "idle", "cowboy" });
 
     TextureEngine::GameTexture player_texture =
         texture_engine.engine.get_texture(starting_state.animation_data.texture_id);

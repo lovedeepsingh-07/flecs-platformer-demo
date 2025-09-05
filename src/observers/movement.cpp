@@ -28,8 +28,10 @@ void observers::movement(flecs::world& registry) {
             emitter_pos.y = pos.y + base_collider.height / 2;
             particle_emitter.engine.emitting = true;
 
-            if (parent_entity.has<components::events::AttackEvent>()) {
-                parent_entity.remove<components::events::AttackEvent>();
+            flecs::entity attack_entity =
+                parent_entity.target<components::Attack_Entity>();
+            if (attack_entity.is_valid()) {
+                attack_entity.destruct();
             }
         });
 
@@ -47,6 +49,7 @@ void observers::movement(flecs::world& registry) {
 
             b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
             vel.x = constants::PLAYER_DASH_VEL * (float)(texture.flipped ? -1 : 1);
+            vel.y = 0;
             b2Body_SetLinearVelocity(body.body_id, vel);
 
             flecs::entity dash_particle_emitter =

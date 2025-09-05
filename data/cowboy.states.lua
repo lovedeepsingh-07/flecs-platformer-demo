@@ -26,7 +26,7 @@ STATES = {
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "attack", "attack_air", "hurt" }, { jump = -1 }),
 		animation_data = {
 			loop = false,
-			texture_id = "cowboy_dash",
+			texture_id = "cowboy_air_dash",
 			frames = {
 				{ "active", { 0, 0, 128, 128 } },
 			},
@@ -61,12 +61,12 @@ STATES = {
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash" }),
 		animation_data = {
 			loop = false,
-			texture_id = "cowboy_attack",
+			texture_id = "cowboy_sword_slash_horizontal_up",
 			frames = {
-				{ "windup", { 0, 0, 256, 256 } },
-				{ "active", { 256, 0, 256, 256 } },
-				{ "recovery", { 512, 0, 256, 256 } },
-				{ "recovery", { 768, 0, 256, 256 } },
+				{ "windup", { 0, 0, 512, 256 } },
+				{ "active", { 512, 0, 512, 256 } },
+				{ "recovery", { 1024, 0, 512, 256 } },
+				{ "recovery", { 1536, 0, 512, 256 } },
 			},
 		},
 	},
@@ -76,7 +76,7 @@ STATES = {
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "hurt", "dash" }, { jump = -1 }),
 		animation_data = {
 			loop = false,
-			texture_id = "cowboy_attack_air",
+			texture_id = "cowboy_vertical_air_slash",
 			frames = {
 				{ "windup", { 0, 0, 128, 128 } },
 				{ "active", { 128, 0, 128, 128 } },
