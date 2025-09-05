@@ -48,6 +48,8 @@ void entity_debug(flecs::world& registry, const std::string& entity_id) {
     ImGui::Text("Attacking: %s", curr_entity.target<components::Attack_Entity>().is_valid() ? "true" : "false");
     ImGui::Text("Buffered Jump: %s", curr_entity.has<components::events::BufferedJumpEvent>() ? "true" : "false");
     ImGui::Text("Buffered Dash: %s", curr_entity.has<components::events::BufferedDashEvent>() ? "true" : "false");
+    ImGui::Text("Blocking: %s", curr_entity.target<components::Block_Entity>().is_valid() ? "true" : "false");
+    ImGui::Text("Parry Window: %s", curr_entity.has<components::events::ParryWindowEvent>() ? "true" : "false");
 }
 
 void Interface::game_debug_GUI(flecs::world& registry) {

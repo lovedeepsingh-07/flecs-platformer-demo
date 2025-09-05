@@ -128,6 +128,7 @@ namespace components {
 
     // the "target" of this relationship will be the jump_entity itself
     struct Attack_Entity {};
+    struct Block_Entity {};
     struct Jump_Entity {};
     struct Dash_Entity {};
     struct Hitbox_Entity {};
@@ -162,6 +163,11 @@ namespace components {
         };
         struct HitEvent {
             int direction;
+        };
+        struct HurtEvent {};
+        struct BlockEvent {};
+        struct ParryWindowEvent {
+            float parry_time;
         };
     }
 

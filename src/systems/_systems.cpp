@@ -6,6 +6,7 @@ void systems::setup(flecs::world& registry) {
     systems::movement(registry);
     systems::physics(registry);
     systems::state(registry);
+    systems::block(registry);
     systems::attack(registry);
     systems::freeze_frame(registry);
     systems::camera(registry);

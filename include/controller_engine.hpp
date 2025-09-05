@@ -11,6 +11,7 @@ namespace ControllerEngine {
         int jump;
         int light_attack;
         int heavy_attack;
+        int block;
     };
     class ControllerEngine {
       public:

@@ -25,6 +25,7 @@ namespace systems {
     void movement(flecs::world& registry);
     void physics(flecs::world& registry);
     void state(flecs::world& registry);
+    void block(flecs::world& registry);
     void attack(flecs::world& registry);
     void freeze_frame(flecs::world& registry);
     void camera(flecs::world& registry);

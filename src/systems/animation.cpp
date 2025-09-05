@@ -35,8 +35,8 @@ void systems::animation(flecs::world& registry) {
                 if (attack_entity.is_valid()) {
                     attack_entity.destruct();
                 }
-                if (curr_entity.has<components::events::HitEvent>()) {
-                    curr_entity.remove<components::events::HitEvent>();
+                if (curr_entity.has<components::events::HurtEvent>()) {
+                    curr_entity.remove<components::events::HurtEvent>();
                 }
                 return;
             }

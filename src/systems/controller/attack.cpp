@@ -1,3 +1,4 @@
+#include "constants.hpp"
 #include "systems.hpp"
 
 void systems::controller::handle_attack(
@@ -9,7 +10,7 @@ void systems::controller::handle_attack(
 
     if ((IsKeyPressed(curr_keymap.light_attack) || IsKeyPressed(curr_keymap.heavy_attack))
         && !curr_entity.target<components::Attack_Entity>().is_valid()
-        && !curr_entity.has<components::events::HitEvent>()) {
+        && !curr_entity.has<components::events::HurtEvent>()) {
         flecs::entity attack_entity = registry.entity().child_of(curr_entity);
         if (IsKeyDown(curr_keymap.light_attack)) {
             if (IsKeyDown(curr_keymap.down)) {
@@ -32,5 +33,22 @@ void systems::controller::handle_attack(
         if (curr_entity.has<components::events::BufferedJumpEvent>()) {
             curr_entity.remove<components::events::BufferedJumpEvent>();
         }
+    }
+
+    bool is_blocking = curr_entity.target<components::Block_Entity>().is_valid();
+    if (IsKeyPressed(curr_keymap.block) && !is_blocking
+        && !curr_entity.has<components::events::ParryWindowEvent>()
+        && !curr_entity.has<components::events::HurtEvent>()) {
+        curr_entity.set<components::events::ParryWindowEvent>(
+            { .parry_time = 20 * constants::FRAMES_TO_SEC }
+        );
+        flecs::entity block_entity = registry.entity().child_of(curr_entity);
+        curr_entity.add<components::Block_Entity>(block_entity);
+    }
+    if (IsKeyReleased(curr_keymap.block) && is_blocking) {
+        if (curr_entity.has<components::events::ParryWindowEvent>()) {
+            curr_entity.remove<components::events::ParryWindowEvent>();
+        }
+        curr_entity.target<components::Block_Entity>().destruct();
     }
 }

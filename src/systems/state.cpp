@@ -27,81 +27,98 @@ void systems::state(flecs::world& registry) {
 
             std::string next_state_id = state.curr_state_id;
 
-            if (curr_entity.has<components::events::HitEvent>()) {
+            if (curr_entity.has<components::events::HurtEvent>()) {
                 if (curr_state.can_transition_to("hurt")) {
                     next_state_id = "hurt";
                 }
             } else {
-                flecs::entity attack_entity =
-                    curr_entity.target<components::Attack_Entity>();
-                if (attack_entity.is_valid()) {
+                flecs::entity block_entity =
+                    curr_entity.target<components::Block_Entity>();
+                if (block_entity.is_valid()) {
                     if (movement.on_ground) {
-                        if (attack_entity.has<components::attack_types::Light, components::attack_types::direction::Forward>(
-                            )) {
-                            if (curr_state.can_transition_to("light_forward")) {
-                                next_state_id = "light_forward";
-                            }
-                        }
-                        if (attack_entity.has<components::attack_types::Light, components::attack_types::direction::Down>(
-                            )) {
-                            if (curr_state.can_transition_to("light_down")) {
-                                next_state_id = "light_down";
-                            }
-                        }
-                        if (attack_entity.has<components::attack_types::Heavy, components::attack_types::direction::Forward>(
-                            )) {
-                            if (curr_state.can_transition_to("heavy_forward")) {
-                                next_state_id = "heavy_forward";
-                            }
-                        }
-                        if (attack_entity.has<components::attack_types::Heavy, components::attack_types::direction::Down>(
-                            )) {
-                            if (curr_state.can_transition_to("heavy_down")) {
-                                next_state_id = "heavy_down";
-                            }
+                        if (curr_state.can_transition_to("block")) {
+                            next_state_id = "block";
                         }
                     } else {
-                        if (attack_entity.has<components::attack_types::Light, components::attack_types::direction::Forward>(
-                            )) {
-                            if (curr_state.can_transition_to("light_forward_air")) {
-                                next_state_id = "light_forward_air";
-                            }
-                        }
-                        if (attack_entity.has<components::attack_types::Light, components::attack_types::direction::Down>(
-                            )) {
-                            if (curr_state.can_transition_to("light_down_air")) {
-                                next_state_id = "light_down_air";
-                            }
-                        }
-                        if (attack_entity.has<components::attack_types::Heavy>(flecs::Wildcard)) {
-                            if (curr_state.can_transition_to("heavy_forward_air")) {
-                                next_state_id = "heavy_forward_air";
-                            }
+                        if (curr_state.can_transition_to("block_air")) {
+                            next_state_id = "block_air";
                         }
                     }
                 } else {
-                    if (curr_entity.target<components::Dash_Entity>().is_valid()) {
+                    flecs::entity attack_entity =
+                        curr_entity.target<components::Attack_Entity>();
+                    if (attack_entity.is_valid()) {
                         if (movement.on_ground) {
-                            if (curr_state.can_transition_to("dash")) {
-                                next_state_id = "dash";
+                            if (attack_entity.has<components::attack_types::Light, components::attack_types::direction::Forward>(
+                                )) {
+                                if (curr_state.can_transition_to("light_forward")) {
+                                    next_state_id = "light_forward";
+                                }
+                            }
+                            if (attack_entity.has<components::attack_types::Light, components::attack_types::direction::Down>(
+                                )) {
+                                if (curr_state.can_transition_to("light_down")) {
+                                    next_state_id = "light_down";
+                                }
+                            }
+                            if (attack_entity.has<components::attack_types::Heavy, components::attack_types::direction::Forward>(
+                                )) {
+                                if (curr_state.can_transition_to("heavy_forward")) {
+                                    next_state_id = "heavy_forward";
+                                }
+                            }
+                            if (attack_entity.has<components::attack_types::Heavy, components::attack_types::direction::Down>(
+                                )) {
+                                if (curr_state.can_transition_to("heavy_down")) {
+                                    next_state_id = "heavy_down";
+                                }
                             }
                         } else {
-                            if (curr_state.can_transition_to("dash_air")) {
-                                next_state_id = "dash_air";
+                            if (attack_entity.has<components::attack_types::Light, components::attack_types::direction::Forward>(
+                                )) {
+                                if (curr_state.can_transition_to("light_"
+                                                                 "forward_air")) {
+                                    next_state_id = "light_forward_air";
+                                }
+                            }
+                            if (attack_entity.has<components::attack_types::Light, components::attack_types::direction::Down>(
+                                )) {
+                                if (curr_state.can_transition_to("light_down_"
+                                                                 "air")) {
+                                    next_state_id = "light_down_air";
+                                }
+                            }
+                            if (attack_entity.has<components::attack_types::Heavy>(flecs::Wildcard)) {
+                                if (curr_state.can_transition_to("heavy_"
+                                                                 "forward_air")) {
+                                    next_state_id = "heavy_forward_air";
+                                }
                             }
                         }
                     } else {
-                        if (!movement.on_ground) {
-                            if (curr_state.can_transition_to("jump")) {
-                                next_state_id = "jump";
-                            }
-                        } else if (movement.left_idle_right == 0) {
-                            if (curr_state.can_transition_to("idle")) {
-                                next_state_id = "idle";
+                        if (curr_entity.target<components::Dash_Entity>().is_valid()) {
+                            if (movement.on_ground) {
+                                if (curr_state.can_transition_to("dash")) {
+                                    next_state_id = "dash";
+                                }
+                            } else {
+                                if (curr_state.can_transition_to("dash_air")) {
+                                    next_state_id = "dash_air";
+                                }
                             }
                         } else {
-                            if (curr_state.can_transition_to("run")) {
-                                next_state_id = "run";
+                            if (!movement.on_ground) {
+                                if (curr_state.can_transition_to("jump")) {
+                                    next_state_id = "jump";
+                                }
+                            } else if (movement.left_idle_right == 0) {
+                                if (curr_state.can_transition_to("idle")) {
+                                    next_state_id = "idle";
+                                }
+                            } else {
+                                if (curr_state.can_transition_to("run")) {
+                                    next_state_id = "run";
+                                }
                             }
                         }
                     }

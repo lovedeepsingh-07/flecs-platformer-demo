@@ -1,4 +1,3 @@
-#include "constants.hpp"
 #include "systems.hpp"
 #include "utils.hpp"
 
@@ -92,16 +91,12 @@ void systems::attack(flecs::world& registry) {
                 );
 
                 if (cast_context.hit && !attack_event.hit_some_entity
-                    && !cast_context.hit_entity.has<components::events::HitEvent>()) {
+                    && !cast_context.hit_entity.has<components::events::HitEvent>()
+                    && !cast_context.hit_entity.has<components::events::HurtEvent>()) {
                     cast_context.hit_entity.set<components::events::HitEvent>(
                         { .direction = (texture.flipped ? -1 : 1) }
                     );
                     attack_event.hit_some_entity = true;
-                    if (!registry.has<components::global_options::Freezed>()) {
-                        registry.set<components::global_options::Freezed>(
-                            { 10.0F * constants::FRAMES_TO_SEC }
-                        );
-                    }
                 }
             }
         })

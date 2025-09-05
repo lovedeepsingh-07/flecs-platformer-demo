@@ -8,8 +8,10 @@ void systems::controller::handle_dash(
     const auto& controller_engine = registry.get<components::Controller_Engine>();
     const auto& curr_keymap = controller_engine.engine.get_keymap(controller._id);
 
+    bool is_blocking = curr_entity.target<components::Block_Entity>().is_valid();
+
     if ((IsKeyPressed(curr_keymap.left) || IsKeyPressed(curr_keymap.right))
-        && !curr_entity.target<components::Dash_Entity>().is_valid()) {
+        && !curr_entity.target<components::Dash_Entity>().is_valid() && !is_blocking) {
         if (curr_entity.has<components::events::BufferedDashEvent>()) {
             if (curr_key_pressed
                 == curr_entity.get<components::events::BufferedDashEvent>().buffer_key) {

@@ -6,6 +6,7 @@ KEYMAPS = {
 		jump = "KEY_W",
 		light_attack = "KEY_E",
 		heavy_attack = "KEY_Q",
+		block = "KEY_F",
 	},
 	enemy = {
 		left = "KEY_H",
@@ -14,5 +15,6 @@ KEYMAPS = {
 		jump = "KEY_K",
 		light_attack = "KEY_O",
 		heavy_attack = "KEY_I",
+		block = "KEY_U",
 	},
 }

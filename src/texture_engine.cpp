@@ -13,6 +13,7 @@ void TextureEngine::TextureEngine::setup() {
     this->load_texture("cowboy_knockdown", "assets/cowboy/knockdown.png", cowboy_render_scale);
     this->load_texture("cowboy_run", "assets/cowboy/run.png", cowboy_render_scale);
     this->load_texture("cowboy_shield_high", "assets/cowboy/shield_high.png", cowboy_render_scale);
+    this->load_texture("cowboy_shield_low", "assets/cowboy/shield_low.png", cowboy_render_scale);
     this->load_texture("cowboy_sword_slash_horizontal", "assets/cowboy/sword_slash_horizontal.png", cowboy_render_scale);
     this->load_texture("cowboy_sword_slash_horizontal_big", "assets/cowboy/sword_slash_horizontal_big.png", cowboy_render_scale);
     this->load_texture("cowboy_sword_slash_horizontal_up", "assets/cowboy/sword_slash_horizontal_up.png", cowboy_render_scale);

@@ -10,7 +10,7 @@ void systems::controller::handle_jump(
 
     if (IsKeyPressed(curr_keymap.jump)
         && !curr_entity.has<components::events::BufferedJumpEvent>()
-        && !curr_entity.has<components::events::HitEvent>()) {
+        && !curr_entity.has<components::events::HurtEvent>()) {
         if (movement.on_ground) {
             // if we are on the ground then we just add <JumpEvent,JumpEvent_One>
             flecs::entity jump_entity =

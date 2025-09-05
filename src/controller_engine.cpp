@@ -37,6 +37,7 @@ tl::expected<void, error::ControllerEngineError> ControllerEngine::ControllerEng
             .jump = KEYS_table[keymap_table["jump"]],
             .light_attack = KEYS_table[keymap_table["light_attack"]],
             .heavy_attack = KEYS_table[keymap_table["heavy_attack"]],
+            .block = KEYS_table[keymap_table["block"]],
         };
 
         int keymap_id = 0;

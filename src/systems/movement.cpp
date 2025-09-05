@@ -58,8 +58,11 @@ void systems::movement(flecs::world& registry) {
                  const components::PhysicalBody& body) {
             b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
 
-            if (curr_entity.target<components::Attack_Entity>().is_valid()
-                && movement.on_ground) {
+            bool is_attacking =
+                curr_entity.target<components::Attack_Entity>().is_valid();
+            bool is_blocking = curr_entity.target<components::Block_Entity>().is_valid();
+
+            if ((is_attacking && movement.on_ground) || is_blocking) {
                 vel.x = 0.0F;
             } else {
                 float target_speed = 0.0F;

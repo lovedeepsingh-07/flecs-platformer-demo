@@ -1,6 +1,7 @@
 #include "components.hpp"
 #include "constants.hpp"
 #include "observers.hpp"
+#include <iostream>
 
 void observers::attack(flecs::world& registry) {
     registry.observer<components::events::AttackEvent>("AttackEvent on_remove")
@@ -14,31 +15,52 @@ void observers::attack(flecs::world& registry) {
             }
         });
     registry
-        .observer<components::events::HitEvent, components::Health, components::PhysicalBody, components::TextureComponent>(
-            "HitEvent "
-            "on_set"
-        )
+        .observer<components::events::HitEvent, components::PhysicalBody, components::TextureComponent>("HitEvent "
+                                                                                                        "on_set")
         .event(flecs::OnSet)
         .each([](flecs::entity curr_entity, const components::events::HitEvent& hit_event,
-                 components::Health& health, const components::PhysicalBody& body,
-                 components::TextureComponent& texture) {
+                 const components::PhysicalBody& body, components::TextureComponent& texture) {
+            flecs::entity block_entity = curr_entity.target<components::Block_Entity>();
+            if (block_entity.is_valid()) {
+                if (curr_entity.has<components::events::ParryWindowEvent>()) {
+                    std::cout << "parried" << '\n';
+                } else {
+                    std::cout << "blocked" << '\n';
+                }
+            } else {
+                // apply knockback
+                b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
+                vel.x = 2 * constants::MAX_PLAYER_RUN_VEL * (float)hit_event.direction;
+                b2Body_SetLinearVelocity(body.body_id, vel);
+                texture.flipped = (hit_event.direction != -1);
+
+                // add HurtEvent
+                curr_entity.add<components::events::HurtEvent>();
+            }
+            curr_entity.remove<components::events::HitEvent>();
+        });
+    registry
+        .observer<components::events::HurtEvent, components::Health>("HurtEvent"
+                                                                     " on_set")
+        .event(flecs::OnSet)
+        .each([](flecs::entity curr_entity, const components::events::HurtEvent& hurt_event,
+                 components::Health& health) {
             // apply damage
             if (!(health.health <= 0)) {
                 health.health -= 5;
             } else {
                 health.health = health.max_health;
             }
-            // apply knockback
-            b2Vec2 vel = b2Body_GetLinearVelocity(body.body_id);
-            vel.x = 2 * constants::MAX_PLAYER_RUN_VEL * (float)hit_event.direction;
-            b2Body_SetLinearVelocity(body.body_id, vel);
-
-            texture.flipped = (hit_event.direction != -1);
 
             flecs::entity attack_entity =
                 curr_entity.target<components::Attack_Entity>();
             if (attack_entity.is_valid()) {
                 attack_entity.destruct();
+            }
+
+            flecs::entity block_entity = curr_entity.target<components::Block_Entity>();
+            if (block_entity.is_valid()) {
+                block_entity.destruct();
             }
         });
 };
