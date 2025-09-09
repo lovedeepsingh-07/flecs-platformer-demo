@@ -21,6 +21,7 @@ void components::setup(flecs::world& registry) {
     registry.component<components::Texture_Engine>().add(flecs::Singleton);
     registry.component<components::State_Engine>().add(flecs::Singleton);
     registry.component<components::Controller_Engine>().add(flecs::Singleton);
+    registry.component<components::Particle_Engine>().add(flecs::Singleton);
 
     registry.component<components::Particle_Emitter>();
     registry.component<components::emitter_types::Jump>()

@@ -46,6 +46,14 @@ int main() {
     }
     registry.set<components::Controller_Engine>({ controller_engine });
 
+    // setup particle_engine
+    auto particle_engine = ParticleEngine::ParticleEngine{};
+    auto particle_engine_setup_result = particle_engine.setup();
+    if (!particle_engine_setup_result) {
+        std::cerr << particle_engine_setup_result.error().message << '\n';
+        return 0;
+    }
+    registry.set<components::Particle_Engine>({ particle_engine });
 
     // clay UI setup
     uint64_t clay_required_memory = Clay_MinMemorySize();

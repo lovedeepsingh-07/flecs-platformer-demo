@@ -23,4 +23,10 @@ namespace error {
         ControllerEngineError(Type t, std::string msg)
         : type(t), message(std::move(msg)) {}
     };
+    struct ParticleEngineError {
+        enum class Type : std::uint8_t { LoadError } type;
+        std::string message;
+        ParticleEngineError(Type t, std::string msg)
+        : type(t), message(std::move(msg)) {}
+    };
 }

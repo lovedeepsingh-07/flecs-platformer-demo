@@ -87,10 +87,10 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
     });
 
     // setup partile emitters
-    auto jumping_particle_engine = ParticleEngine::ParticleEngine{};
+    auto jumping_particle_engine = ParticleEngine::ParticleEmitter{};
     jumping_particle_engine.pool_size = 360; // arbitrary number
     jumping_particle_engine.emitting = false;
-    jumping_particle_engine.config = ParticleEngine::EngineConfig{
+    jumping_particle_engine.config = ParticleEngine::EmitterConfig{
         .local_coords = false,
         .one_shot = true,
         .amount = 4,
@@ -115,10 +115,10 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
             .child_of(enemy_entity);
     enemy_entity.add<components::emitter_types::Jump>(jump_emitter_entity);
 
-    auto dash_particle_engine = ParticleEngine::ParticleEngine{};
+    auto dash_particle_engine = ParticleEngine::ParticleEmitter{};
     dash_particle_engine.pool_size = 360; // somewhat arbitrary number
     dash_particle_engine.emitting = false;
-    dash_particle_engine.config = ParticleEngine::EngineConfig{
+    dash_particle_engine.config = ParticleEngine::EmitterConfig{
         .local_coords = false,
         .one_shot = true,
         .amount = 4,

@@ -88,28 +88,12 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
         .max_health = constants::MAX_PLAYER_HEALTH,
     });
 
-
-    // setup partile emitters
-    auto jump_particle_engine = ParticleEngine::ParticleEngine{};
+    // setup particle emitters
+    const auto& particle_engine = registry.get<components::Particle_Engine>();
+    auto jump_particle_engine = ParticleEngine::ParticleEmitter{};
     jump_particle_engine.pool_size = 360; // somewhat arbitrary number
     jump_particle_engine.emitting = false;
-    jump_particle_engine.config = ParticleEngine::EngineConfig{
-        .local_coords = false,
-        .one_shot = true,
-        .amount = 4,
-        .speed_scale = 2.5F,
-        .lifetime = 0.25F,
-        .velocity_scale = 100.0F,
-        .explosiveness = 0.0F,
-        .direction_bias = -std::numbers::pi / 2,
-        .spread = 10.0F * DEG2RAD,
-        .separation = 155 * DEG2RAD,
-        .square_particles = true,
-        .start_size = 4.6F,
-        .end_size = 3.5F,
-        .start_color = Vector4{ 1.0F, 1.0F, 1.0F, 1.0F },
-        .end_color = Vector4{ 1.0F, 1.0F, 1.0F, 0.0F },
-    };
+    jump_particle_engine.config = particle_engine.engine.get_config("jump");
     jump_particle_engine.setup();
     flecs::entity jump_emitter_entity =
         registry.entity()
@@ -118,26 +102,10 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
             .child_of(player_entity);
     player_entity.add<components::emitter_types::Jump>(jump_emitter_entity);
 
-    auto dash_particle_engine = ParticleEngine::ParticleEngine{};
+    auto dash_particle_engine = ParticleEngine::ParticleEmitter{};
     dash_particle_engine.pool_size = 360; // somewhat arbitrary number
     dash_particle_engine.emitting = false;
-    dash_particle_engine.config = ParticleEngine::EngineConfig{
-        .local_coords = false,
-        .one_shot = true,
-        .amount = 4,
-        .speed_scale = 2.5F,
-        .lifetime = 0.25F,
-        .velocity_scale = 100.0F,
-        .explosiveness = 0.0F,
-        .direction_bias = std::numbers::pi,
-        .spread = 45.0F * DEG2RAD,
-        .separation = 0,
-        .square_particles = true,
-        .start_size = 4.6F,
-        .end_size = 3.5F,
-        .start_color = Vector4{ 1.0F, 1.0F, 1.0F, 1.0F },
-        .end_color = Vector4{ 1.0F, 1.0F, 1.0F, 0.0F },
-    };
+    dash_particle_engine.config = particle_engine.engine.get_config("dash");
     dash_particle_engine.setup();
     flecs::entity dash_emitter_entity =
         registry.entity()

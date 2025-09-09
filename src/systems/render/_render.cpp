@@ -29,7 +29,7 @@ void systems::render::setup(flecs::world& registry) {
     registry.system<components::Particle_Emitter>("Render Particles")
         .kind(flecs::PreStore)
         .each([](flecs::entity curr_entity, components::Particle_Emitter& particle_emitter
-              ) { particle_emitter.engine.render(); })
+              ) { particle_emitter.emitter.render(); })
         .add<components::system_types::Render>();
 
     systems::render::rectangle(registry);

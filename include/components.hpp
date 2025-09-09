@@ -48,9 +48,12 @@ namespace components {
     struct Controller_Engine {
         ControllerEngine::ControllerEngine engine;
     };
+    struct Particle_Engine {
+        ParticleEngine::ParticleEngine engine;
+    };
 
     struct Particle_Emitter {
-        ParticleEngine::ParticleEngine engine;
+        ParticleEngine::ParticleEmitter emitter;
     };
     // these are relationships and the "target" of these relationships will be the emitter
     namespace emitter_types {

@@ -1,6 +1,66 @@
 #include "particle_engine.hpp"
 
-void ParticleEngine::ParticleEngine::setup() {
+tl::expected<void, error::ParticleEngineError> ParticleEngine::ParticleEngine::setup() {
+    sol::state lua_state;
+    lua_state.open_libraries(sol::lib::base);
+    lua_state.script_file("data/emitters.lua");
+
+    sol::object EMITTERS_object = lua_state["EMITTERS"];
+    if (!EMITTERS_object.valid() || EMITTERS_object.get_type() != sol::type::table) {
+        return tl::unexpected(error::ParticleEngineError{
+            error::ParticleEngineError::Type::LoadError, "unable to read 'EMITTERS' table" });
+    }
+    sol::table EMITTERS_table = EMITTERS_object.as<sol::table>();
+
+    for (auto&& emitter_kv : EMITTERS_table) {
+        sol::object emitter_config_object = emitter_kv.second;
+        if (!emitter_config_object.valid()
+            || emitter_config_object.get_type() != sol::type::table) {
+            return tl::unexpected(error::ParticleEngineError{
+                error::ParticleEngineError::Type::LoadError,
+                "unable to read emitter_config table" });
+        }
+        sol::table emitter_config_table = emitter_config_object.as<sol::table>();
+
+        std::string emitter_config_id = emitter_kv.first.as<std::string>();
+        EmitterConfig curr_config{
+            .local_coords = emitter_config_table["local_coords"],
+            .one_shot = emitter_config_table["one_shot"],
+            .amount = emitter_config_table["amount"],
+            .speed_scale = emitter_config_table["speed_scale"],
+            .lifetime = emitter_config_table["lifetime"],
+            .velocity_scale = emitter_config_table["velocity_scale"],
+            .explosiveness = emitter_config_table["explosiveness"],
+            .direction_bias = emitter_config_table["direction_bias"],
+            .spread = emitter_config_table["spread"],
+            .separation = emitter_config_table["separation"],
+            .square_particles = emitter_config_table["square_particles"],
+            .start_size = emitter_config_table["start_size"],
+            .end_size = emitter_config_table["end_size"],
+            .start_color = {
+				emitter_config_table["start_color"][1],
+				emitter_config_table["start_color"][2],
+				emitter_config_table["start_color"][3],
+				emitter_config_table["start_color"][4],
+			},
+			.end_color = {
+				emitter_config_table["end_color"][1],
+				emitter_config_table["end_color"][2],
+				emitter_config_table["end_color"][3],
+				emitter_config_table["end_color"][4],
+			},
+        };
+        this->m_emitter_configs.emplace(emitter_config_id, curr_config);
+    }
+
+    return {};
+}
+const ParticleEngine::EmitterConfig&
+ParticleEngine::ParticleEngine::get_config(const std::string& config_id) const {
+    return this->m_emitter_configs.at(config_id);
+}
+
+void ParticleEngine::ParticleEmitter::setup() {
     // setup random
     this->rand_gen = std::mt19937(std::random_device{}());
 
@@ -22,12 +82,12 @@ void ParticleEngine::ParticleEngine::setup() {
     });
 }
 
-void ParticleEngine::ParticleEngine::reset_cycle() {
+void ParticleEngine::ParticleEmitter::reset_cycle() {
     cycle_time = 0.0F;
     next_slot = 0;
 }
 
-ParticleEngine::Particle* ParticleEngine::ParticleEngine::alloc_particle() {
+ParticleEngine::Particle* ParticleEngine::ParticleEmitter::alloc_particle() {
     for (auto& curr_particle : this->particle_pool) {
         if (!curr_particle.alive) {
             curr_particle.alive = true;
@@ -38,7 +98,7 @@ ParticleEngine::Particle* ParticleEngine::ParticleEngine::alloc_particle() {
     return nullptr;
 }
 
-void ParticleEngine::ParticleEngine::spawn_n(Vector2 spawn_pos, int count) {
+void ParticleEngine::ParticleEmitter::spawn_n(Vector2 spawn_pos, int count) {
     for (int i = 0; i < count; i++) {
         // clamp the number of particles spawned
         if (i > (int)this->particle_pool.size()) {
@@ -77,7 +137,7 @@ void ParticleEngine::ParticleEngine::spawn_n(Vector2 spawn_pos, int count) {
     }
 }
 
-void ParticleEngine::ParticleEngine::emit(Vector2 emit_pos, float delta_time) {
+void ParticleEngine::ParticleEmitter::emit(Vector2 emit_pos, float delta_time) {
     if (!emitting) {
         return;
     }
@@ -121,7 +181,7 @@ void ParticleEngine::ParticleEngine::emit(Vector2 emit_pos, float delta_time) {
     }
 }
 
-void ParticleEngine::ParticleEngine::update(float delta_time) {
+void ParticleEngine::ParticleEmitter::update(float delta_time) {
     for (auto& curr_particle : this->particle_pool) {
         if (!curr_particle.alive) {
             continue;
@@ -137,7 +197,7 @@ void ParticleEngine::ParticleEngine::update(float delta_time) {
     }
 };
 
-void ParticleEngine::ParticleEngine::render() {
+void ParticleEngine::ParticleEmitter::render() {
     for (auto& curr_particle : this->particle_pool) {
         if (!curr_particle.alive) {
             continue;
@@ -163,7 +223,7 @@ void ParticleEngine::ParticleEngine::render() {
     }
 }
 
-void ParticleEngine::ParticleEngine::kill_particles() {
+void ParticleEngine::ParticleEmitter::kill_particles() {
     for (auto& curr_particle : this->particle_pool) {
         if (curr_particle.alive) {
             curr_particle.alive = false;
