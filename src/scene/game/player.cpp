@@ -113,4 +113,28 @@ void scene::game::setup_player(flecs::world& registry, b2WorldId world_id, b2Vec
             .set<components::Position>({ pos.x, pos.y + (constants::PLAYER_COLLIDER_HEIGHT / 2) })
             .child_of(player_entity);
     player_entity.add<components::emitter_types::Dash>(dash_emitter_entity);
+
+    auto hurt_particle_engine = ParticleEngine::ParticleEmitter{};
+    hurt_particle_engine.pool_size = 360; // somewhat arbitrary number
+    hurt_particle_engine.emitting = false;
+    hurt_particle_engine.config = particle_engine.engine.get_config("hurt");
+    hurt_particle_engine.setup();
+    flecs::entity hurt_emitter_entity =
+        registry.entity()
+            .set<components::Particle_Emitter>({ hurt_particle_engine })
+            .set<components::Position>({ pos.x, pos.y })
+            .child_of(player_entity);
+    player_entity.add<components::emitter_types::Hurt>(hurt_emitter_entity);
+
+    auto parry_particle_engine = ParticleEngine::ParticleEmitter{};
+    parry_particle_engine.pool_size = 360; // somewhat arbitrary number
+    parry_particle_engine.emitting = false;
+    parry_particle_engine.config = particle_engine.engine.get_config("parry");
+    parry_particle_engine.setup();
+    flecs::entity parry_emitter_entity =
+        registry.entity()
+            .set<components::Particle_Emitter>({ parry_particle_engine })
+            .set<components::Position>({ pos.x, pos.y })
+            .child_of(player_entity);
+    player_entity.add<components::emitter_types::Parry>(parry_emitter_entity);
 }

@@ -30,6 +30,12 @@ void components::setup(flecs::world& registry) {
     registry.component<components::emitter_types::Dash>()
         .add(flecs::Relationship)
         .add(flecs::Exclusive);
+    registry.component<components::emitter_types::Hurt>()
+        .add(flecs::Relationship)
+        .add(flecs::Exclusive);
+    registry.component<components::emitter_types::Parry>()
+        .add(flecs::Relationship)
+        .add(flecs::Exclusive);
 
     registry.component<components::GlobalCamera>();
     registry.component<components::Camera_Target>();

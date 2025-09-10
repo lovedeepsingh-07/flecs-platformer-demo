@@ -86,31 +86,16 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
         .max_health = constants::MAX_PLAYER_HEALTH,
     });
 
-    // setup partile emitters
-    auto jumping_particle_engine = ParticleEngine::ParticleEmitter{};
-    jumping_particle_engine.pool_size = 360; // arbitrary number
-    jumping_particle_engine.emitting = false;
-    jumping_particle_engine.config = ParticleEngine::EmitterConfig{
-        .local_coords = false,
-        .one_shot = true,
-        .amount = 4,
-        .speed_scale = 2.5F,
-        .lifetime = 0.25F,
-        .velocity_scale = 100.0F,
-        .explosiveness = 0.0F,
-        .direction_bias = -std::numbers::pi / 2,
-        .spread = 10.0F * DEG2RAD,
-        .separation = 155 * DEG2RAD,
-        .square_particles = true,
-        .start_size = 4.6F,
-        .end_size = 3.5F,
-        .start_color = Vector4{ 1.0F, 1.0F, 1.0F, 1.0F },
-        .end_color = Vector4{ 1.0F, 1.0F, 1.0F, 0.0F },
-    };
-    jumping_particle_engine.setup();
+    // setup particle emitters
+    const auto& particle_engine = registry.get<components::Particle_Engine>();
+    auto jump_particle_engine = ParticleEngine::ParticleEmitter{};
+    jump_particle_engine.pool_size = 360; // somewhat arbitrary number
+    jump_particle_engine.emitting = false;
+    jump_particle_engine.config = particle_engine.engine.get_config("jump");
+    jump_particle_engine.setup();
     flecs::entity jump_emitter_entity =
         registry.entity()
-            .set<components::Particle_Emitter>({ jumping_particle_engine })
+            .set<components::Particle_Emitter>({ jump_particle_engine })
             .set<components::Position>({ pos.x, pos.y + (constants::PLAYER_COLLIDER_HEIGHT / 2) })
             .child_of(enemy_entity);
     enemy_entity.add<components::emitter_types::Jump>(jump_emitter_entity);
@@ -118,23 +103,7 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
     auto dash_particle_engine = ParticleEngine::ParticleEmitter{};
     dash_particle_engine.pool_size = 360; // somewhat arbitrary number
     dash_particle_engine.emitting = false;
-    dash_particle_engine.config = ParticleEngine::EmitterConfig{
-        .local_coords = false,
-        .one_shot = true,
-        .amount = 4,
-        .speed_scale = 2.5F,
-        .lifetime = 0.25F,
-        .velocity_scale = 100.0F,
-        .explosiveness = 0.0F,
-        .direction_bias = std::numbers::pi,
-        .spread = 45.0F * DEG2RAD,
-        .separation = 0,
-        .square_particles = true,
-        .start_size = 4.6F,
-        .end_size = 3.5F,
-        .start_color = Vector4{ 1.0F, 1.0F, 1.0F, 1.0F },
-        .end_color = Vector4{ 1.0F, 1.0F, 1.0F, 0.0F },
-    };
+    dash_particle_engine.config = particle_engine.engine.get_config("dash");
     dash_particle_engine.setup();
     flecs::entity dash_emitter_entity =
         registry.entity()
@@ -142,4 +111,28 @@ void scene::game::setup_enemy(flecs::world& registry, b2WorldId world_id, b2Vec2
             .set<components::Position>({ pos.x, pos.y + (constants::PLAYER_COLLIDER_HEIGHT / 2) })
             .child_of(enemy_entity);
     enemy_entity.add<components::emitter_types::Dash>(dash_emitter_entity);
+
+    auto hurt_particle_engine = ParticleEngine::ParticleEmitter{};
+    hurt_particle_engine.pool_size = 360; // somewhat arbitrary number
+    hurt_particle_engine.emitting = false;
+    hurt_particle_engine.config = particle_engine.engine.get_config("hurt");
+    hurt_particle_engine.setup();
+    flecs::entity hurt_emitter_entity =
+        registry.entity()
+            .set<components::Particle_Emitter>({ hurt_particle_engine })
+            .set<components::Position>({ pos.x, pos.y })
+            .child_of(enemy_entity);
+    enemy_entity.add<components::emitter_types::Hurt>(hurt_emitter_entity);
+
+    auto parry_particle_engine = ParticleEngine::ParticleEmitter{};
+    parry_particle_engine.pool_size = 360; // somewhat arbitrary number
+    parry_particle_engine.emitting = false;
+    parry_particle_engine.config = particle_engine.engine.get_config("parry");
+    parry_particle_engine.setup();
+    flecs::entity parry_emitter_entity =
+        registry.entity()
+            .set<components::Particle_Emitter>({ parry_particle_engine })
+            .set<components::Position>({ pos.x, pos.y })
+            .child_of(enemy_entity);
+    enemy_entity.add<components::emitter_types::Parry>(parry_emitter_entity);
 }

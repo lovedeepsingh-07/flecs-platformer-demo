@@ -15,15 +15,38 @@ void observers::attack(flecs::world& registry) {
             }
         });
     registry
-        .observer<components::events::HitEvent, components::PhysicalBody, components::TextureComponent>("HitEvent "
-                                                                                                        "on_set")
+        .observer<components::events::HitEvent, components::PhysicalBody, components::TextureComponent, components::Position>(
+            "HitEvent "
+            "on_set"
+        )
         .event(flecs::OnSet)
         .each([](flecs::entity curr_entity, const components::events::HitEvent& hit_event,
-                 const components::PhysicalBody& body, components::TextureComponent& texture) {
+                 const components::PhysicalBody& body,
+                 components::TextureComponent& texture, const components::Position& pos) {
+            flecs::world registry = curr_entity.world();
             flecs::entity block_entity = curr_entity.target<components::Block_Entity>();
+
             if (block_entity.is_valid()) {
                 if (curr_entity.has<components::events::ParryWindowEvent>()) {
-                    std::cout << "parried" << '\n';
+                    // emit parry particles
+                    flecs::entity parry_emitter_entity =
+                        curr_entity.target<components::emitter_types::Parry>();
+                    if (!parry_emitter_entity.is_valid()) {
+                        return;
+                    }
+                    auto& parry_emitter =
+                        parry_emitter_entity.get_mut<components::Particle_Emitter>();
+                    auto& emitter_pos =
+                        parry_emitter_entity.get_mut<components::Position>();
+                    emitter_pos = pos;
+                    parry_emitter.emitter.emitting = true;
+
+                    // freeze for 15 frames
+                    if (!registry.has<components::global_options::Freezed>()) {
+                        registry.set<components::global_options::Freezed>(
+                            { 15.0F * constants::FRAMES_TO_SEC }
+                        );
+                    }
                 } else {
                     std::cout << "blocked" << '\n';
                 }
@@ -36,6 +59,18 @@ void observers::attack(flecs::world& registry) {
 
                 // add HurtEvent
                 curr_entity.add<components::events::HurtEvent>();
+
+                // emit hurt particles
+                flecs::entity hurt_emitter_entity =
+                    curr_entity.target<components::emitter_types::Hurt>();
+                if (!hurt_emitter_entity.is_valid()) {
+                    return;
+                }
+                auto& hurt_emitter =
+                    hurt_emitter_entity.get_mut<components::Particle_Emitter>();
+                auto& emitter_pos = hurt_emitter_entity.get_mut<components::Position>();
+                emitter_pos = pos;
+                hurt_emitter.emitter.emitting = true;
             }
             curr_entity.remove<components::events::HitEvent>();
         });

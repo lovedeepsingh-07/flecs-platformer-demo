@@ -50,6 +50,9 @@ tl::expected<void, error::ParticleEngineError> ParticleEngine::ParticleEngine::s
 				emitter_config_table["end_color"][4],
 			},
         };
+        curr_config.direction_bias = curr_config.direction_bias * DEG2RAD;
+        curr_config.spread = curr_config.spread * DEG2RAD;
+        curr_config.separation = curr_config.separation * DEG2RAD;
         this->m_emitter_configs.emplace(emitter_config_id, curr_config);
     }
 

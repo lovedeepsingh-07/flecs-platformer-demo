@@ -59,6 +59,8 @@ namespace components {
     namespace emitter_types {
         struct Jump {};
         struct Dash {};
+        struct Hurt {};
+        struct Parry {};
     }
 
     struct GlobalCamera {
