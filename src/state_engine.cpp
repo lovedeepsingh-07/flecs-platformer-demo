@@ -51,11 +51,17 @@ tl::expected<void, error::StateEngineError> StateEngine::StateEngine::load_state
         }
         sol::table curr_state_table = curr_state_object.as<sol::table>();
 
+        // damage
+        sol::object damage_object = curr_state_table["damage"];
+        if (damage_object.valid() && damage_object.get_type() == sol::type::number) {
+            curr_state.offensive = true;
+            curr_state.damage = damage_object.as<int>();
+        }
+
         // hitbox
         sol::object hitbox_object = curr_state_table["hitbox"];
         if (hitbox_object.valid() && hitbox_object.get_type() == sol::type::table) {
             sol::table hitbox_table = hitbox_object.as<sol::table>();
-            curr_state.offensive = true;
             curr_state.hitbox = Rectangle{
                 hitbox_table[1],
                 hitbox_table[2],

@@ -31,6 +31,7 @@ namespace StateEngine {
         std::string id;
         State_animation_data animation_data;
         bool offensive;
+        int damage;
         Rectangle hitbox;
 
         tl::expected<void, error::StateEngineError>

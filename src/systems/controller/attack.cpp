@@ -51,4 +51,7 @@ void systems::controller::handle_attack(
         }
         curr_entity.target<components::Block_Entity>().destruct();
     }
+    if (!IsKeyDown(curr_keymap.block) && is_blocking) {
+        curr_entity.target<components::Block_Entity>().destruct();
+    }
 }

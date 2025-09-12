@@ -58,7 +58,8 @@ void observers::attack(flecs::world& registry) {
                 texture.flipped = (hit_event.direction != -1);
 
                 // add HurtEvent
-                curr_entity.add<components::events::HurtEvent>();
+                curr_entity.set<components::events::HurtEvent>({ .damage =
+                                                                     hit_event.damage });
 
                 // emit hurt particles
                 flecs::entity hurt_emitter_entity =
@@ -82,7 +83,7 @@ void observers::attack(flecs::world& registry) {
                  components::Health& health) {
             // apply damage
             if (!(health.health <= 0)) {
-                health.health -= 5;
+                health.health -= (float)hurt_event.damage;
             } else {
                 health.health = health.max_health;
             }

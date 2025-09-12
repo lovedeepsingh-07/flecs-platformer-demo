@@ -168,8 +168,11 @@ namespace components {
         };
         struct HitEvent {
             int direction;
+            int damage;
         };
-        struct HurtEvent {};
+        struct HurtEvent {
+            int damage;
+        };
         struct BlockEvent {};
         struct ParryWindowEvent {
             float parry_time;

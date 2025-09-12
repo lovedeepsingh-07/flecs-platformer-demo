@@ -111,6 +111,7 @@ STATES = {
 		},
 	},
 	light_forward = {
+		damage = 10,
 		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash", "block" }),
 		animation_data = {
@@ -125,6 +126,7 @@ STATES = {
 		},
 	},
 	light_down = {
+		damage = 10,
 		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash", "block" }),
 		animation_data = {
@@ -139,6 +141,7 @@ STATES = {
 		},
 	},
 	heavy_forward = {
+		damage = 20,
 		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash", "block" }),
 		animation_data = {
@@ -152,6 +155,7 @@ STATES = {
 		},
 	},
 	heavy_down = {
+		damage = 20,
 		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash", "block" }),
 		animation_data = {
@@ -166,6 +170,7 @@ STATES = {
 		},
 	},
 	light_forward_air = {
+		damage = 10,
 		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "hurt", "dash_air", "block_air" }, { jump = -1 }),
 		animation_data = {
@@ -179,6 +184,7 @@ STATES = {
 		},
 	},
 	light_down_air = {
+		damage = 10,
 		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "hurt", "dash_air", "block_air" }, { jump = -1 }),
 		animation_data = {
@@ -192,6 +198,7 @@ STATES = {
 		},
 	},
 	heavy_forward_air = {
+		damage = 20,
 		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "hurt", "dash_air", "block_air" }, { jump = -1 }),
 		animation_data = {
