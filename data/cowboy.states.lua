@@ -118,7 +118,7 @@ STATES = {
 			texture_id = "cowboy_sword_slash_horizontal",
 			frames = {
 				{ "windup", { 0, 0, 512, 256 } },
-				{ "active", { 512, 0, 512, 256 }, { 50, 0, 48, 32 } },
+				{ "active", { 512, 0, 512, 256 }, { 35, 0, 54, 20 } },
 				{ "recover", { 1024, 0, 512, 256 } },
 				{ "recover", { 1536, 0, 512, 256 } },
 			},
@@ -132,7 +132,7 @@ STATES = {
 			texture_id = "cowboy_sword_slash_horizontal_up",
 			frames = {
 				{ "windup", { 0, 0, 512, 256 } },
-				{ "active", { 512, 0, 512, 256 }, { 50, 0, 48, 32 } },
+				{ "active", { 512, 0, 512, 256 }, { 58, -24, 48, 22 } },
 				{ "recover", { 1024, 0, 512, 256 } },
 				{ "recover", { 1536, 0, 512, 256 } },
 			},
@@ -146,7 +146,7 @@ STATES = {
 			texture_id = "cowboy_sword_slash_horizontal_big",
 			frames = {
 				{ "windup", { 0, 0, 512, 256 } },
-				{ "active", { 512, 0, 512, 256 }, { 50, 0, 48, 32 } },
+				{ "active", { 512, 0, 512, 256 }, { 88, 6, 104, 14 } },
 				{ "recover", { 1024, 0, 512, 256 } },
 			},
 		},
@@ -159,7 +159,7 @@ STATES = {
 			texture_id = "cowboy_sword_slash_vertical",
 			frames = {
 				{ "windup", { 0, 0, 256, 256 } },
-				{ "active", { 256, 0, 256, 256 }, { 50, 0, 48, 32 } },
+				{ "active", { 256, 0, 256, 256 }, { 44, -5, 42, 50 } },
 				{ "recover", { 512, 0, 256, 256 } },
 				{ "recover", { 768, 0, 256, 256 } },
 			},
@@ -173,7 +173,7 @@ STATES = {
 			texture_id = "cowboy_horizontal_air_slash",
 			frames = {
 				{ "windup", { 0, 0, 128, 128 } },
-				{ "active", { 128, 0, 128, 128 }, { 50, 0, 48, 32 } },
+				{ "active", { 128, 0, 128, 128 }, { 40, 7, 40, 28 } },
 				{ "recovery", { 256, 0, 128, 128 } },
 			},
 		},
@@ -186,7 +186,7 @@ STATES = {
 			texture_id = "cowboy_vertical_air_slash",
 			frames = {
 				{ "windup", { 0, 0, 128, 128 } },
-				{ "active", { 128, 0, 128, 128 }, { 50, 0, 48, 32 } },
+				{ "active", { 128, 0, 128, 128 }, { 24, 21, 45, 50 } },
 				{ "recovery", { 256, 0, 128, 128 } },
 			},
 		},
@@ -200,7 +200,7 @@ STATES = {
 			frames = {
 				{ "windup", { 0, 0, 128, 128 } },
 				{ "windup", { 128, 0, 128, 128 } },
-				{ "active", { 256, 0, 128, 128 }, { 50, 0, 48, 32 } },
+				{ "active", { 256, 0, 128, 128 }, { 8, -31, 62, 30 } },
 				{ "recovery", { 384, 0, 128, 128 } },
 			},
 		},
