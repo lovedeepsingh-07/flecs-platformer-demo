@@ -33,17 +33,15 @@ void systems::attack(flecs::world& registry) {
             }
             const StateEngine::State& curr_state = state_result->get();
 
-            // we only want to run this system's code for states which are "offensive"
-            if (!curr_state.offensive) {
+            // we only want to run this system's code for states which are "offensive" and the frame is "active"
+            if (!curr_state.offensive
+                || curr_state.animation_data.frames[animation.curr_frame_index]._type != "active") {
                 return;
             }
 
-            // calculate hitbox color and position based on current frame type and texture.flipped respectively
-            Rectangle hitbox_rect = curr_state.hitbox;
-            Color hitbox_color =
-                ((curr_state.animation_data.frames[animation.curr_frame_index]._type == "active")
-                     ? RED
-                     : WHITE);
+            // calculate position based on "texture.flipped"
+            Rectangle hitbox_rect =
+                curr_state.animation_data.frames[animation.curr_frame_index].hitbox;
             Vector2 hitbox_pos = Vector2Add(
                 Vector2{ pos.x, pos.y },
                 Vector2{ (float)(texture.flipped ? -1 : 1) * hitbox_rect.x,
@@ -53,21 +51,15 @@ void systems::attack(flecs::world& registry) {
             flecs::entity hitbox_entity =
                 attack_entity.target<components::Hitbox_Entity>();
             if (hitbox_entity.is_valid()) {
-                // if hitbox is not valid, that means we have to create the hitbox entity
-                auto& hitbox_rect_comp =
-                    hitbox_entity.get_mut<components::RectangleComponent>();
                 auto& hitbox_pos_comp = hitbox_entity.get_mut<components::Position>();
-
-                // update hitbox color and position
-                hitbox_rect_comp.color = hitbox_color;
                 hitbox_pos_comp.x = hitbox_pos.x;
                 hitbox_pos_comp.y = hitbox_pos.y;
             } else {
+                // if hitbox is not valid, that means we have to create the hitbox entity
                 hitbox_entity =
                     registry.entity()
-                        .set<components::RectangleComponent>(
-                            { hitbox_rect.width, hitbox_rect.height, hitbox_color }
-                        )
+                        .set<components::RectangleComponent>({ hitbox_rect.width,
+                                                               hitbox_rect.height, RED })
                         .add<components::rectangle_options::RectOpts_Debug>()
                         .add<components::rectangle_options::RectOpts_Lines>()
                         .set<components::Position>({ hitbox_pos.x, hitbox_pos.y })

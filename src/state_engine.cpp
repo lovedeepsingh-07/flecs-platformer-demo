@@ -1,4 +1,5 @@
 #include "state_engine.hpp"
+#include <iostream>
 
 tl::expected<void, error::StateEngineError> StateEngine::StateEngine::setup() {
     sol::state lua_state;
@@ -56,18 +57,6 @@ tl::expected<void, error::StateEngineError> StateEngine::StateEngine::load_state
         if (damage_object.valid() && damage_object.get_type() == sol::type::number) {
             curr_state.offensive = true;
             curr_state.damage = damage_object.as<int>();
-        }
-
-        // hitbox
-        sol::object hitbox_object = curr_state_table["hitbox"];
-        if (hitbox_object.valid() && hitbox_object.get_type() == sol::type::table) {
-            sol::table hitbox_table = hitbox_object.as<sol::table>();
-            curr_state.hitbox = Rectangle{
-                hitbox_table[1],
-                hitbox_table[2],
-                hitbox_table[3],
-                hitbox_table[4],
-            };
         } else {
             curr_state.offensive = false;
         }
@@ -113,14 +102,23 @@ tl::expected<void, error::StateEngineError> StateEngine::StateEngine::load_state
         sol::table frames_table = frames_object.as<sol::table>();
         for (auto&& curr_frame_kv : frames_table) {
             sol::table curr_frame_table = curr_frame_kv.second.as<sol::table>();
-            animation_data.frames.emplace_back(AnimationFrame{
-                ._type = curr_frame_table[1],
-                .source_rect = Rectangle{
-                    curr_frame_table[2][1],
-                    curr_frame_table[2][2],
-                    curr_frame_table[2][3],
-                    curr_frame_table[2][4],
-                } });
+            auto curr_animation_frame =
+                AnimationFrame{ ._type = curr_frame_table[1],
+                                .source_rect = Rectangle{
+                                    curr_frame_table[2][1],
+                                    curr_frame_table[2][2],
+                                    curr_frame_table[2][3],
+                                    curr_frame_table[2][4],
+                                } };
+            if (curr_state.offensive && curr_animation_frame._type == "active") {
+                curr_animation_frame.hitbox = Rectangle{
+                    curr_frame_table[3][1],
+                    curr_frame_table[3][2],
+                    curr_frame_table[3][3],
+                    curr_frame_table[3][4],
+                };
+            }
+            animation_data.frames.emplace_back(curr_animation_frame);
         }
         curr_state.animation_data = animation_data;
         const auto state_load_result = state_registry.load_state(curr_state.id, curr_state);

@@ -112,14 +112,13 @@ STATES = {
 	},
 	light_forward = {
 		damage = 10,
-		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash", "block" }),
 		animation_data = {
 			loop = false,
 			texture_id = "cowboy_sword_slash_horizontal",
 			frames = {
 				{ "windup", { 0, 0, 512, 256 } },
-				{ "active", { 512, 0, 512, 256 } },
+				{ "active", { 512, 0, 512, 256 }, { 50, 0, 48, 32 } },
 				{ "recover", { 1024, 0, 512, 256 } },
 				{ "recover", { 1536, 0, 512, 256 } },
 			},
@@ -127,14 +126,13 @@ STATES = {
 	},
 	light_down = {
 		damage = 10,
-		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash", "block" }),
 		animation_data = {
 			loop = false,
 			texture_id = "cowboy_sword_slash_horizontal_up",
 			frames = {
 				{ "windup", { 0, 0, 512, 256 } },
-				{ "active", { 512, 0, 512, 256 } },
+				{ "active", { 512, 0, 512, 256 }, { 50, 0, 48, 32 } },
 				{ "recover", { 1024, 0, 512, 256 } },
 				{ "recover", { 1536, 0, 512, 256 } },
 			},
@@ -142,28 +140,26 @@ STATES = {
 	},
 	heavy_forward = {
 		damage = 20,
-		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash", "block" }),
 		animation_data = {
 			loop = false,
 			texture_id = "cowboy_sword_slash_horizontal_big",
 			frames = {
 				{ "windup", { 0, 0, 512, 256 } },
-				{ "active", { 512, 0, 512, 256 } },
+				{ "active", { 512, 0, 512, 256 }, { 50, 0, 48, 32 } },
 				{ "recover", { 1024, 0, 512, 256 } },
 			},
 		},
 	},
 	heavy_down = {
 		damage = 20,
-		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "jump", "hurt", "dash", "block" }),
 		animation_data = {
 			loop = false,
 			texture_id = "cowboy_sword_slash_vertical",
 			frames = {
 				{ "windup", { 0, 0, 256, 256 } },
-				{ "active", { 256, 0, 256, 256 } },
+				{ "active", { 256, 0, 256, 256 }, { 50, 0, 48, 32 } },
 				{ "recover", { 512, 0, 256, 256 } },
 				{ "recover", { 768, 0, 256, 256 } },
 			},
@@ -171,35 +167,32 @@ STATES = {
 	},
 	light_forward_air = {
 		damage = 10,
-		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "hurt", "dash_air", "block_air" }, { jump = -1 }),
 		animation_data = {
 			loop = false,
 			texture_id = "cowboy_horizontal_air_slash",
 			frames = {
 				{ "windup", { 0, 0, 128, 128 } },
-				{ "active", { 128, 0, 128, 128 } },
+				{ "active", { 128, 0, 128, 128 }, { 50, 0, 48, 32 } },
 				{ "recovery", { 256, 0, 128, 128 } },
 			},
 		},
 	},
 	light_down_air = {
 		damage = 10,
-		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "hurt", "dash_air", "block_air" }, { jump = -1 }),
 		animation_data = {
 			loop = false,
 			texture_id = "cowboy_vertical_air_slash",
 			frames = {
 				{ "windup", { 0, 0, 128, 128 } },
-				{ "active", { 128, 0, 128, 128 } },
+				{ "active", { 128, 0, 128, 128 }, { 50, 0, 48, 32 } },
 				{ "recovery", { 256, 0, 128, 128 } },
 			},
 		},
 	},
 	heavy_forward_air = {
 		damage = 20,
-		hitbox = { 50, 0, 48, 32 },
 		can_transition_to = MAKE_TRANSITION_TABLE(0, { "idle", "run", "hurt", "dash_air", "block_air" }, { jump = -1 }),
 		animation_data = {
 			loop = false,
@@ -207,7 +200,7 @@ STATES = {
 			frames = {
 				{ "windup", { 0, 0, 128, 128 } },
 				{ "windup", { 128, 0, 128, 128 } },
-				{ "active", { 256, 0, 128, 128 } },
+				{ "active", { 256, 0, 128, 128 }, { 50, 0, 48, 32 } },
 				{ "recovery", { 384, 0, 128, 128 } },
 			},
 		},

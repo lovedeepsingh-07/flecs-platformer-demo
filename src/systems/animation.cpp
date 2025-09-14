@@ -27,6 +27,21 @@ void systems::animation(flecs::world& registry) {
             }
             const StateEngine::State& curr_state = state_result->get();
 
+            // if previously the hitbox_entity was created, and now the animation frame is no longer active, we have to destroy that hitbox entity as well
+            flecs::entity attack_entity =
+                curr_entity.target<components::Attack_Entity>();
+            if (attack_entity.is_valid()) {
+                flecs::entity hitbox_entity =
+                    attack_entity.target<components::Hitbox_Entity>();
+                if (hitbox_entity.is_valid()
+                    && curr_state.animation_data
+                            .frames[animation.curr_frame_index]
+                            ._type
+                        != "active") {
+                    hitbox_entity.destruct();
+                }
+            }
+
             // if animation is not playing and curr_entity has any animation dependant component then remove that component
             // and then just return this system as we do not have to play any animation anymore
             if (!animation.playing) {
