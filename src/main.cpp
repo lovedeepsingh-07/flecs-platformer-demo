@@ -8,10 +8,10 @@
 
 int main() {
     // raylib + clay setup
-    Clay_Raylib_Initialize(0, 0, "game", FLAG_WINDOW_UNDECORATED);
-    int screen_width = GetMonitorWidth(0);
-    int screen_height = GetMonitorHeight(0);
-    SetWindowSize(screen_width, screen_height);
+    int screen_width = 1280;
+    int screen_height = 720;
+    Clay_Raylib_Initialize(screen_width, screen_height, "game", FLAG_WINDOW_UNDECORATED | FLAG_WINDOW_RESIZABLE);
+    // SetWindowSize(screen_width, screen_height);
     SetTargetFPS(constants::TARGET_FPS);
     SetExitKey(0);
 
@@ -58,7 +58,7 @@ int main() {
     // clay UI setup
     uint64_t clay_required_memory = Clay_MinMemorySize();
     auto clay_memory = Clay_Arena{
-        .capacity = clay_required_memory,
+        .capacity = static_cast<size_t>(clay_required_memory),
         .memory = (char*)malloc(clay_required_memory),
     };
     Clay_Initialize(

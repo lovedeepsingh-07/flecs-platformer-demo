@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>game</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+  <script type="module">
+    import initModule from "./build/web/game.js";
+
+    const instance = await initModule({
+      canvas: document.getElementById("canvas"),
+      locateFile: (path) => {
+        if (path.endsWith(".wasm")) return "./build/web/game.wasm";
+        if (path.endsWith(".data")) return "./build/web/game.data";
+        return path;
+      },
+    });
+
+    console.log("Game loaded", instance);
+  </script>
+</html>

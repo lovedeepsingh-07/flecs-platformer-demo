@@ -65,7 +65,7 @@ void observers::movement(flecs::world& registry) {
                 + (texture.flipped ? base_collider.width / 2 : -base_collider.width / 2);
             emitter_pos.y = pos.y;
             dash_emitter.emitter.config.direction_bias =
-                (float)(texture.flipped ? std::numbers::pi : 0);
+                (float)(texture.flipped ? PI : 0);
             dash_emitter.emitter.emitting = true;
 
             if (parent_entity.has<components::events::AttackEvent>()) {

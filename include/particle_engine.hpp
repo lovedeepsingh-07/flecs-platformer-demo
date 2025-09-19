@@ -26,7 +26,7 @@ namespace ParticleEngine {
         float velocity_scale{ 90.0F };
         float explosiveness{ 0.0F };
         float direction_bias{ 0 };
-        float spread{ std::numbers::pi * 2.0F };
+        float spread{ PI * 2.0F };
         float separation{ 0.0F };
         bool square_particles{ true };
         float start_size{ 7.0F }, end_size{ 3.0F };
