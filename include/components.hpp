@@ -1,6 +1,7 @@
 #pragma once
 
 #include "controller_engine.hpp"
+#include "memory_arena.hpp"
 #include "particle_engine.hpp"
 #include "state_engine.hpp"
 #include "texture_engine.hpp"
@@ -34,9 +35,12 @@ namespace components {
     // these below are the "targets" of that relationship
     namespace scenes {
         struct MainMenu {};
-        struct Setting {};
         struct GameSetup {};
         struct Game {};
+    };
+
+    struct PerFrame_MemoryArena {
+        MemoryArena::MemoryArena arena;
     };
 
     struct Texture_Engine {

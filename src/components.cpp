@@ -14,9 +14,10 @@ void components::setup(flecs::world& registry) {
     registry.component<components::SceneRoot>();
     registry.component<components::ActiveScene>().add(flecs::Relationship).add(flecs::Exclusive);
     registry.component<components::scenes::MainMenu>().add(flecs::Target);
-    registry.component<components::scenes::Setting>().add(flecs::Target);
     registry.component<components::scenes::GameSetup>().add(flecs::Target);
     registry.component<components::scenes::Game>().add(flecs::Target);
+
+    registry.component<components::PerFrame_MemoryArena>().add(flecs::Singleton);
 
     registry.component<components::Texture_Engine>().add(flecs::Singleton);
     registry.component<components::State_Engine>().add(flecs::Singleton);

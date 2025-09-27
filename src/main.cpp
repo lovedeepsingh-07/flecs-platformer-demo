@@ -23,6 +23,9 @@ int main() {
     observers::setup(registry);
     systems::setup(registry);
 
+    // setup per frame memory arena
+    registry.set<components::PerFrame_MemoryArena>({ MemoryArena::MemoryArena{} });
+
     // setup texture_engine
     auto texture_engine = TextureEngine::TextureEngine{};
     texture_engine.setup();
@@ -71,7 +74,10 @@ int main() {
     );
 
     // setup fonts
-    std::array<Font, 1> font_list{ GetFontDefault() };
+    std::array<Font, 1> font_list{
+        LoadFontEx("assets/JetBrainsMonoNLNerdFontComplete-Regular.ttf", 48, NULL, 400)
+    };
+    SetTextureFilter(font_list[0].texture, TEXTURE_FILTER_BILINEAR);
     Clay_SetMeasureTextFunction(Raylib_MeasureText, font_list.data());
     registry.set<components::global_options::GameFonts>({ font_list });
 
