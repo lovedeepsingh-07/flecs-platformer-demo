@@ -106,7 +106,9 @@ void Interface::main_menu_GUI(flecs::world& registry) {
                     CLAY_TEXT(
                         per_frame_arena.arena.get_string(
                             std::string("left - ")
-                            + std::string(GetKeyName(+curr_controller.second.left))
+                            + std::string(game_utils::key_to_string(
+                                +curr_controller.second.left
+                            ))
                         ),
                         CLAY_TEXT_CONFIG({
                             .textColor = game_utils::RaylibColorToClayColor(WHITE),
@@ -117,7 +119,9 @@ void Interface::main_menu_GUI(flecs::world& registry) {
                     CLAY_TEXT(
                         per_frame_arena.arena.get_string(
                             std::string("right - ")
-                            + std::string(GetKeyName(+curr_controller.second.right))
+                            + std::string(game_utils::key_to_string(
+                                +curr_controller.second.right
+                            ))
                         ),
                         CLAY_TEXT_CONFIG({
                             .textColor = game_utils::RaylibColorToClayColor(WHITE),
@@ -128,7 +132,9 @@ void Interface::main_menu_GUI(flecs::world& registry) {
                     CLAY_TEXT(
                         per_frame_arena.arena.get_string(
                             std::string("down - ")
-                            + std::string(GetKeyName(+curr_controller.second.down))
+                            + std::string(game_utils::key_to_string(
+                                +curr_controller.second.down
+                            ))
                         ),
                         CLAY_TEXT_CONFIG({
                             .textColor = game_utils::RaylibColorToClayColor(WHITE),
@@ -139,7 +145,9 @@ void Interface::main_menu_GUI(flecs::world& registry) {
                     CLAY_TEXT(
                         per_frame_arena.arena.get_string(
                             std::string("jump - ")
-                            + std::string(GetKeyName(+curr_controller.second.jump))
+                            + std::string(game_utils::key_to_string(
+                                +curr_controller.second.jump
+                            ))
                         ),
                         CLAY_TEXT_CONFIG({
                             .textColor = game_utils::RaylibColorToClayColor(WHITE),
@@ -150,7 +158,9 @@ void Interface::main_menu_GUI(flecs::world& registry) {
                     CLAY_TEXT(
                         per_frame_arena.arena.get_string(
                             std::string("light attack - ")
-                            + std::string(GetKeyName(+curr_controller.second.light_attack))
+                            + std::string(game_utils::key_to_string(
+                                +curr_controller.second.light_attack
+                            ))
                         ),
                         CLAY_TEXT_CONFIG({
                             .textColor = game_utils::RaylibColorToClayColor(WHITE),
@@ -161,7 +171,9 @@ void Interface::main_menu_GUI(flecs::world& registry) {
                     CLAY_TEXT(
                         per_frame_arena.arena.get_string(
                             std::string("heavy attack - ")
-                            + std::string(GetKeyName(+curr_controller.second.heavy_attack))
+                            + std::string(game_utils::key_to_string(
+                                +curr_controller.second.heavy_attack
+                            ))
                         ),
                         CLAY_TEXT_CONFIG({
                             .textColor = game_utils::RaylibColorToClayColor(WHITE),
@@ -172,7 +184,9 @@ void Interface::main_menu_GUI(flecs::world& registry) {
                     CLAY_TEXT(
                         per_frame_arena.arena.get_string(
                             std::string("block - ")
-                            + std::string(GetKeyName(+curr_controller.second.block))
+                            + std::string(game_utils::key_to_string(
+                                +curr_controller.second.block
+                            ))
                         ),
                         CLAY_TEXT_CONFIG({
                             .textColor = game_utils::RaylibColorToClayColor(WHITE),

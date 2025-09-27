@@ -1,1 +1,1 @@
-# game
+# flecs-platformer-demo

@@ -40,3 +40,77 @@ void game_utils::draw_solid_polygon(
 void game_utils::draw_segment(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void* context) {
     DrawLineV((Vector2){ p1.x, p1.y }, (Vector2){ p2.x, p2.y }, GREEN);
 };
+
+std::string game_utils::key_to_string(int key) {
+    switch (key) {
+    case 65:
+        return "A";
+    case 66:
+        return "B";
+    case 67:
+        return "C";
+    case 68:
+        return "D";
+    case 69:
+        return "E";
+    case 70:
+        return "F";
+    case 71:
+        return "G";
+    case 72:
+        return "H";
+    case 73:
+        return "I";
+    case 74:
+        return "J";
+    case 75:
+        return "K";
+    case 76:
+        return "L";
+    case 77:
+        return "M";
+    case 78:
+        return "N";
+    case 79:
+        return "O";
+    case 80:
+        return "P";
+    case 81:
+        return "Q";
+    case 82:
+        return "R";
+    case 83:
+        return "S";
+    case 84:
+        return "T";
+    case 85:
+        return "U";
+    case 86:
+        return "V";
+    case 87:
+        return "W";
+    case 88:
+        return "X";
+    case 89:
+        return "Y";
+    case 90:
+        return "Z";
+    case 256:
+        return "ESCAPE";
+    case 257:
+        return "ENTER";
+    case 259:
+        return "BACKSPACE";
+    case 263:
+        return "LEFT";
+    case 262:
+        return "RIGHT";
+    case 264:
+        return "DOWN";
+    case 265:
+        return "UP";
+    // Add more keys as needed...
+    default:
+        return "UNKNOWN_KEY";
+    }
+}

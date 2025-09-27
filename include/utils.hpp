@@ -30,10 +30,12 @@ namespace game_utils {
     };
 
     float cast_result_fcn(b2ShapeId shape_id, b2Vec2 point, b2Vec2 normal, float fraction, void* context);
-    Clay_Color RaylibColorToClayColor(Color rayColor);
-    void HandleClayErrors(Clay_ErrorData errorData);
     void draw_solid_polygon(
         b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius, b2HexColor color, void* context
     );
     void draw_segment(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void* context);
+
+    Clay_Color RaylibColorToClayColor(Color rayColor);
+    void HandleClayErrors(Clay_ErrorData errorData);
+    std::string key_to_string(int key);
 }
