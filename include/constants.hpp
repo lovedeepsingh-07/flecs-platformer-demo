@@ -49,5 +49,5 @@ namespace constants {
 
     constexpr float ANIMATION_FRAME_TIME = 0.1F;
 
-    constexpr KeyboardKey DEBUG_KEY = KEY_F3;
+    constexpr KeyboardKey DEBUG_KEY = KEY_F2;
 }

@@ -1,8 +1,15 @@
 <html>
   <head>
     <title>flecs-platformer-demo</title>
+    <script>
+      const handle_fullscreen = () => {
+        const canvas = document.getElementById("canvas");
+        canvas?.requestFullscreen();
+      };
+    </script>
   </head>
   <body>
+    <button onclick="handle_fullscreen()">FullScreen</button>
     <canvas id="canvas"></canvas>
   </body>
   <script type="module">
