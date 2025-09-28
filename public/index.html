@@ -1,16 +1,19 @@
 <html>
   <head>
     <title>flecs-platformer-demo</title>
-    <script>
-      const handle_fullscreen = () => {
-        const canvas = document.getElementById("canvas");
-        canvas?.requestFullscreen();
-      };
-    </script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
   </head>
   <body>
-    <button onclick="handle_fullscreen()">FullScreen</button>
-    <canvas id="canvas"></canvas>
+    <div class="header-container">
+      <h1 style="font-size: 24px; font-weight: 100">flecs-platformer-demo</h1>
+      <button class="btn" onclick="request_fullscreen()">FullScreen</button>
+    </div>
+    <div class="canvas-container">
+      <div style="border: 2px solid white; width: fit-content">
+        <canvas id="canvas" width="1280" height="720"></canvas>
+      </div>
+    </div>
   </body>
   <script type="module">
     import initModule from "./flecs-platformer-demo.js";
@@ -23,34 +26,5 @@
         return path;
       },
     });
-
-    console.log("Game loaded", instance);
   </script>
 </html>
-
-<!-- <script lang="ts"> -->
-<!-- 	import { onMount } from 'svelte'; -->
-<!-- 	import wasm_module from '$lib/basement.js'; -->
-<!-- 	onMount(async () => { -->
-<!-- 		await wasm_module({ -->
-<!-- 			canvas: document.getElementById('canvas'), -->
-<!-- 			locateFile: (path: string) => { -->
-<!-- 				if (path.endsWith('.wasm')) return '/basement.wasm'; -->
-<!-- 				return path; -->
-<!-- 			} -->
-<!-- 		}); -->
-<!-- 	}); -->
-<!-- </script> -->
-<!---->
-<!-- <div class="m-0 bg-red-500 p-4"> -->
-<!-- 	<h1 class="text-2xl">basement</h1> -->
-<!-- 	<button -->
-<!-- 		onclick={() => { -->
-<!-- 			const canvas = document.getElementById('canvas'); -->
-<!-- 			canvas?.requestFullscreen(); -->
-<!-- 		}}>fullscreen</button -->
-<!-- 	> -->
-<!-- 	<div class="border-2 border-indigo-600"> -->
-<!-- 		<canvas class="block max-w-[100%]" width="1280" height="720" id="canvas"></canvas> -->
-<!-- 	</div> -->
-<!-- </div> -->

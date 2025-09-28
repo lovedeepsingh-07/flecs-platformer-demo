@@ -1,3 +1,4 @@
+#include "raylib.h"
 #define CLAY_IMPLEMENTATION
 #include "components.hpp"
 #include "constants.hpp"
@@ -10,7 +11,7 @@ int main() {
     // raylib + clay setup
     int screen_width = 1280;
     int screen_height = 720;
-    Clay_Raylib_Initialize(screen_width, screen_height, "flecs-platformer-demo", FLAG_WINDOW_RESIZABLE);
+    Clay_Raylib_Initialize(screen_width, screen_height, "flecs-platformer-demo", FLAG_MSAA_4X_HINT);
     // SetWindowSize(screen_width, screen_height);
     SetTargetFPS(constants::TARGET_FPS);
     SetExitKey(0);

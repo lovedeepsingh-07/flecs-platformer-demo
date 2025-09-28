@@ -26,11 +26,13 @@ build-web:
 	emcmake cmake -S . -B {{build_dir}}/web -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE={{cmake_build_type}} -DEXPECTED_BUILD_TESTS=OFF
 	cmake --build ./{{build_dir}}/web
 	cp {{build_dir}}/web/compile_commands.json {{build_dir}}/compile_commands.json
-	cp {{build_dir}}/web/{{binary_name}}.wasm {{public_dir}}
-	cp {{build_dir}}/web/{{binary_name}}.js {{public_dir}}
-	cp {{build_dir}}/web/{{binary_name}}.data {{public_dir}}
-run-web: build-web
-	live-server public/
+	mkdir -p {{build_dir}}/public
+	cp {{build_dir}}/web/{{binary_name}}.* {{build_dir}}/public/
+	cp {{public_dir}}/index.html {{build_dir}}/public/
+	cp {{public_dir}}/style.css {{build_dir}}/public/
+	cp {{public_dir}}/script.js {{build_dir}}/public/
+serve: build-web
+	live-server {{build_dir}}/public --port=3000
 
 fmt:
     find {{src_dir}} {{include_dir}} -regex '.*\.\(cpp\|hpp\)' | xargs clang-format -i

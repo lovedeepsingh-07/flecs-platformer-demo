@@ -1,0 +1,29 @@
+name: ci
+on:
+  push:
+    branches: ["main"]
+env:
+  PROJECT_NAME: flecs-platformer-demo
+  OUTPUT_DIRECTORY: result/bin
+  BUILD_COMMAND: nix build
+jobs:
+  build-and-public-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - run: ${{ env.BUILD_COMMAND }}
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ${{env.OUTPUT_DIRECTORY}} --project-name=${{env.PROJECT_NAME}}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

@@ -38,12 +38,14 @@
             			cmake --build ./build/web
             		  '';
           installPhase = ''
-                        			  mkdir -p $out/bin
-                        		      cp build/web/flecs-platformer-demo.js $out/bin
-                        		      cp build/web/flecs-platformer-demo.wasm $out/bin
-                        		      cp build/web/flecs-platformer-demo.data $out/bin
-            						  cp public/index.html $out/bin
-                        		  '';
+                                    			  mkdir -p $out/bin
+                                    		      cp build/web/flecs-platformer-demo.js $out/bin/
+                                    		      cp build/web/flecs-platformer-demo.wasm $out/bin/
+                                    		      cp build/web/flecs-platformer-demo.data $out/bin/
+                        						  cp public/index.html $out/bin/
+            									cp public/style.css $out/bin/
+            									cp public/script.js $out/bin/
+                                    		  '';
         };
         apps.setup = flake-utils.lib.mkApp {
           drv = pkgs.writeShellApplication {

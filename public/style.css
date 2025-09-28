@@ -1,0 +1,46 @@
+body {
+  padding: 8px;
+  margin: 0px;
+  background-color: black;
+  color: white;
+  font-family: "Andale Mono", monospace;
+}
+
+.header-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  width: 100%;
+  max-width: fit-content;
+  background-color: black;
+  font-weight: 200;
+  font-size: 18px;
+  border: 1px solid white;
+  border-radius: 6px;
+  color: white;
+  padding: 4px 8px;
+  transition: all;
+  transition-duration: 160ms;
+}
+.btn:hover {
+  background-color: white;
+  color: black;
+}
+
+.canvas-container {
+  margin-top: 6px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.canvas {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+}
